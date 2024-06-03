@@ -1,5 +1,7 @@
 ﻿using ArcGIS.Desktop.Framework;
+using ArcGIS.Desktop.Mapping.Events;
 using CCTool.Scripts.Manager;
+using NPOI.SS.Formula.Functions;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Common;
@@ -122,5 +124,41 @@ namespace CCTool.Scripts.ToolManagers
                 GetDirList(directory, dirList); // 递归获取子文件夹下的子文件夹
             }
         }
+
+        // 计算点2相对于点1的角度     从正东方向为0度，-180~180
+        public static double CalculateAngleFromEast(List<double> point1, List<double> point2)
+        {
+            double deltaX = point2[0] - point1[0];
+            double deltaY = point2[1] - point1[1];
+            double radians = Math.Atan2(deltaX, deltaY);
+            double angle = radians * (180 / Math.PI);
+            return angle;
+
+        }
+
+        // 计算点2相对于点1的角度     从正北方向为0度，-180~180
+        public static double CalculateAngleFromNorth(List<double> point1, List<double> point2)
+        {
+            double result = 0;
+
+            double deltaX = point2[0] - point1[0];
+            double deltaY = point2[1] - point1[1];
+            double radians = Math.Atan2(deltaY, deltaX);
+            double angle = radians * (180 / Math.PI);
+            // 此时的角度取值范围为-180~180, 正北方向0度
+            // 调整至0-360度
+            if (angle < 0)
+            {
+                result = angle + 360;
+            }
+            else
+            {
+                result = angle;
+            }
+            return result;
+        }
+
+        
+
     }
 }

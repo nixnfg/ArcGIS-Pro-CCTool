@@ -36,38 +36,44 @@ namespace CCTool.Scripts.MiniTool.GetInfo
 
         private void form_loaded(object sender, RoutedEventArgs e)
         {
-            // 更新地图标签
-            string txt = lb.Content.ToString();
-            Map map = MapView.Active.Map;
-            string result = txt.Replace("Map", map.Name);
-
-            lb.Content = result;
-
-            // 获取所有要素图层
-            List<string> featureLayers = map.AllFeatureLayers();
-            // 获取所有独立表
-            List<string> standaloneTables = map.AllStandaloneTables();
-
-            // 更新要素图层信息
-            if (featureLayers.Count>0)
+            try
             {
-                tb_message.AddMessage($"要素图层\r", Brushes.Green);
-                foreach (string layer in featureLayers)
+                // 更新地图标签
+                string txt = lb.Content.ToString();
+                Map map = MapView.Active.Map;
+                string result = txt.Replace("Map", map.Name);
+
+                lb.Content = result;
+
+                // 获取所有要素图层
+                List<string> featureLayers = map.AllFeatureLayers();
+                // 获取所有独立表
+                List<string> standaloneTables = map.AllStandaloneTables();
+
+                // 更新要素图层信息
+                if (featureLayers.Count > 0)
                 {
-                    tb_message.AddMessage($"{layer}\r", Brushes.BlueViolet);
+                    tb_message.AddMessage($"要素图层\r", Brushes.Green);
+                    foreach (string layer in featureLayers)
+                    {
+                        tb_message.AddMessage($"{layer}\r", Brushes.BlueViolet);
+                    }
+                }
+                // 更新独立表图层信息
+                if (standaloneTables.Count > 0)
+                {
+                    tb_message.AddMessage($"独立表图层\r", Brushes.Green);
+                    foreach (string layer in standaloneTables)
+                    {
+                        tb_message.AddMessage($"{layer}\r", Brushes.BlueViolet);
+                    }
                 }
             }
-            // 更新独立表图层信息
-            if (standaloneTables.Count > 0)
+            catch (Exception ee)
             {
-                tb_message.AddMessage($"独立表图层\r", Brushes.Green);
-                foreach (string layer in standaloneTables)
-                {
-                    tb_message.AddMessage($"{layer}\r", Brushes.BlueViolet);
-                }
+                MessageBox.Show(ee.Message + ee.StackTrace);
+                return;
             }
-
-
         }
 
     }

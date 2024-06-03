@@ -40,127 +40,135 @@ namespace CCTool.Scripts.MiniTool.GetInfo
 
         private void combox_layer_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_layer);
+            UITool.AddFeatureLayersToComboxPlus(combox_layer);
 
         }
 
         private async void combox_layer_DropClosed(object sender, EventArgs e)
         {
-            // 清空文本
-            tb_message.Document.Blocks.Clear();
-
-            string lyName = combox_layer.Text;
-            await QueuedTask.Run(() =>
+            try
             {
-                // 获取目标FeatureLayer
-                FeatureLayer featurelayer = lyName.TargetFeatureLayer();
-                // 确保要素类的几何类型是多边形
-                if (featurelayer.ShapeType != esriGeometryType.esriGeometryPolygon)
-                {
-                    // 如果不是多边形类型，则输出错误信息并退出函数
-                    MessageBox.Show("该要素类不是多边形类型。");
-                    return;
-                }
+                // 清空文本
+                tb_message.Document.Blocks.Clear();
 
-                tb_message.AddMessage($"共计【{featurelayer.GetFeatureCount()}】个图斑\r", Brushes.Black);
-
-                // 遍历面要素类中的所有要素
-                using (var cursor = featurelayer.Search())
+                string lyName = combox_layer.ComboxText();
+                await QueuedTask.Run(() =>
                 {
-                    int featureCount = 1;
-                    while (cursor.MoveNext())
+                    // 获取目标FeatureLayer
+                    FeatureLayer featurelayer = lyName.TargetFeatureLayer();
+                    // 确保要素类的几何类型是多边形
+                    if (featurelayer.ShapeType != esriGeometryType.esriGeometryPolygon)
                     {
-                        using (var feature = cursor.Current as Feature)
+                        // 如果不是多边形类型，则输出错误信息并退出函数
+                        MessageBox.Show("该要素类不是多边形类型。");
+                        return;
+                    }
+
+                    tb_message.AddMessage($"共计【{featurelayer.GetFeatureCount()}】个图斑\r", Brushes.Black);
+
+                    // 遍历面要素类中的所有要素
+                    using (var cursor = featurelayer.Search())
+                    {
+                        int featureCount = 1;
+                        while (cursor.MoveNext())
                         {
-
-                            // 获取要素的几何
-                            ArcGIS.Core.Geometry.Polygon polygon = feature.GetShape() as ArcGIS.Core.Geometry.Polygon;
-
-                            // 获取面要素的所有点（内外环）
-                            List<List<MapPoint>> mapPoints = polygon.MapPointsFromPolygon();
-                            // 获取每个环的最西北点
-                            List<List<double>> NWPoints = polygon.NWPointsFromPolygon();
-                            tb_message.AddMessage($"***********************************************\r", Brushes.Black);
-                            tb_message.AddMessage($"第【{featureCount}】个图斑\r", Brushes.Gray);
-
-                            // 每个环进行处理
-                            for (int j = 0; j < mapPoints.Count; j++)
+                            using (var feature = cursor.Current as Feature)
                             {
-                                
-                                List<MapPoint> vertices = mapPoints[j];
-                                // 获取要素的最西北点坐标
-                                double XMin = NWPoints[j][0];
-                                double YMax = NWPoints[j][1];
 
-                                // 找出西北点【离西北角（Xmin,Ymax）最近的点】
-                                int targetIndex = 0;
-                                double maxDistance = 10000000;
-                                for (int i = 0; i < vertices.Count; i++)
+                                // 获取要素的几何
+                                ArcGIS.Core.Geometry.Polygon polygon = feature.GetShape() as ArcGIS.Core.Geometry.Polygon;
+
+                                // 获取面要素的所有点（内外环）
+                                List<List<MapPoint>> mapPoints = polygon.MapPointsFromPolygon();
+                                // 获取每个环的最西北点
+                                List<List<double>> NWPoints = polygon.NWPointsFromPolygon();
+                                tb_message.AddMessage($"***********************************************\r", Brushes.Black);
+                                tb_message.AddMessage($"第【{featureCount}】个图斑\r", Brushes.Gray);
+
+                                // 每个环进行处理
+                                for (int j = 0; j < mapPoints.Count; j++)
                                 {
-                                    // 计算和西北角的距离
-                                    double distance = Math.Sqrt(Math.Pow(vertices[i].X - XMin, 2) + Math.Pow(vertices[i].Y - YMax, 2));
-                                    // 如果小于上一个值，则保存新值，直到找出最近的点
-                                    if (distance < maxDistance)
+
+                                    List<MapPoint> vertices = mapPoints[j];
+                                    // 获取要素的最西北点坐标
+                                    double XMin = NWPoints[j][0];
+                                    double YMax = NWPoints[j][1];
+
+                                    // 找出西北点【离西北角（Xmin,Ymax）最近的点】
+                                    int targetIndex = 0;
+                                    double maxDistance = 10000000;
+                                    for (int i = 0; i < vertices.Count; i++)
                                     {
-                                        targetIndex = i;
-                                        maxDistance = distance;
+                                        // 计算和西北角的距离
+                                        double distance = Math.Sqrt(Math.Pow(vertices[i].X - XMin, 2) + Math.Pow(vertices[i].Y - YMax, 2));
+                                        // 如果小于上一个值，则保存新值，直到找出最近的点
+                                        if (distance < maxDistance)
+                                        {
+                                            targetIndex = i;
+                                            maxDistance = distance;
+                                        }
+                                    }
+
+                                    // 判断是否是西北角
+                                    string isNW = "";
+                                    if (targetIndex == 0)
+                                    {
+                                        isNW = "初始点在西北角";
+                                    }
+                                    else
+                                    {
+                                        isNW = "初始点不在西北角";
+                                    }
+
+                                    // 判断顺逆时针，如果有问题就调整反向
+                                    string clock = "";
+                                    bool isClockwise = vertices.IsColckwise();
+                                    if (!isClockwise)
+                                    {
+                                        clock = "逆时针";
+                                    }
+                                    if (isClockwise)
+                                    {
+                                        clock = "顺时针";
+                                    }
+
+                                    // 判断内外环
+                                    string isYH = "";
+                                    if (j == 0)
+                                    {
+                                        isYH = "外环";
+                                    }
+                                    else
+                                    {
+                                        isYH = $"内环{j}";
+                                    }
+
+                                    // 在末尾加起始点
+                                    vertices.Add(vertices[0]);
+                                    if (j > 0)
+                                    {
+                                        tb_message.AddMessage($"---------------------------------------------\r", Brushes.Black);
+                                    }
+                                    tb_message.AddMessage($"{isYH}      {clock}     {isNW}\r", Brushes.Green);
+
+                                    // 获取点信息
+                                    for (int i = 0; i < vertices.Count; i++)
+                                    {
+                                        tb_message.AddMessage($"{i + 1},      {vertices[i].X},     {vertices[i].Y}\r", Brushes.BlueViolet);
                                     }
                                 }
 
-                                // 判断是否是西北角
-                                string isNW = "";
-                                if (targetIndex == 0)
-                                {
-                                    isNW = "初始点在西北角";
-                                }
-                                else
-                                {
-                                    isNW = "初始点不在西北角";
-                                }
-
-                                // 判断顺逆时针，如果有问题就调整反向
-                                string clock = "";
-                                bool isClockwise = vertices.IsColckwise();
-                                if (!isClockwise)
-                                {
-                                    clock = "逆时针";
-                                }
-                                if (isClockwise)
-                                {
-                                    clock = "顺时针";
-                                }
-
-                                // 判断内外环
-                                string isYH = "";
-                                if (j == 0)
-                                {
-                                    isYH = "外环";
-                                }
-                                else
-                                {
-                                    isYH = $"内环{j}";
-                                }
-
-                                // 在末尾加起始点
-                                vertices.Add(vertices[0]);
-                                if (j>0)
-                                {
-                                    tb_message.AddMessage($"---------------------------------------------\r", Brushes.Black);
-                                }
-                                tb_message.AddMessage($"{isYH}      {clock}     {isNW}\r", Brushes.Green);
-
-                                // 获取点信息
-                                for (int i = 0; i < vertices.Count; i++)
-                                {
-                                    tb_message.AddMessage($"{i+1},      {vertices[i].X},     {vertices[i].Y}\r", Brushes.BlueViolet);
-                                }
                             }
-
+                            featureCount++;
                         }
-                        featureCount++;
                     }
-                }
-            });
+                });
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message+ee.StackTrace);
+                return;
+            }
         }
 
     }

@@ -118,6 +118,18 @@ namespace CCTool.Scripts.UI.ProWindow
                     return;
                 }
 
+                // 获取目标数据库和点要素名
+                string gdbPath = fc_path[..(fc_path.IndexOf(".gdb") + 4)];
+                string fcName = fc_path[(fc_path.LastIndexOf(@"\") + 1)..];
+
+                // 判断要素名是不是以数字开头
+                bool isNum = fcName.IsNumeric();
+                if (isNum)
+                {
+                    MessageBox.Show("输出的要素名不规范，不能以数字开头！");
+                    return;
+                }
+
                 // 获取所有选中的txt
                 List<string> list_txtPath = new List<string>();
                 foreach (CheckBox shp in cb_txts)
@@ -139,17 +151,20 @@ namespace CCTool.Scripts.UI.ProWindow
                 {
                     // 参数获取
                     string gdb_def = Project.Current.DefaultGeodatabasePath;
-                    pw.AddProcessMessage(" 创建一个空要素并新建字段", 10, time_base, Brushes.Black);
+                    pw.AddProcessMessage(" 创建一个空要素", 10, time_base, Brushes.Black);
 
                     // 创建一个空要素
                     Arcpy.CreateFeatureclass(gdb_def, "tem_fc", "POLYGON", spatial_reference);
+                    string targetFC = gdb_def + @"\tem_fc";
+
+                    pw.AddProcessMessage("新建字段", 10, time_base, Brushes.Black);
                     // 新建字段
-                    Arcpy.AddField(gdb_def + @"\tem_fc", "文件名", "TEXT");
-                    Arcpy.AddField(gdb_def + @"\tem_fc", "编号", "TEXT");
-                    Arcpy.AddField(gdb_def + @"\tem_fc", "名称", "TEXT");
-                    Arcpy.AddField(gdb_def + @"\tem_fc", "类型", "TEXT");
-                    Arcpy.AddField(gdb_def + @"\tem_fc", "图幅", "TEXT");
-                    Arcpy.AddField(gdb_def + @"\tem_fc", "用途", "TEXT");
+                    EditTool.AddField(targetFC, "文件名");
+                    EditTool.AddField(targetFC, "编号");
+                    EditTool.AddField(targetFC, "名称");
+                    EditTool.AddField(targetFC, "类型");
+                    EditTool.AddField(targetFC, "图幅");
+                    EditTool.AddField(targetFC, "用途");
 
                     pw.AddProcessMessage(" 获取所有txt文件", 10, time_base, Brushes.Black);
 

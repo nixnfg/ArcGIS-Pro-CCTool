@@ -77,5 +77,10 @@ namespace CCTool.Scripts.UI.ProWindow
             }
         }
 
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135814717?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
+        }
     }
 }

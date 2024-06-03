@@ -64,7 +64,7 @@ namespace CCTool.Scripts.GHApp.SD
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         private void openTableButton_Click(object sender, RoutedEventArgs e)
@@ -77,14 +77,14 @@ namespace CCTool.Scripts.GHApp.SD
             try
             {
                 // 获取参数
-                string fc_path = combox_fc.Text;
+                string fc_path = combox_fc.ComboxText();
                 string area_type = combox_area.Text[..2]; // 去掉“面积”，以防shp故障
                 string unit = combox_unit.Text;
                 int digit = int.Parse(combox_digit.Text);
                 bool isAdj = (bool)checkBox_adj.IsChecked;
 
-                string fc_area_path = combox_fc_area.Text;
-                string name_field = combox_field_area.Text;
+                string fc_area_path = combox_fc_area.ComboxText();
+                string name_field = combox_field_area.ComboxText();
 
                 string excel_path = textTablePath.Text;
                 // 默认数据库位置
@@ -116,8 +116,12 @@ namespace CCTool.Scripts.GHApp.SD
                     BaseTool.CopyResourceFile(@"CCTool.Data.Excel.三调用地自转换.xlsx", folder_path + @"\三调用地自转换.xlsx");
 
                     // 放到新建的数据库中
-                    Arcpy.CreateFileGDB(folder_path, "新数据库");
-                    string new_gdb = $@"{folder_path}\新数据库.gdb";
+                    string filePath = @"D:\Program Files\临时文件";
+                    string gdbName = "临时数据库";
+                    Arcpy.CreateFileGDB(filePath, gdbName);
+                    string new_gdb = $@"{filePath}\{gdbName}.gdb";
+                    // 清理一下
+                    new_gdb.ClearGDBItem();
 
                     if (fc_area_path == "")  // 如果没有分地块统计
                     {
@@ -126,8 +130,10 @@ namespace CCTool.Scripts.GHApp.SD
 
                     else   // 如果分地块统计
                     {
+                        // 先融合
+                        Arcpy.Dissolve(fc_area_path, gdb_path + @"\dissolveFC", name_field);
                         // 按属性分割
-                        Arcpy.SplitByAttributes(fc_area_path, new_gdb, name_field);
+                        Arcpy.SplitByAttributes(gdb_path + @"\dissolveFC", new_gdb, name_field);
                     }
 
                     // 收集分割后的地块
@@ -218,12 +224,18 @@ namespace CCTool.Scripts.GHApp.SD
 
                     // 删除中间数据
                     Arcpy.Delect(gdb_path + @"\statistic_sd");
+                    Arcpy.Delect(gdb_path + @"\dissolveFC");
                     Arcpy.Delect(gdb_path + @"\前");
                     Arcpy.Delect(gdb_path + @"\后");
                     File.Delete(folder_path + @"\三调用地自转换.xlsx");
-                    Directory.Delete(new_gdb, true);
+                    // 收集分割后的地块
+                    List<string> list = new_gdb.GetFeatureClassAndTablePath();
+                    foreach (var item in list)
+                    {
+                        Arcpy.Delect(item);
+                    }
                 });
-                pw.AddProcessMessage(40, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -234,12 +246,12 @@ namespace CCTool.Scripts.GHApp.SD
 
         private void combox_fc_area_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc_area);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc_area);
         }
 
         private void combox_fc_area_Closed(object sender, EventArgs e)
         {
-            string fc_area = combox_fc_area.Text;
+            string fc_area = combox_fc_area.ComboxText();
             if (fc_area == "")
             {
                 combox_field_area.IsEnabled = false;
@@ -252,16 +264,23 @@ namespace CCTool.Scripts.GHApp.SD
 
         private void combox_field_area_DropDown(object sender, EventArgs e)
         {
-            string area_fc = combox_fc_area.Text;
-            UITool.AddTextFieldsToCombox(area_fc, combox_field_area);
+            string area_fc = combox_fc_area.ComboxText();
+            UITool.AddTextFieldsToComboxPlus(area_fc, combox_field_area);
         }
         // 数据检查
         private async void btn_check_Click(object sender, RoutedEventArgs e)
         {
 
-            string lyName = combox_fc.Text;
-            string lyArea = combox_fc_area.Text;
-            string areaName = combox_field_area.Text;
+            string lyName = combox_fc.ComboxText();
+            string lyArea = combox_fc_area.ComboxText();
+            string areaName = combox_field_area.ComboxText();
+
+            // 判断参数是否选择完全
+            if (lyName == "")
+            {
+                MessageBox.Show("有必选参数为空！！！");
+                return;
+            }
 
             // 打开检查框
             ProcessWindow pw = UITool.OpenProcessWindow(processwindow, "数据检查");
@@ -291,7 +310,7 @@ namespace CCTool.Scripts.GHApp.SD
                     }
 
                     // 检查字段值是否合规
-                    string result_value = CheckTool.CheckFieldValue(lyName, "DLMC", DataStore.yd_sd);
+                    string result_value = CheckTool.CheckFieldValue(lyName, "DLMC", DataLib.yd_sd);
                     pw.AddMessage(result_value, Brushes.Red);
 
                     // 检查是否包含空值
@@ -308,5 +327,10 @@ namespace CCTool.Scripts.GHApp.SD
             }
         }
 
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135688560?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
+        }
     }
 }

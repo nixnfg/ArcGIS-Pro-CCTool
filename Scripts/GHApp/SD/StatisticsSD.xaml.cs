@@ -136,7 +136,7 @@ namespace CCTool.Scripts.UI.ProWindow
                         Arcpy.Delect(gdb + @"\" + tb);
                     }
                 });
-                pw.AddProcessMessage(10, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {

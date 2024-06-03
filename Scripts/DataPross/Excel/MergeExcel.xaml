@@ -1,0 +1,37 @@
+﻿<controls:ProWindow x:Class="CCTool.Scripts.DataPross.Excel.MergeExcel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
+        mc:Ignorable="d"
+        Title="合并Excel表" Height="330" Width="500" 
+                    WindowStartupLocation="CenterScreen"
+                    Icon="/CCTool;component/Data/Icons/Atoolbox.png"
+    >
+    <controls:ProWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </controls:ProWindow.Resources>
+    <Grid>
+        <Label Content="输入Excel表所在文件夹：" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" Width="187"/>
+        <TextBox x:Name="textFolderPath" Margin="15,35,34,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="22"/>
+        <Label Content="输出合并后的Excel表：" HorizontalAlignment="Left" Margin="15,58,0,0" VerticalAlignment="Top" Width="375"/>
+        <TextBox x:Name="textExcelPath" Margin="15,86,34,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="22"/>
+        <Button x:Name="openExcelButton" Style="{StaticResource btn_openFolder}" Margin="0,86,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openExcelButton_Click"/>
+
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,10,21"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="openFolderButton" Style="{StaticResource btn_openFolder}" Margin="0,35,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openFolderButton_Click"/>
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,98,21" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+        <GroupBox Header="Sheet名称参数" Margin="15,113,10,0" Height="73" VerticalAlignment="Top"/>
+        <RadioButton x:Name="rb_excel" Content="以Excel文件名称命名" HorizontalAlignment="Left" Margin="30,147,0,0" VerticalAlignment="Top" Width="187" IsChecked="True"/>
+        <RadioButton x:Name="rb_sheet" Content="以Excel+Sheet名称命名" HorizontalAlignment="Left" Margin="250,147,0,0" VerticalAlignment="Top" Width="187"/>
+
+
+    </Grid>
+</controls:ProWindow>

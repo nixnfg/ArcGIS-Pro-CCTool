@@ -38,10 +38,10 @@ namespace CCTool.Scripts
         private async void btn_go_Click(object sender, RoutedEventArgs e)
         {
             // 获取指标
-            string fc_xz_txt = combox_fc_xz.Text;
-            string fc_gh_txt = combox_fc_gh.Text;
-            string field_xz = combox_field_xz.Text;
-            string field_gh = combox_field_gh.Text;
+            string fc_xz_txt = combox_fc_xz.ComboxText();
+            string fc_gh_txt = combox_fc_gh.ComboxText();
+            string field_xz = combox_field_xz.ComboxText();
+            string field_gh = combox_field_gh.ComboxText();
             string field_change = @"变化";
 
             // 判断参数是否选择完全
@@ -86,7 +86,7 @@ namespace CCTool.Scripts
 
                     pw.AddProcessMessage(30, time_base, "添加字段");
                     // 添加字段
-                    Arcpy.AddField(identityFeatureClass, field_change, "TEXT");
+                    EditTool.AddField(identityFeatureClass, field_change);
 
                     pw.AddProcessMessage(20, time_base, "计算字段，找出变化图斑");
 
@@ -125,7 +125,7 @@ namespace CCTool.Scripts
                     // 删除字段
                     Arcpy.DeleteField(checkRezult, new List<string>() { "现状_" + field_xz, "规划_" + field_gh, field_change }, "KEEP_FIELDS");
                 });
-                pw.AddProcessMessage(20, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -136,22 +136,28 @@ namespace CCTool.Scripts
 
         private void combox_fc_xz_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc_xz);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc_xz);
         }
 
         private void combox_field_xz_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc_xz.Text, combox_field_xz);
+            UITool.AddTextFieldsToComboxPlus(combox_fc_xz.ComboxText(), combox_field_xz);
         }
 
         private void combox_fc_gh_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc_gh);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc_gh);
         }
 
         private void combox_field_gh_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc_gh.Text, combox_field_gh);
+            UITool.AddTextFieldsToComboxPlus(combox_fc_gh.ComboxText(), combox_field_gh);
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135740684?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

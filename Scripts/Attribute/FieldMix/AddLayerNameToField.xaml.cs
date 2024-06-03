@@ -102,7 +102,7 @@ namespace CCTool.Scripts.Attribute.FieldMix
                         }
                     }
                 });
-                pw.AddProcessMessage(80, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -139,6 +139,12 @@ namespace CCTool.Scripts.Attribute.FieldMix
             {
                 item.IsChecked = false;
             }
+        }
+
+        private void btn_help_click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135625991?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

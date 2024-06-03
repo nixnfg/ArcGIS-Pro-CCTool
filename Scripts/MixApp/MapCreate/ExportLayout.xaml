@@ -11,23 +11,27 @@
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="选择导出的文件夹位置：" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Top" Width="324"/>
-        <TextBox x:Name="textFolderPath" Margin="15,44,49,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
-        <Button x:Name="btn_go" Content="执行" Margin="0,0,10,15" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="56" Click="btn_go_click"/>
-        <Button x:Name="openFolderButton" Content="打开" Margin="0,44,10,0" HorizontalAlignment="Right" Width="34" Height="21" VerticalAlignment="Top" Background="{x:Null}" Click="openFolderButton_Click"/>
-        <GroupBox Header="导出图片类型" Margin="0,111,10,55" HorizontalAlignment="Right" Width="148"/>
+        <TextBox x:Name="textFolderPath" Style="{StaticResource TextBoxNormal}" Margin="15,44,34,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top"/>
+        <Button x:Name="openFolderButton" Style="{StaticResource btn_openFolder}" Margin="0,44,10,0" HorizontalAlignment="Right"  VerticalAlignment="Top" Click="openFolderButton_Click"/>
+
+        <GroupBox Header="导出图片类型" Margin="0,111,10,47" HorizontalAlignment="Right" Width="148"/>
         <RadioButton x:Name="rb_png" Content="PNG" Margin="0,142,97,0" VerticalAlignment="Top" IsChecked="True" HorizontalAlignment="Right" Width="45"/>
         <RadioButton x:Name="rb_jpg" Content="JPG" Margin="0,166,102,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="40"/>
         <Label Content="图片分辨率：" Margin="0,80,82,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="76"/>
-        <TextBox x:Name="text_dpi" Margin="0,84,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="300" HorizontalAlignment="Right" Width="63"/>
+        <TextBox x:Name="text_dpi" Margin="0,84,10,0" TextWrapping="NoWrap" VerticalAlignment="Top" Text="300" HorizontalAlignment="Right" Width="63"/>
         <RadioButton x:Name="rb_pdf_series" Content="PDF(地图系列)" Margin="0,189,27,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="115"/>
-        <ListBox x:Name="listBox_layout" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="15,102,183,15" Loaded="listBox_layout_Load"/>
+        <ListBox x:Name="listBox_layout" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="15,102,183,47" Loaded="listBox_layout_Load"/>
         <Label Content="布局列表：" Margin="0,77,364,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="76"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,11,15"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_click" />
+        <Button x:Name="btn_select" Style="{StaticResource btn_selectAll}" Margin="15,0,0,15"  VerticalAlignment="Bottom" Click="btn_select_Click" HorizontalAlignment="Left" Width="70" />
+        <Button x:Name="btn_unSelect" Style="{StaticResource btn_unSelectAll}" Margin="97,0,0,15"  VerticalAlignment="Bottom" Click="btn_unSelect_Click" HorizontalAlignment="Left" Width="70" />
+
 
     </Grid>
 </controls:ProWindow>

@@ -54,13 +54,13 @@ namespace CCTool.Scripts
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         // 将图层字段加入到Combox列表中
         private void combox_field_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_field);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_field);
         }
 
         // 执行
@@ -69,8 +69,8 @@ namespace CCTool.Scripts
             try
             {
                 // 参数获取
-                string fcPath = combox_fc.Text;
-                string bmField = combox_field.Text;
+                string fcPath = combox_fc.ComboxText();
+                string bmField = combox_field.ComboxText();
                 bool isMC = (bool)checkbox_isMC.IsChecked;
 
                 string version = combox_version.Text;
@@ -152,7 +152,7 @@ namespace CCTool.Scripts
                     // 删除中间数据
                     File.Delete(output_excel);
                     
-                    pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                    pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
                 });
             }
             catch (Exception ee)
@@ -161,6 +161,12 @@ namespace CCTool.Scripts
                 return;
             }
             
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135768327?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
         }
     }
 }

@@ -19,6 +19,7 @@ using ActiproSoftware.Windows;
 using NPOI.XSSF.Streaming.Values;
 using System.Windows.Documents;
 using System.Windows.Media.Media3D;
+using System.Threading;
 
 namespace CCTool.Scripts.ToolManagers
 {
@@ -28,11 +29,11 @@ namespace CCTool.Scripts.ToolManagers
         public static Workbook OpenWorkbook(string excelFile)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            LoadOptions loadOptinos = new LoadOptions(LoadFormat.Xlsx);
+            LoadOptions loadOptinos = new LoadOptions(LoadFormat.Auto);
             Workbook wb = new Workbook(excelFile, loadOptinos);
             return wb;
         }
-        
+
         // 获取TXT文件的编码类型
         public static System.Text.Encoding GetEncodingType(string FILE_NAME)
         {
@@ -131,7 +132,35 @@ namespace CCTool.Scripts.ToolManagers
                 // 属性映射
                 if (inCell is not null && dict.ContainsKey(inCell.StringValue))
                 {
-                    mapCell.Value =dict[inCell.StringValue];   // 赋值
+                    mapCell.Value = dict[inCell.StringValue];   // 赋值
+                }
+            }
+            // 保存
+            wb.Save(excelFile);
+            wb.Dispose();
+        }
+
+
+        // Excel文件属性映射【输入映射字典dict】
+        public static void ExcelAttributeMapperDouble(string excelPath, int sheet_in_col, int sheet_map_col, Dictionary<string, double> dict, int startRow = 0)
+        {
+            // 获取工作薄、工作表
+            string excelFile = excelPath.GetExcelPath();
+            int sheetIndex = excelPath.GetExcelSheetIndex();
+            // 打开工作薄
+            Workbook wb = OpenWorkbook(excelFile);
+            // 打开工作表
+            Worksheet sheet = wb.Worksheets[sheetIndex];
+            // 逐行处理
+            for (int i = startRow; i <= sheet.Cells.MaxDataRow; i++)
+            {
+                //  获取目标cell
+                Cell inCell = sheet.Cells[i, sheet_in_col];
+                Cell mapCell = sheet.Cells[i, sheet_map_col];
+                // 属性映射
+                if (inCell is not null && dict.ContainsKey(inCell.StringValue))
+                {
+                    mapCell.Value = dict[inCell.StringValue];   // 赋值
                 }
             }
             // 保存
@@ -194,7 +223,7 @@ namespace CCTool.Scripts.ToolManagers
         }
 
         // Excel文件属性映射_列【输入映射字典dict】
-        public static void ExcelAttributeMapperColDouble(string excelPath, int sheet_in_row, int sheet_map_row, Dictionary<string, string> dict, int startCol = 0)
+        public static void ExcelAttributeMapperColDouble(string excelPath, int sheet_in_row, int sheet_map_row, Dictionary<string, double> dict, int startCol = 0)
         {
             // 获取工作薄、工作表
             string excelFile = excelPath.GetExcelPath();
@@ -212,7 +241,7 @@ namespace CCTool.Scripts.ToolManagers
                 // 属性映射
                 if (inCell is not null && dict.ContainsKey(inCell.StringValue))
                 {
-                    mapCell.Value = double.Parse(dict[inCell.StringValue]);   // 赋值
+                    mapCell.Value = dict[inCell.StringValue];   // 赋值
                 }
             }
             // 保存
@@ -261,9 +290,9 @@ namespace CCTool.Scripts.ToolManagers
             // 打开工作表
             Worksheet sheet = wb.Worksheets[sheetIndex];
             // 获取cell
-            Cell cell = sheet.Cells[row,col];
+            Cell cell = sheet.Cells[row, col];
             // 写入cell值
-            cell.Value =cell_value;
+            cell.Value = cell_value;
             // 保存
             wb.Save(excelFile);
             wb.Dispose();
@@ -279,7 +308,7 @@ namespace CCTool.Scripts.ToolManagers
             Workbook wb = OpenWorkbook(excelFile);
             // 打开工作表
             Worksheet sheet = wb.Worksheets[sheetIndex];
-            
+
             for (int i = startRow; i <= sheet.Cells.MaxDataRow; i++)
             {
                 // 获取cell
@@ -511,7 +540,7 @@ namespace CCTool.Scripts.ToolManagers
                     }
                 }
                 // 重新合并单元格   判断合并单元格的格子数，不是单格才合并
-                if (isOver==false && mergeRange.NumberOfCells > 1)
+                if (isOver == false && mergeRange.NumberOfCells > 1)
                 {
                     sheet.AddMergedRegion(mergeRange);
                 }
@@ -745,7 +774,7 @@ namespace CCTool.Scripts.ToolManagers
         }
 
         // 删除Excel表中的0值行【指定1个列】
-        private static List<int> ExcelDeleteNullColResult(string excelPath, int deleteRow, int startCol = 0)
+        private static List<int> ExcelDeleteNullColResult(string excelPath, int deleteRow, int startCol = 0, int lastCol = 0)
         {
             List<int> list = new List<int>();
             // 获取工作薄、工作表
@@ -760,7 +789,7 @@ namespace CCTool.Scripts.ToolManagers
             wb.CalculateFormula();
 
             // 找出0值行
-            for (int i = sheet.Cells.MaxDataColumn; i >= startCol; i--)
+            for (int i = sheet.Cells.MaxDataColumn + lastCol; i >= startCol; i--)
             {
                 Cell cell = sheet.Cells.GetCell(deleteRow, i);
                 if (cell == null)  // 值为空则纳入
@@ -789,7 +818,7 @@ namespace CCTool.Scripts.ToolManagers
         }
 
         // 删除Excel表中的0值行【指定多个列】
-        private static List<int> ExcelDeleteNullColResult(string excelPath, List<int> deleteRows, int startCol = 0)
+        private static List<int> ExcelDeleteNullColResult(string excelPath, List<int> deleteRows, int startCol = 0, int lastCol = 0)
         {
             List<int> list = new List<int>();
             // 获取工作薄、工作表
@@ -803,8 +832,10 @@ namespace CCTool.Scripts.ToolManagers
             // 强制更新表内的公式单元格
             wb.CalculateFormula();
 
+            int deleteCount = sheet.Cells.MaxDataColumn;
+
             // 找出0值行
-            for (int i = sheet.Cells.MaxDataColumn; i >= startCol; i--)
+            for (int i = deleteCount-lastCol; i >= startCol; i--)
             {
                 // 设置一个flag
                 bool isNull = true;
@@ -858,19 +889,20 @@ namespace CCTool.Scripts.ToolManagers
         }
 
         // 删除Excel表中的0值列【指定1个列】
-        public static void ExcelDeleteNullCol(string excelPath, int deleteRow,int startCol = 0)
+        public static void ExcelDeleteNullCol(string excelPath, int deleteRow, int startCol = 0, int lastCol = 0)
         {
             // 要删除列
-            List<int> deleleRows = ExcelDeleteNullColResult(excelPath, deleteRow, startCol);
+            List<int> deleleRows = ExcelDeleteNullColResult(excelPath, deleteRow, startCol, lastCol);
             // 删除列
             ExcelDeleteCol(excelPath, deleleRows);
         }
 
         // 删除Excel表中的0值列【指定多个列】
-        public static void ExcelDeleteNullCol(string excelPath, List<int> deleteRows, int startCol = 0)
+        public static void ExcelDeleteNullCol(string excelPath, List<int> deleteRows, int startCol = 0, int lastCol = 0)
         {
             // 要删除列
-            List<int> deleleCols = ExcelDeleteNullColResult(excelPath, deleteRows, startCol);
+            List<int> deleleCols = ExcelDeleteNullColResult(excelPath, deleteRows, startCol, lastCol);
+
             // 删除列
             ExcelDeleteCol(excelPath, deleleCols);
         }
@@ -891,6 +923,150 @@ namespace CCTool.Scripts.ToolManagers
             SheetUtil.CopyRow(sheet, sourceRowIndex, targetRowIndex);
             // 保存工作薄
             wb.Write(new FileStream(excelFile, FileMode.Create, FileAccess.Write));
+        }
+
+        // 从Excel文件中获取表头列表
+        public static List<string> GetColListFromExcel(string excelPath)
+        {
+            // 定义列表
+            List<string> result = new List<string>();
+            List<string> stringList1 = new List<string>();
+            List<string> stringList2 = new List<string>();
+            // 获取工作薄、工作表
+            string excelFile = excelPath.GetExcelPath();
+            int sheetIndex = excelPath.GetExcelSheetIndex();
+            // 打开工作薄
+            Workbook wb = OpenWorkbook(excelFile);
+            // 打开工作表
+            Worksheet sheet = wb.Worksheets[sheetIndex];
+            // 获取第一行的值列表
+            for (int i = 0; i <= sheet.Cells.MaxDataColumn; i++)
+            {
+                Cell cell = sheet.Cells[0, i];
+                if (cell != null)
+                {
+                    string value = cell.StringValue;
+                    if (!stringList1.Contains(value) && value != "")
+                    {
+                        stringList1.Add(value);
+                    }
+                }
+            }
+            // 获取第二行的值列表
+            for (int i = 0; i <= sheet.Cells.MaxDataColumn; i++)
+            {
+                Cell cell = sheet.Cells[1, i];
+                if (cell != null)
+                {
+                    string value = cell.StringValue;
+                    if (!stringList2.Contains(value) && value != "")
+                    {
+                        stringList2.Add(value);
+                    }
+                }
+            }
+            wb.Dispose();
+
+            // 取列表最长的
+            if (stringList2.Count > stringList1.Count)
+            {
+                result = stringList2;
+            }
+            else
+            {
+                result = stringList1;
+            }
+
+            // 返回result
+            return result;
+        }
+
+
+        // 从Excel文件中获取值列表
+        public static List<string> GetColValueFromExcel(string excelPath, string colField)
+        {
+            // 定义列表
+            List<string> result = new List<string>();
+            List<string> stringList1 = new List<string>();
+            List<string> stringList2 = new List<string>();
+            int rowIndex = -1;
+            int colIndex = -1;
+            // 获取工作薄、工作表
+            string excelFile = excelPath.GetExcelPath();
+            int sheetIndex = excelPath.GetExcelSheetIndex();
+            // 打开工作薄
+            Workbook wb = OpenWorkbook(excelFile);
+            // 打开工作表
+            Worksheet sheet = wb.Worksheets[sheetIndex];
+            // 获取第一行的值列表
+            for (int i = 0; i <= sheet.Cells.MaxDataColumn; i++)
+            {
+                Cell cell = sheet.Cells[0, i];
+                if (cell != null)
+                {
+                    string value = cell.StringValue;
+                    if (!stringList1.Contains(value) && value != "")
+                    {
+                        stringList1.Add(value);
+                    }
+                }
+            }
+            // 获取第二行的值列表
+            for (int i = 0; i <= sheet.Cells.MaxDataColumn; i++)
+            {
+                Cell cell = sheet.Cells[1, i];
+                if (cell != null)
+                {
+                    string value = cell.StringValue;
+                    if (!stringList2.Contains(value) && value != "")
+                    {
+                        stringList2.Add(value);
+                    }
+                }
+            }
+
+            // 取列表最长的
+            if (stringList2.Count > stringList1.Count)
+            {
+                rowIndex = 1;
+            }
+            else
+            {
+                rowIndex = 0;
+            }
+
+            // 获取表头所在的列
+            for (int i = 0; i <= sheet.Cells.MaxDataColumn; i++)
+            {
+                Cell cell = sheet.Cells[rowIndex, i];
+                if (cell != null)
+                {
+                    string value = cell.StringValue;
+                    if (value == colField)
+                    {
+                        colIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // 获取表头所在的列的值列表
+            for (int i = 0; i <= sheet.Cells.MaxDataRow; i++)
+            {
+                Cell cell = sheet.Cells[i, colIndex];
+                if (cell != null)
+                {
+                    string value = cell.StringValue;
+                    if (!result.Contains(value) && value != "" && value != colField)
+                    {
+                        result.Add(value);
+                    }
+                }
+            }
+
+            wb.Dispose();
+            // 返回result
+            return result;
         }
 
         // 从Excel文件中获取Dictionary
@@ -927,6 +1103,39 @@ namespace CCTool.Scripts.ToolManagers
         }
 
         // 从Excel文件中获取Dictionary
+        public static Dictionary<string, double> GetDictFromExcelDouble(string excelPath, int col1 = 0, int col2 = 1)
+        {
+            // 定义字典
+            Dictionary<string, double> dict = new Dictionary<string, double>();
+            // 获取工作薄、工作表
+            string excelFile = excelPath.GetExcelPath();
+            int sheetIndex = excelPath.GetExcelSheetIndex();
+            // 打开工作薄
+            Workbook wb = OpenWorkbook(excelFile);
+            // 打开工作表
+            Worksheet sheet = wb.Worksheets[sheetIndex];
+            // 获取key和value值
+            for (int i = 0; i <= sheet.Cells.MaxDataRow; i++)
+            {
+                Cell key = sheet.Cells[i, col1];
+                Cell value = sheet.Cells[i, col2];
+                if (key != null && value != null)
+                {
+                    if (!dict.ContainsKey(key.StringValue))
+                    {
+                        if (key.StringValue != "" && value.StringValue != "")   // 空值不纳入
+                        {
+                            dict.Add(key.StringValue, value.DoubleValue);
+                        }
+                    }
+                }
+            }
+            wb.Dispose();
+            // 返回dict
+            return dict;
+        }
+
+        // 从Excel文件中获取Dictionary
         public static Dictionary<string, string> GetDictFromExcelAll(string excelPath, int col1 = 0, int col2 = 1)
         {
             // 定义字典
@@ -941,9 +1150,9 @@ namespace CCTool.Scripts.ToolManagers
             // 获取key和value值
             for (int i = 0; i <= sheet.Cells.MaxDataRow; i++)
             {
-                Cell key = sheet.Cells[i,col1];
+                Cell key = sheet.Cells[i, col1];
                 Cell value = sheet.Cells[i, col2];
-                if (key!=null && value!=null)
+                if (key != null && value != null)
                 {
                     if (!dict.ContainsKey(key.StringValue))
                     {
@@ -957,7 +1166,7 @@ namespace CCTool.Scripts.ToolManagers
         }
 
         // 从Excel文件中获取List
-        public static List<string> GetListFromExcel(string excelPath, int col, int startRow =0)
+        public static List<string> GetListFromExcel(string excelPath, int col, int startRow = 0)
         {
             // 定义列表
             List<string> list = new List<string>();
@@ -971,7 +1180,7 @@ namespace CCTool.Scripts.ToolManagers
             // 获取key和value值
             for (int i = startRow; i <= sheet.Cells.MaxDataRow; i++)
             {
-                Cell cell = sheet.Cells[i,col];
+                Cell cell = sheet.Cells[i, col];
                 if (cell != null)
                 {
                     string strValue = cell.StringValue;
@@ -1083,7 +1292,7 @@ namespace CCTool.Scripts.ToolManagers
 
             SheetRender sr = new SheetRender(sheet, imgOptions);
             string parentDirectory = System.IO.Directory.GetParent(excelPath).FullName;
-            string wbName = wb.FileName[(wb.FileName.LastIndexOf(@"\") + 1)..].Replace(".xslx","");
+            string wbName = wb.FileName[(wb.FileName.LastIndexOf(@"\") + 1)..].Replace(".xslx", "");
 
             string pathsave = parentDirectory + $@"\{wbName}.jpg";
             sr.ToImage(0, pathsave);
@@ -1091,5 +1300,164 @@ namespace CCTool.Scripts.ToolManagers
             // 保存
             wb.Dispose();
         }
+
+        // 合并Excel文件同值列
+        public static void ExcelMergeSameCol(string excelPath, int sheet_in_col, int startRow = 0)
+        {
+            // 获取工作薄、工作表
+            string excelFile = excelPath.GetExcelPath();
+            int sheetIndex = excelPath.GetExcelSheetIndex();
+            // 打开工作薄
+            Workbook wb = OfficeTool.OpenWorkbook(excelFile);
+            // 打开工作表
+            Worksheet sheet = wb.Worksheets[sheetIndex];
+            Cells cells = sheet.Cells;
+
+            // 初始化列表
+            string previous = "";
+            List<List<int>> rowsList = new List<List<int>>();
+            List<int> newRows = new List<int>();
+            // 逐行处理
+            for (int i = startRow; i < cells.MaxDataRow; i++)
+            {
+                //  获取目标cell
+                Cell inCell = cells[i, sheet_in_col];
+
+                // 属性映射
+                if (inCell is not null)
+                {
+                    string va = inCell.StringValue;
+                    if (va != previous)
+                    {
+                        // 如果不是刚开始的时候，并且合并行大于1时，就把列表发达给rowsList
+                        if (previous != "" && newRows[1] > 1)
+                        {
+                            rowsList.Add(new List<int> { newRows[0], newRows[1] });
+                            previous = va;
+                            newRows[0] = i;     // 起始格
+                            newRows[1] = 1;    // 合并行数
+                        }
+                        else
+                        {
+                            previous = va;
+                            newRows.Add(i);   // 起始格
+                            newRows.Add(1);   // 合并行数
+                        }
+                    }
+                    else
+                    {
+                        newRows[1] += 1;    // 合并行数+1
+                    }
+                }
+            }
+
+            // 合并处理
+            foreach (var rows in rowsList)
+            {
+                int start = rows[0];
+                int count = rows[1];
+                cells.Merge(start, sheet_in_col, count, 1);
+            }
+
+            // 保存
+            wb.Save(excelFile);
+            wb.Dispose();
+        }
+
+        // 分割Excel
+        public static void ExcelSpliteSheets(string excelPath, string folderPath)
+        {
+            // 获取工作薄、工作表
+            string excelFile = excelPath.GetExcelPath();
+            // 打开工作薄
+            Workbook wb = OpenWorkbook(excelFile);
+            //  获取工作表
+            WorksheetCollection sheets = wb.Worksheets;
+            // 分割
+            foreach (Worksheet sheet in sheets)
+            {
+                // 筛选一下，如果sheet没内容，就跳过
+                Cells cells = sheet.Cells;
+                if (cells.MaxDataRow < 0)
+                {
+                    continue;
+                }
+                // 新建工作薄
+                Workbook newWb = new Workbook();
+                newWb.Worksheets[0].Copy(sheet);
+
+                // 保存
+                newWb.Save(@$"{folderPath}\{sheet.Name}.xlsx", SaveFormat.Xlsx);
+                newWb.Dispose();
+            }
+            wb.Dispose();
+        }
+
+        // 合并Excel
+        public static void ExcelMergeSheets(string excelPath, string folderPath, bool isExcel)
+        {
+            // 获取所有excel文件
+            List<string> xlsList = folderPath.GetAllFiles(".xls");
+            List<string> xlsxList = folderPath.GetAllFiles(".xlsx");
+            xlsList.AddRange(xlsxList);
+
+            // 复制Excel表
+            BaseTool.CopyResourceFile(@"CCTool.Data.Excel.界线描述表.xlsx", excelPath);
+
+            // 获取工作薄、工作表
+            string excelFile = excelPath.GetExcelPath();
+            // 打开工作薄
+            Workbook targetWB = OpenWorkbook(excelFile);
+
+            // 合并
+            foreach (string xlsFile in xlsList)
+            {
+                // 打开工作薄
+                Workbook originWB = OpenWorkbook(xlsFile);
+                //  获取工作表
+                WorksheetCollection sheets = originWB.Worksheets;
+                foreach (Worksheet sheet in sheets)
+                {
+                    // 筛选一下，如果sheet没内容，就跳过
+                    Cells cells = sheet.Cells;
+                    if (cells.MaxDataRow < 0)
+                    {
+                        continue;
+                    }
+                    // 获取sheet名称
+                    string sheetName = "范例";
+                    string excelName = xlsFile[(xlsFile.LastIndexOf(@"\") + 1)..xlsFile.LastIndexOf(@".")];
+                    if (isExcel)
+                    {
+                        sheetName = excelName;
+                    }
+                    else
+                    {
+                        sheetName = $"{excelName}_{sheet.Name}";
+                    }
+                    // 插入一个空白页
+                    targetWB.Worksheets.Add(sheetName);
+                    targetWB.Worksheets[sheetName].Copy(sheet);
+                    // 删除第一页
+                    targetWB.Worksheets.RemoveAt("sheet1");
+                }
+                originWB.Dispose();
+            }
+            // 保存
+            targetWB.Save(excelPath);
+            targetWB.Dispose();
+        }
+
+        /// Words部分
+        // 打开Document
+        public static Aspose.Words.Document OpenDocument(string wordPath)
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            Aspose.Words.LoadOptions loadOptinos = new Aspose.Words.LoadOptions(Aspose.Words.LoadFormat.Auto, null, null);
+
+            Aspose.Words.Document doc = new Aspose.Words.Document(wordPath);
+            return doc;
+        }
+
     }
 }

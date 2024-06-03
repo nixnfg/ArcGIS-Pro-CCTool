@@ -39,15 +39,21 @@ namespace CCTool.Scripts.DataPross.Excel
         public Polygon2BoundaryPoint()
         {
             InitializeComponent();
+
+            combox_ptDigit.Items.Add("1");
+            combox_ptDigit.Items.Add("2");
+            combox_ptDigit.Items.Add("3");
+            combox_ptDigit.Items.Add("4");
+            combox_ptDigit.SelectedIndex = 2;
         }
 
         // 定义一个进度框
         private ProcessWindow processwindow = null;
-        string tool_name = "设置界址点从西北角开始";
+        string tool_name = "面要素导出界址点要素";
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         private void openFeatureClassButton_Click(object sender, RoutedEventArgs e)
@@ -60,8 +66,13 @@ namespace CCTool.Scripts.DataPross.Excel
             try
             {
                 // 获取参数
-                string in_fc = combox_fc.Text;
+                string in_fc = combox_fc.ComboxText();
                 string out_point = textFeatureClassPath.Text;
+
+                string zdh_field = combox_field.ComboxText();
+
+                bool xyReserve = (bool)check_xy.IsChecked;
+                int ptDigit = int.Parse(combox_ptDigit.Text);
 
                 // 判断参数是否选择完全
                 if (in_fc == "" || out_point == "")
@@ -74,15 +85,31 @@ namespace CCTool.Scripts.DataPross.Excel
                 string gdbPath = out_point[..(out_point.IndexOf(".gdb") + 4)];
                 string fcName = out_point[(out_point.LastIndexOf(@"\") + 1)..];
 
+                // 判断要素名是不是以数字开头
+                bool isNum = fcName.IsNumeric();
+                if (isNum)
+                {
+                    MessageBox.Show("输出的要素名不规范，不能以数字开头！");
+                    return;
+                }
                 // 打开进度框
                 ProcessWindow pw = UITool.OpenProcessWindow(processwindow, tool_name);
                 DateTime time_base = DateTime.Now;
                 pw.AddMessage("开始执行" + tool_name + "工具…………" + time_base + "\r", Brushes.Green);
+                pw.AddMessage("GO" + "\r", Brushes.Green);
+                pw.AddProcessMessage(10, time_base, $"要素名：{fcName}");
 
                 Close();
                 await QueuedTask.Run(() =>
                 {
-                    pw.AddMessage("获取目标FeatureLayer");
+                    // 判断一下是否存在目标要素，如果有的话，就删掉重建
+                    bool isHaveTarget = GisTool.IsHaveFeaturClass(gdbPath, fcName);
+                    if (isHaveTarget)
+                    {
+                        Arcpy.Delect(out_point);
+                    }
+
+                    pw.AddProcessMessage(10, time_base, $"获取目标FeatureLayer");
                     // 获取目标FeatureLayer
                     FeatureLayer featurelayer = in_fc.TargetFeatureLayer();
                     // 获取坐标系
@@ -97,22 +124,29 @@ namespace CCTool.Scripts.DataPross.Excel
 
                     pw.AddProcessMessage(20, time_base, $"处理面要素，按西北角起始，顺时针重排");
 
-                    List<List<List<MapPoint>>> mapPoints = new List<List<List<MapPoint>>>();
+                    Dictionary<List<List<MapPoint>>, string> mapPoints = new Dictionary<List<List<MapPoint>>, string>();
                     // 遍历面要素类中的所有要素
-                    RowCursor cursor = featurelayer.Search();
+                    RowCursor cursor = featurelayer.GetSelectCursor();
                     while (cursor.MoveNext())
                     {
                         using var feature = cursor.Current as Feature;
                         // 获取要素的几何
-                        ArcGIS.Core.Geometry.Polygon geometry = feature.GetShape() as ArcGIS.Core.Geometry.Polygon;
+                        Polygon geometry = feature.GetShape() as Polygon;
+
                         if (geometry != null)
                         {
+                            string feature_name = "";
+                            if (zdh_field != "")
+                            {
+                                feature_name =feature[zdh_field]?.ToString();   // 宗地号
+                            }
                             // 获取面要素的所有折点【按西北角起始，顺时针重排】
-                            mapPoints.Add(geometry.ReshotMapPoint());
+                            mapPoints.Add(geometry.ReshotMapPoint(), feature_name);
                         }
+                        
                     }
 
-                    pw.AddProcessMessage(00, time_base, "创建一个点要素");
+                    pw.AddProcessMessage(10, time_base, "创建一个点要素");
                     /// 创建点要素
                     // 创建一个ShapeDescription
                     var shapeDescription = new ShapeDescription(GeometryType.Point, sr)
@@ -127,6 +161,12 @@ namespace CCTool.Scripts.DataPross.Excel
                     var pointX = new ArcGIS.Core.Data.DDL.FieldDescription("x坐标", FieldType.Double);
                     var pointY = new ArcGIS.Core.Data.DDL.FieldDescription("y坐标", FieldType.Double);
 
+                    var bs = pointIndex;
+                    if (zdh_field != "")
+                    {
+                        bs = new ArcGIS.Core.Data.DDL.FieldDescription(zdh_field, FieldType.String);
+                    }
+
                     // 打开数据库gdb
                     using (Geodatabase gdb = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(gdbPath))))
                     {
@@ -135,6 +175,12 @@ namespace CCTool.Scripts.DataPross.Excel
                         {
                             polygonIndex,pointIndex, partIndex,pointX, pointY
                         };
+
+                        if (zdh_field != "")
+                        {
+                            fieldDescriptions.Add(bs);
+                        }
+                        
                         // 创建FeatureClassDescription
                         var fcDescription = new FeatureClassDescription(fcName, fieldDescriptions, shapeDescription);
                         // 创建SchemaBuilder
@@ -155,21 +201,50 @@ namespace CCTool.Scripts.DataPross.Excel
                                 // 获取要素定义
                                 FeatureClassDefinition featureClassDefinition = featureClass.GetDefinition();
                                 // 循环创建点
-                                for (int i = 0; i < mapPoints.Count; i++)
+                                int index = 1;
+                                foreach (var mp in mapPoints)
                                 {
-                                    for (int j = 0; j < mapPoints[i].Count; j++)
+                                    int pointIndex = 1;  // 起始点序号
+                                    int lastRowCount = 0;  // 上一轮的行数
+                                    var mpList = mp.Key;
+                                    for (int j = 0; j < mpList.Count; j++)
                                     {
-                                        for (int k = 0; k < mapPoints[i][j].Count; k++)
+                                        for (int k = 0; k < mpList[j].Count; k++)
                                         {
                                             // 创建RowBuffer
                                             using RowBuffer rowBuffer = featureClass.CreateRowBuffer();
-                                            MapPoint pt = mapPoints[i][j][k];
-                                            // 写入字段值
-                                            rowBuffer["原要素编码"] = i + 1;
-                                            rowBuffer["序号"] = $"J{k + 1}";
-                                            rowBuffer["点号"] = j + 1;
-                                            rowBuffer["x坐标"] = pt.X;
-                                            rowBuffer["y坐标"] = pt.Y;
+                                            MapPoint pt = mpList[j][k];
+                                            // 写入字段值和标记代码
+                                            rowBuffer["原要素编码"] = index;
+
+                                            if (zdh_field != "")
+                                            {
+                                                rowBuffer[zdh_field] = mp.Value;
+                                            }
+
+                                            if (xyReserve)
+                                            {
+                                                rowBuffer["x坐标"] = Math.Round(pt.Y, ptDigit);
+                                                rowBuffer["y坐标"] = Math.Round(pt.X, ptDigit);
+                                            }
+                                            else
+                                            {
+                                                rowBuffer["x坐标"] = Math.Round(pt.X, ptDigit);
+                                                rowBuffer["y坐标"] = Math.Round(pt.Y, ptDigit);
+                                            }
+
+                                            // 序号
+                                            if (pointIndex - lastRowCount == mpList[j].Count)    // 找到当前环的最后一点
+                                            {
+                                                rowBuffer["序号"] = $"J{lastRowCount + 1 - j}";
+                                            }
+                                            else
+                                            {
+                                                rowBuffer["序号"] = $"J{pointIndex - j}";
+                                            }
+                                            // 点号
+                                            rowBuffer["点号"] = $"{pointIndex}";
+
                                             // 坐标
                                             Coordinate2D newCoordinate = new Coordinate2D(pt.X, pt.Y);
                                             // 创建点几何
@@ -180,9 +255,14 @@ namespace CCTool.Scripts.DataPross.Excel
                                             // 在表中创建新行
                                             using Feature feature = featureClass.CreateRow(rowBuffer);
                                             context.Invalidate(feature);      // 标记行为无效状态
+
+                                            pointIndex++;
                                         }
+                                        lastRowCount += mpList[j].Count;
                                     }
+                                    index++;
                                 }
+   
                             }, featureClass);
 
                             // 执行编辑操作
@@ -203,6 +283,17 @@ namespace CCTool.Scripts.DataPross.Excel
                 MessageBox.Show(ee.Message + ee.StackTrace);
                 return;
             }
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135838160?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
+        }
+
+        private void combox_field_DropDown(object sender, EventArgs e)
+        {
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_field);
         }
     }
 }

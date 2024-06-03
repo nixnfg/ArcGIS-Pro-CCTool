@@ -6,24 +6,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="度分秒转十进制度" Height="350" Width="500" WindowStartupLocation="CenterScreen"
+        Title="度分秒转十进制度" Height="350" Width="500" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="输入要素图层或独立表：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="368"/>
-        <ComboBox x:Name="combox_fc" Margin="15,35,15,0" VerticalAlignment="Top" DropDownOpened="combox_fc_DropDown"/>
-        <Label x:Name="lb" Content="选择度分秒字段 (文本型)：" HorizontalAlignment="Left" Margin="15,112,0,0" VerticalAlignment="Top" Width="238"/>
-        <ComboBox x:Name="combox_field" Margin="15,137,285,0" VerticalAlignment="Top" DropDownOpened="combox_field_DropDown" DropDownClosed="combox_field_Closed"/>
-        <Label Content="转换模式：" HorizontalAlignment="Left" Margin="11,61,0,0" VerticalAlignment="Top" Width="158"/>
-        <ComboBox x:Name="combox_model" Margin="15,86,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" DropDownClosed="combox_model_Closed"/>
-        <Button x:Name="btn_go" Content="运行" Margin="0,0,15,20" Height="19" VerticalAlignment="Bottom" Click="btn_go_Click" HorizontalAlignment="Right" Width="59"/>
-        <ListBox x:Name="listBox_field" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="15,167,285,20"/>
+        <ComboBox x:Name="combox_fc" Style="{StaticResource ComboBox_icon}" Margin="15,35,15,0" VerticalAlignment="Top" DropDownOpened="combox_fc_DropDown" DropDownClosed="combox_fc_Closed"/>
+
+        <Label Content="转换模式：" Margin="0,61,62,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="158"/>
+        <ComboBox x:Name="combox_model" Margin="0,86,16,0" VerticalAlignment="Top" DropDownClosed="combox_model_Closed" HorizontalAlignment="Right" Width="200"/>
+        <ListBox x:Name="listBox_field" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="15,86,250,20"/>
+        <Label Content="转换字段：" HorizontalAlignment="Left" Margin="10,61,0,0" VerticalAlignment="Top" Width="158"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,16,20"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,98,20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+
 
     </Grid>
 </controls:ProWindow>

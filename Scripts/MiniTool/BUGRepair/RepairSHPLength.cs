@@ -53,7 +53,7 @@ namespace CCTool.Scripts.MiniTool.BUGRepair
             }
 
             // 弹出提示框
-            MessageBox.Show("SHP要素【字段名长度】修改为10(5个汉字)！\r所有版本的ArcGIS和ArcGIS Pro都适用。");
+            MessageBox.Show("已修复！\rSHP要素【字段名长度】修改为10(5个汉字)！\r所有版本的ArcGIS和ArcGIS Pro都适用。");
         }
     }
 }

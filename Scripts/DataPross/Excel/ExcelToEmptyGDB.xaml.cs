@@ -1,4 +1,5 @@
-﻿using ArcGIS.Desktop.Framework.Threading.Tasks;
+﻿using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 using Aspose.Cells;
 using CCTool.Scripts.Manager;
 using CCTool.Scripts.ToolManagers;
@@ -154,17 +155,20 @@ namespace CCTool.Scripts.UI.ProWindow
                             }
                             if (mc != "" && dm != "")
                             {
-                                string mc_value = mc.ToString().Replace("\n", "");               // 字段别名
-                                string dm_value = dm.ToString().Replace("\n", "");              // 字段名
+                                string aliasName = mc.ToString().Replace("\n", "");               // 字段别名
+                                string fieldName = dm.ToString().Replace("\n", "");              // 字段名
                                 string field_type = GetFeildType(sheet.Cells[j, 3].StringValue);          // 字段类型
                                 // 创建字段
-                                Arcpy.AddField(gdb_path + @"\" + name_excel + @".gdb\" + name_feature, dm_value, field_type, mc_value, length_value);
+                                string tartgetFC = gdb_path + @"\" + name_excel + @".gdb\" + name_feature;
+                                Arcpy.AddField(tartgetFC, fieldName, field_type, aliasName, length_value);
+                                //EditTool.AddField(tartgetFC, dm_value, field_type, length_value, mc_value);
+
                             }
                         }
                     }
                     wb.Dispose();
 
-                    pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                    pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
                 });
 
             }
@@ -187,15 +191,31 @@ namespace CCTool.Scripts.UI.ProWindow
         }
 
         // 字段类型转换
+        public static FieldType GetFeildType2(string type)
+        {
+            FieldType fd_type = FieldType.String;
+            if (type == "Float") { fd_type = FieldType.Double; }
+            else if (type == "Char" || type == "VarChar") { fd_type = FieldType.String; }
+            else if (type == "Int") { fd_type = FieldType.Integer; }
+            else if (type == "Date") { fd_type = FieldType.Date; }
+            return fd_type;
+        }
+
+        // 字段类型转换
         public static string GetFeildType(string type)
         {
-            string fd_type = type;
-            if (type == "Float") { fd_type = "Double"; }
-            else if (type == "Char" || type == "VarChar") { fd_type = "Text"; }
-            else if (type == "Int") { fd_type = "Long"; }
+            string fd_type = "TEXT";
+            if (type == "Float") { fd_type = "DOUBLE"; }
+            else if (type == "Char" || type == "VarChar") { fd_type = "TEXT"; }
+            else if (type == "Int") { fd_type = "LONG"; }
             else if (type == "Date") { fd_type = "DATE"; }
-
             return fd_type;
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135835783?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
         }
     }
 }

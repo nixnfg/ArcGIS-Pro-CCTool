@@ -82,6 +82,7 @@ namespace CCTool.Scripts.UI.ProWindow
                         inspector.Load(mapMember, oids[0]);
                         // 获取选定要素的几何类型
                         var geometryType = inspector.Shape.GeometryType;
+
                         // 检查几何类型是否为面要素
                         if (geometryType == GeometryType.Polygon)
                         {

@@ -132,7 +132,7 @@ namespace CCTool.Scripts.UI.ProWindow
                     File.Delete(folder_path + @"\三调用地自转换.xlsx");
                     
                 });
-                pw.AddProcessMessage(40, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {

@@ -39,11 +39,11 @@ namespace CCTool.Scripts.DataPross.Excel
 
         // 定义一个进度框
         private ProcessWindow processwindow = null;
-        string tool_name = "面要素导出界址点要素";
+        string tool_name = "设置界址点从西北角开始";
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
@@ -51,7 +51,7 @@ namespace CCTool.Scripts.DataPross.Excel
             try
             {
                 // 获取参数
-                string in_fc = combox_fc.Text;
+                string in_fc = combox_fc.ComboxText();
 
                 // 判断参数是否选择完全
                 if (in_fc == "")
@@ -104,6 +104,12 @@ namespace CCTool.Scripts.DataPross.Excel
                 MessageBox.Show(ee.Message + ee.StackTrace);
                 return;
             }
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135837645?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
         }
     }
 }

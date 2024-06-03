@@ -6,25 +6,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="添加图层名称和路径到字段" Height="400" Width="500" WindowStartupLocation="CenterScreen"
+        Title="添加图层名称和路径到字段" Height="400" Width="500" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="选择要素图层或表：" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Top" Width="186"/>
-        <Button x:Name="btn_go" Content="执行" Margin="0,0,10,19" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="56" Click="btn_go_click"/>
         <ListBox x:Name="listbox_fc" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="15,44,0,76" HorizontalAlignment="Left" Width="264"/>
         <GroupBox Header="添加项(现有或新建字段)" Margin="292,35,10,75"/>
         <CheckBox x:Name="checkBox_name" Content="图层名称" HorizontalAlignment="Left" Margin="307,67,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <TextBox x:Name="txt_name" HorizontalAlignment="Left" Margin="391,65,0,0" TextWrapping="Wrap" Text="LayerName" VerticalAlignment="Top" Width="90"/>
+        <TextBox x:Name="txt_name" HorizontalAlignment="Left" Margin="391,65,0,0" TextWrapping="NoWrap" Text="LayerName" VerticalAlignment="Top" Width="90"/>
         <CheckBox x:Name="checkBox_path" Content="图层路径" HorizontalAlignment="Left" Margin="307,96,0,0" VerticalAlignment="Top" IsChecked="True"/>
-        <TextBox x:Name="txt_path" HorizontalAlignment="Left" Margin="391,94,0,0" TextWrapping="Wrap" Text="LayerPath" VerticalAlignment="Top" Width="90"/>
-        <Button x:Name="btn_select" Content="全选" HorizontalAlignment="Left" Margin="15,0,0,47" Width="65" Click="btn_select_Click" Height="19" VerticalAlignment="Bottom"/>
-        <Button x:Name="btn_unSelect" Content="取消全选" HorizontalAlignment="Left" Margin="94,0,0,47" Width="65" Click="btn_unSelect_Click" Height="19" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="txt_path" HorizontalAlignment="Left" Margin="391,94,0,0" TextWrapping="NoWrap" Text="LayerPath" VerticalAlignment="Top" Width="90"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,11,24"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,93,24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_click"/>
+
+        <Button x:Name="btn_select" Style="{StaticResource btn_selectAll}" Margin="0,0,415,45"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_select_Click" />
+
+        <Button x:Name="btn_unSelect" Style="{StaticResource btn_unSelectAll}" Margin="0,0,333,45"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_unSelect_Click" />
+
     </Grid>
 </controls:ProWindow>

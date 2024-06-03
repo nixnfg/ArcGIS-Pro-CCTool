@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CCTool.Scripts.ToolManagers;
+using NPOI.OpenXmlFormats.Vml;
 
 namespace CCTool.Scripts.UI.ProWindow
 {
@@ -37,7 +38,7 @@ namespace CCTool.Scripts.UI.ProWindow
 
         // 定义一个进度框
         private ProcessWindow processwindow = null;
-        string tool_name = "合并文件夹下的所有CAD文件";
+        string tool_name = "批量CAD合并为要素";
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
         {
@@ -53,6 +54,18 @@ namespace CCTool.Scripts.UI.ProWindow
                 if (folder_path == "" || featureClass_path == "")
                 {
                     MessageBox.Show("有必选参数为空！！！");
+                    return;
+                }
+
+                // 获取目标数据库和点要素名
+                string gdbPath = featureClass_path[..(featureClass_path.IndexOf(".gdb") + 4)];
+                string fcName = featureClass_path[(featureClass_path.LastIndexOf(@"\") + 1)..];
+
+                // 判断要素名是不是以数字开头
+                bool isNum = fcName.IsNumeric();
+                if (isNum)
+                {
+                    MessageBox.Show("输出的要素名不规范，不能以数字开头！");
                     return;
                 }
 
@@ -111,7 +124,7 @@ namespace CCTool.Scripts.UI.ProWindow
                     LayerFactory.Instance.CreateLayer(new Uri(featureClass_path), map);
 
                 });
-                pw.AddProcessMessage(40, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -128,6 +141,12 @@ namespace CCTool.Scripts.UI.ProWindow
         private void openFeatureClassButton_Click(object sender, RoutedEventArgs e)
         {
             textFeatureClassPath.Text = UITool.SaveDialogFeatureClass();
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135841060?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
         }
     }
 }

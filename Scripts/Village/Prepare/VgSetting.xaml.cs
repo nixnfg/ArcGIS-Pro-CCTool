@@ -54,7 +54,7 @@ namespace CCTool.Scripts.UI.ProWindow
                 MessageBox.Show("请输入一个整数型数字！！");
                 return;
             }
-            
+
         }
         // 窗体加载
         private void Form_Load(object sender, EventArgs e)
@@ -67,7 +67,9 @@ namespace CCTool.Scripts.UI.ProWindow
                 textDPI.Text = store.Value.dpi.ToString();
                 // 地图
                 combox_basemap.SelectedIndex = store.Value.basemapIndex;
-                
+                // 是否调用中间数据
+                check_review.IsChecked = store.Value.isReview;
+
                 listBox.Items.Clear();
                 foreach (var item in store.Value.listPic)
                 {
@@ -88,7 +90,8 @@ namespace CCTool.Scripts.UI.ProWindow
                 // 保存参数
                 store.Value.dpi = int.Parse(textDPI.Text);
                 store.Value.listPic = listBox.Items.Cast<string>().ToList();
-                store.Value.basemapIndex= combox_basemap.SelectedIndex;
+                store.Value.basemapIndex = combox_basemap.SelectedIndex;
+                store.Value.isReview = (bool)check_review.IsChecked;
                 // 保存store
                 store.Save();
             }
@@ -112,8 +115,10 @@ namespace CCTool.Scripts.UI.ProWindow
         public int dpi { get; set; } = 300;
         // 地图
         public int basemapIndex { get; set; } = 0;
+        // 是否调用中间数据
+        public bool isReview { get; set; } = false;
         // 导出图纸列表
-        public List<string> listPic { get; set; } = new List<string>() { } ;
+        public List<string> listPic { get; set; } = new List<string>() { };
         // 工具框尺寸
         public Size formSize { get; set; } = new Size(400, 200);
         // 工具框位置

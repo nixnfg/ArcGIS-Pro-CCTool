@@ -27,6 +27,8 @@ using System.Windows.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;
 using System.IO;
 using CCTool.Scripts.ToolManagers;
+using System.Threading;
+using CheckBox = System.Windows.Controls.CheckBox;
 
 namespace CCTool.Scripts.UI.ProWindow
 {
@@ -70,7 +72,10 @@ namespace CCTool.Scripts.UI.ProWindow
                 int dpi = int.Parse(text_dpi.Text);
                 string pic_type = "";
                 string layoutName = comBox_layout.Text;
-                string baselayer = comBox_baselayer.Text;
+                string baselayer = comBox_baselayer.ComboxText();
+
+                // 获取导出图层
+                List<string> listLayer = UITool.GetStringFromListbox(listBox_layer);
 
                 if (rb_jpg.IsChecked == true)
                 {
@@ -105,7 +110,6 @@ namespace CCTool.Scripts.UI.ProWindow
 
                 await QueuedTask.Run(() =>
                 {
-                    
                     // 获取图层显示信息
                     Dictionary<string, bool> dic =  MapCtlTool.GetLayerVisible();
                     // 获取图底名称
@@ -118,16 +122,16 @@ namespace CCTool.Scripts.UI.ProWindow
                     }
 
                     // 去除数字标记
-                    for (int i = 0; i < listBox_layer.Items.Count; i++)
+                    for (int i = 0; i < listLayer.Count; i++)
                     {
-                        string text = (string)listBox_layer.Items[i];
+                        string text = listLayer[i];
                         if (text.Contains("："))
                         {
                             text = text[..text.IndexOf("：")];
                         }
                     }
 
-                    foreach (string item in listBox_layer.Items)
+                    foreach (string item in listLayer)
                     {
                         pw.AddProcessMessage(20, time_base, "导出图层：" + item);
 
@@ -169,6 +173,9 @@ namespace CCTool.Scripts.UI.ProWindow
                             LayersAndAttributes = LayersAndAttributes.LayersAndAttributes   // 图层  属性
                         };
 
+                        pw.AddProcessMessage(0, time_base, "暂停2秒", Brushes.Green);
+                        Thread.Sleep(2000);
+
                         // 导出JPG
                         if (pic_type == "jpg")
                         {
@@ -189,7 +196,7 @@ namespace CCTool.Scripts.UI.ProWindow
                     // 恢复图层显示信息
                     MapCtlTool.SetLayerVisible(dic);
                 });
-                pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -197,37 +204,11 @@ namespace CCTool.Scripts.UI.ProWindow
                 return;
             }
 
-        }
-
-        private void comBox_layer_DropOpen(object sender, EventArgs e)
-        {
-            UITool.AddFeatureLayersToCombox(comBox_layer);
         }
 
         private void comBox_layout_DropOpen(object sender, EventArgs e)
         {
             UITool.AddAllLayoutToCombox(comBox_layout);
-        }
-
-        private void comBox_layer_DropClose(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!listBox_layer.Items.Contains(comBox_layer.Text))
-                {
-                    // 在UI线程上执行添加item的操作
-                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        listBox_layer.Items.Add(comBox_layer.Text);
-                    });
-                }
-            }
-            catch (Exception ee)
-            {
-                MessageBox.Show(ee.Message + ee.StackTrace);
-                return;
-            }
-            
         }
 
         // 移除列表中选定的item
@@ -281,8 +262,45 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void comBox_baselayer_DropOpen(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(comBox_baselayer);
+            UITool.AddFeatureLayersToComboxPlus(comBox_baselayer);
         }
+        // 加载图层
+        private void listBox_layer_Load(object sender, RoutedEventArgs e)
+        {
+            UITool.AddCanseeLayersToListbox(listBox_layer);
+        }
+
+        private void btn_select_Click(object sender, RoutedEventArgs e)
+        {
+            if (listBox_layer.Items.Count == 0)
+            {
+                MessageBox.Show("列表内没有字段！");
+                return;
+            }
+
+            var list_field = listBox_layer.Items;
+            foreach (CheckBox item in list_field)
+            {
+                item.IsChecked = true;
+            }
+        }
+
+        private void btn_unSelect_Click(object sender, RoutedEventArgs e)
+        {
+            if (listBox_layer.Items.Count == 0)
+            {
+                MessageBox.Show("列表内没有字段！");
+                return;
+            }
+
+            var list_field = listBox_layer.Items;
+            foreach (CheckBox item in list_field)
+            {
+                item.IsChecked = false;
+            }
+        }
+
+
     }
     // 参数设置
     public class LayoutSettings

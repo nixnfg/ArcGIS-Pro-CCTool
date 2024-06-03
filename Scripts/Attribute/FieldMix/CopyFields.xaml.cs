@@ -50,7 +50,7 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void combox_fc_before_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayerAndTableToCombox(combox_fc_before);
+            UITool.AddFeatureLayerAndTableToComboxPlus(combox_fc_before);
         }
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
@@ -64,7 +64,7 @@ namespace CCTool.Scripts.UI.ProWindow
 
                 pw.AddProcessMessage(10, "获取相关参数");
                 // 参数获取
-                string fc_before = combox_fc_before.Text;
+                string fc_before = combox_fc_before.ComboxText();
                 var fc_after = listbox_targetFeature.Items;
                 var fileds = listbox_field.Items;
 
@@ -114,12 +114,20 @@ namespace CCTool.Scripts.UI.ProWindow
                     {
                         foreach (var fd in fieldDefs)
                         {
-                            pw.AddProcessMessage(10, time_base, $"【{targetFeatureClass}】__ 复制字段：{fd.fldName}");
-                            Arcpy.AddField(targetFeatureClass, fd.fldName, fd.fldType, fd.fldAlias, fd.fldLength);
+                            if (!GisTool.IsHaveFieldInTarget(targetFeatureClass, fd.fldName))
+                            {
+                                pw.AddProcessMessage(10, time_base, $"【{targetFeatureClass}】__ 复制字段：{fd.fldName}");
+                                Arcpy.AddField(targetFeatureClass, fd.fldName, fd.fldType, fd.fldAlias, fd.fldLength);
+                            }
+                            else
+                            {
+                                pw.AddProcessMessage(10, time_base, $"【{targetFeatureClass}】已经存在字段：{fd.fldName}", Brushes.IndianRed);
+                            }
+                            
                         }
                     }
                 });
-                pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -132,10 +140,10 @@ namespace CCTool.Scripts.UI.ProWindow
         {
             try
             {
-                string fcPath = combox_fc_before.Text;
+                string fcPath = combox_fc_before.ComboxText();
 
                 // 生成字段列表
-                if (combox_fc_before.Text != "")
+                if (fcPath != "")
                 {
                     UITool.AddFieldsToListBox(listbox_field,fcPath);
                 }
@@ -210,6 +218,12 @@ namespace CCTool.Scripts.UI.ProWindow
             {
                 item.IsChecked = false;
             }
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135742751?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

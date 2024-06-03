@@ -599,6 +599,7 @@ namespace CCTool.Scripts.Manager
 
             Arcpy.Dissolve(in_gdb + @"\现状用地", def_gdb + @"\tem_bj");     // 生成边界
             Arcpy.CopyFeatures(in_gdb + @"\规划用地", def_gdb + @"\tem_ghyd");      // 复制规划用地
+
             //  裁剪生态保护红线
             if (GisTool.IsHaveFeaturClass(in_gdb, "生态保护红线"))
             {
@@ -994,12 +995,11 @@ namespace CCTool.Scripts.Manager
                     }
                     row.Store();
                 }
-
-                // 删除中间字段
-                Arcpy.DeleteField(yd, "用地分类;YDLXMC");
-                // 删除中间数据
-                File.Delete(folder_path + @"\用地用海代码_村庄功能.xlsx");
             }
+            // 删除中间字段
+            Arcpy.DeleteField(yd, "用地分类;YDLXMC");
+            // 删除中间数据
+            File.Delete(folder_path + @"\用地用海代码_村庄功能.xlsx");
         }
         // 生成历史文化保护区LSWHBHQ
         public static void CreateLSWHBHQ(string village_name, ProcessWindow pw, DateTime time_base, bool isAddMessage = false)
@@ -1142,10 +1142,10 @@ namespace CCTool.Scripts.Manager
                         var xzmj = row["现状面积"];
                         var ghmj = row["规划面积"];
 
-                        if (xzmj is not null) { row["JQXZNMJ"] = Math.Round(double.Parse(xzmj.ToString()) / 10000, 2); }          // 现状面积
+                        if (xzmj is not null) { row["JQXZNMJ"] = Math.Round(double.Parse(xzmj.ToString()) / 10000, 6); }          // 现状面积
                         else { row["JQXZNMJ"] = 0; }
 
-                        if (ghmj is not null) { row["GHMBNMJ"] = Math.Round(double.Parse(ghmj.ToString()) / 10000, 2); }         // 规划面积
+                        if (ghmj is not null) { row["GHMBNMJ"] = Math.Round(double.Parse(ghmj.ToString()) / 10000, 6); }         // 规划面积
                         else { row["GHMBNMJ"] = 0; }
 
                         double xz_updata = double.Parse(row["JQXZNMJ"].ToString());      // 更新后现状面积
@@ -1547,6 +1547,9 @@ namespace CCTool.Scripts.Manager
             // 统计面积
             GisTool.MultiStatistics(yd_xz, output_table_xz, statistics_fields, new List<string>() { field_GN }, "总计", 1);
             GisTool.MultiStatistics(yd_gh, output_table_gh, statistics_fields, new List<string>() { field_GN }, "总计", 1);
+
+            if (isAddMessage) { pw.AddProcessMessage(0, time_base, "计算村庄、村域等用地面积", Brushes.Gray); }
+
             // 删除中间字段
             Arcpy.DeleteField(yd_xz, field_GN);
             Arcpy.DeleteField(yd_gh, field_GN);
@@ -1571,6 +1574,15 @@ namespace CCTool.Scripts.Manager
         // 生成规划指标表【Excel】
         public static void CreateExcelGHZBB(string village_name, ProcessWindow pw, DateTime time_base, bool isAddMessage = false)
         {
+            // 获取【是否调用中间数据】
+            string txtPath = @"D:\ProSDKsettings\Settings.txt";
+            bool isReview = txtPath.GetAttFormTxtJson("isReview") switch
+            {
+                "False" => false,
+                "True" => true,
+                _ => false,
+            };
+
             // 获取参数
             string def_folder = Project.Current.HomeFolderPath;     // 工程默认文件夹位置
             string output_folder_path = def_folder + @"\2-输出文件";        // 输出文件包路径
@@ -1578,13 +1590,20 @@ namespace CCTool.Scripts.Manager
             string output_excel_path = output_folder_path + @"\" + village_name + @"表格+图集";  // 输出文件夹的位置
 
             string excel_ZBB = output_excel_path + @"\规划指标一览表.xlsx";    // 输出规划指标一览表Excel
-            string zbb = output_folder_path + @"\" + village_name + @"数据库\规划表格.gdb\GHZBB";   // GHZBB表的位置
+            string zbb_gdb = output_folder_path + @"\" + village_name + @"数据库\规划表格.gdb";   // GHZBB表所在GDB的位置
+            string zbb = zbb_gdb + @"\GHZBB";   // GHZBB表的位置
 
             // 创建文件目录
             CreateTarget(village_name);
-            if (isAddMessage) { pw.AddMessage( "生成规划指标一览表", Brushes.Gray); }
-            // 生成GHZBB
-            CreateGHZBB(village_name, pw, time_base);
+            
+            // 如果不允许调用   或  允许调用但不存在
+            bool isHaveTable = GisTool.IsHaveStandaloneTable(zbb_gdb, "GHZBB");
+            if (isReview == false || (isReview == true && isHaveTable == false))
+            {
+                if (isAddMessage) { pw.AddMessage("生成规划指标一览表", Brushes.Gray); }
+                // 生成GHZBB
+                CreateGHZBB(village_name, pw, time_base);
+            }
 
             if (isAddMessage) { pw.AddProcessMessage(10, time_base, "写入Excel", Brushes.Gray); }
             // 复制Excel表格
@@ -1607,14 +1626,31 @@ namespace CCTool.Scripts.Manager
             string output_excel_path = output_folder_path + @"\" + village_name + @"表格+图集";  // 输出文件夹的位置
 
             string excel_GKFQ = output_excel_path + @"\国土空间管控表.xlsx";    // 输出国土空间管控表Excel
+            string GKBJ_gdb = $@"{output_folder_path}\{village_name}数据库\村庄规划数据库.gdb";   
             string GKBJ = $@"{output_folder_path}\{village_name}数据库\村庄规划数据库.gdb\MBNGH\GKBJ";   // GKBJ的位置
 
-            if (isAddMessage) { pw.AddMessage("生成GKBJ", Brushes.Gray); }
+            
 
             // 创建文件目录
             CreateTarget(village_name, "MBNGH");
-            // 生成GKBJ
-            CreateGKBJ(village_name, pw, time_base);
+
+            // 获取【是否调用中间数据】
+            string txtPath = @"D:\ProSDKsettings\Settings.txt";
+            bool isReview = txtPath.GetAttFormTxtJson("isReview") switch
+            {
+                "False" => false,
+                "True" => true,
+                _ => false,
+            };
+
+            // 如果不允许调用   或  允许调用但不存在
+            bool isHaveTable = GisTool.IsHaveFeaturClass(GKBJ_gdb, "GKBJ");
+            if (isReview == false || (isReview == true && isHaveTable == false))
+            {
+                if (isAddMessage) { pw.AddMessage("生成GKBJ", Brushes.Gray); }
+                // 生成GKBJ
+                CreateGKBJ(village_name, pw, time_base);
+            }
 
             // 汇总指标
             GisTool.MultiStatistics(GKBJ, def_gdb + @"\s_gkbj", "SHAPE_Area SUM", new List<string>() { "GKBJLXMC" }, "合计", 1);
@@ -1633,10 +1669,14 @@ namespace CCTool.Scripts.Manager
         // 生成村域现状图【JPG】
         public static void CreateXZT(string village_name, ProcessWindow pw, DateTime time_base, bool isAddMessage = false)
         {
-            if (isAddMessage) { pw.AddMessage("创建现状指标表", Brushes.Gray); }
-            // 创建现状指标表
-            CreateJPGFolder(village_name);
-            CreateExcelXZTZB(village_name, pw, time_base);
+            // 获取【是否调用中间数据】
+            string txtPath = @"D:\ProSDKsettings\Settings.txt";
+            bool isReview = txtPath.GetAttFormTxtJson("isReview") switch
+            {
+                "False" => false,
+                "True" => true,
+                _ => false,
+            };
 
             // 获取参数
             string def_folder = Project.Current.HomeFolderPath;     // 工程默认文件夹位置
@@ -1648,6 +1688,16 @@ namespace CCTool.Scripts.Manager
             string output_excel_path = output_folder_path + @"\" + village_name + @"表格+图集";  // 输出文件夹的位置
 
             string yd_xz = in_gdb + @"\现状用地";    // 输入现状用地
+
+            CreateJPGFolder(village_name);
+            // 如果不允许调用   或  允许调用但不存在
+            bool isHaveTable = File.Exists($@"{output_excel_path}\现状指标表.xlsx");
+            if (isReview == false || (isReview == true && isHaveTable == false))
+            {
+                if (isAddMessage) { pw.AddMessage("创建现状指标表", Brushes.Gray); }
+                // 创建现状指标表
+                CreateExcelXZTZB(village_name, pw, time_base);
+            }
 
             // 获取excel单元格值的字典和列表
             Dictionary<string, string> dict = OfficeTool.GetDictFromExcel(excel_path + @"\sheet1$");
@@ -1705,7 +1755,7 @@ namespace CCTool.Scripts.Manager
             Map map = mf.Map;                         // 获取主地图
             Layer mapBox = map.FindLayers("Mapbox影像")[0];     // 获取Mapbox影像图层
             Layer mapTD = map.FindLayers("天地图影像")[0];     // 获取天地图影像图层
-            string txtPath = @"D:\ProSDKsettings\Settings.txt";
+
             int mapIndex = int.Parse(txtPath.GetAttFormTxtJson("basemapIndex"));
 
             MapFrame mf_index = layout.FindElement("导航图") as MapFrame;             // 获取索引图框
@@ -1775,7 +1825,7 @@ namespace CCTool.Scripts.Manager
             JPEGFormat JPG = new JPEGFormat()
             {
                 HasWorldFile = true,
-                Resolution = DataStore.vgDPI,
+                Resolution = DataLib.vgDPI,
                 OutputFileName = output_excel_path + @"\现状用地图.jpg",
                 ColorMode = JPEGColorMode.TwentyFourBitTrueColor,
             };
@@ -1797,18 +1847,23 @@ namespace CCTool.Scripts.Manager
             {
                 Arcpy.Delect(in_gdb + @"\" + delect);
             }
-            // 删除文件
-            Directory.Delete(def_folder + @"\制图包", true);
+
+            //try
+            //{
+            //    // 删除文件
+            //    Directory.Delete(def_folder + @"\制图包", true);
+            //}
+            //catch (Exception)
+            //{
+            //    return;
+            //}
         }
 
         // 生成村域规划图【JPG】
         public static void CreateGHT(string village_name, ProcessWindow pw, DateTime time_base, bool isAddMessage = false)
         {
-            if (isAddMessage) { pw.AddMessage("生成空间功能结构调整表", Brushes.Gray); }
-
             // 生成空间功能结构调整表
             CreateJPGFolder(village_name);
-            CreateExcelKJGNJGTZB(village_name, pw, time_base);
 
             // 获取参数
             string def_folder = Project.Current.HomeFolderPath;     // 工程默认文件夹位置
@@ -1821,6 +1876,23 @@ namespace CCTool.Scripts.Manager
 
             string yd_xz = in_gdb + @"\现状用地";    // 输入现状用地
             string yd_gh = in_gdb + @"\规划用地";    // 输入规划用地
+
+            // 获取【是否调用中间数据】
+            string txtPath = @"D:\ProSDKsettings\Settings.txt";
+            bool isReview = txtPath.GetAttFormTxtJson("isReview") switch
+            {
+                "False" => false,
+                "True" => true,
+                _ => false,
+            };
+
+            // 如果不允许调用   或  允许调用但不存在
+            bool isHaveTable = File.Exists($@"{output_excel_path}\空间功能结构调整表.xlsx");
+            if (isReview == false || (isReview == true && isHaveTable == false))
+            {
+                if (isAddMessage) { pw.AddMessage("生成空间功能结构调整表", Brushes.Gray); }
+                CreateExcelKJGNJGTZB(village_name, pw, time_base);
+            }
 
             // 获取excel单元格值的字典和列表
             Dictionary<string, string> dict = OfficeTool.GetDictFromExcel(excel_path + @"\sheet1$");
@@ -1844,7 +1916,7 @@ namespace CCTool.Scripts.Manager
             string town_name = village_names[0] + village_names[1];
             // 生成乡镇界和乡镇界_周边
             string area_gdb = def_folder + @"\制图包\乡镇行政区划\乡镇.gdb";  // 乡镇边界库
-            // 复制乡镇界
+
             // 复制乡镇界
             if (GisTool.IsHaveFeaturClass(area_gdb, town_name))
             {
@@ -1857,19 +1929,18 @@ namespace CCTool.Scripts.Manager
             // 生成乡镇界周边
             Arcpy.Select(area_gdb + @"\" + town_name, in_gdb + @"\乡镇界_周边", "CZMC <> \'" + village_name + "\'");
 
-            if (isAddMessage) { pw.AddProcessMessage(10, time_base, "生成GKBJ", Brushes.Gray); }
-
             // 生成GKBJ
-            if (!GisTool.IsHaveFeaturClass(in_gdb, "管控边界"))
+            string gkbj_gdb = output_folder_path + @"\" + village_name + @"数据库\村庄规划数据库.gdb";   // 输出要素的位置
+            if (isReview == false || (isReview == true && GisTool.IsHaveFeaturClass(gkbj_gdb, "GKBJ")==false))
             {
-                CreateGKBJtoPath(village_name, in_gdb + @"\管控边界");
+                if (isAddMessage) { pw.AddProcessMessage(10, time_base, "生成GKBJ", Brushes.Gray); }
+                // 创建文件目录
+                VG.CreateTarget(village_name, "MBNGH");
+                CreateGKBJtoPath(village_name, @$"{gkbj_gdb}\MBNGH\GKBJ");
             }
             // 生成村庄建设边界
-            if (!GisTool.IsHaveFeaturClass(in_gdb, "村庄建设边界"))
-            {
-                Arcpy.Select(in_gdb + @"\管控边界", in_gdb + @"\GKBJ_JS", "GKBJLXMC = '村庄集中建设区' Or GKBJLXMC = '村庄弹性发展区'");
-                Arcpy.Dissolve(in_gdb + @"\GKBJ_JS", in_gdb + @"\村庄建设边界");
-            }
+            Arcpy.Select(@$"{gkbj_gdb}\MBNGH\GKBJ", in_gdb + @"\GKBJ_JS", "GKBJLXMC = '村庄集中建设区' Or GKBJLXMC = '村庄弹性发展区'");
+            Arcpy.Dissolve(in_gdb + @"\GKBJ_JS", in_gdb + @"\村庄建设边界");
 
             if (isAddMessage) { pw.AddProcessMessage(10, time_base, "导入规划图布局", Brushes.Gray); }
 
@@ -1892,7 +1963,7 @@ namespace CCTool.Scripts.Manager
             Map map = mf.Map;                         // 获取主地图
             Layer mapBox = map.FindLayers("Mapbox影像")[0];     // 获取Mapbox影像图层
             Layer mapTD = map.FindLayers("天地图影像")[0];     // 获取天地图影像图层
-            string txtPath = @"D:\ProSDKsettings\Settings.txt";
+
             int mapIndex = int.Parse(txtPath.GetAttFormTxtJson("basemapIndex"));
 
             MapFrame mf_index = layout.FindElement("导航图") as MapFrame;             // 获取索引图框
@@ -1962,7 +2033,7 @@ namespace CCTool.Scripts.Manager
             JPEGFormat JPG = new JPEGFormat()
             {
                 HasWorldFile = true,
-                Resolution = DataStore.vgDPI,
+                Resolution = DataLib.vgDPI,
                 OutputFileName = output_excel_path + @"\规划用地图.jpg",
                 ColorMode = JPEGColorMode.TwentyFourBitTrueColor,
             };
@@ -1984,22 +2055,20 @@ namespace CCTool.Scripts.Manager
             {
                 Arcpy.Delect(in_gdb + @"\" + delect);
             }
-            // 删除管控边界
-            if (isAddMessage) { Arcpy.Delect(in_gdb + @"\管控边界"); }
-            // 删除文件
-            Directory.Delete(def_folder + @"\制图包", true);
-
+            //try
+            //{
+            //    // 删除文件
+            //    Directory.Delete(def_folder + @"\制图包", true);
+            //}
+            //catch (Exception)
+            //{
+            //    return;
+            //}
         }
 
         // 生成管制边界图【JPG】
         public static void CreateGKBJT(string village_name, ProcessWindow pw, DateTime time_base, bool isAddMessage = false)
         {
-            if (isAddMessage) { pw.AddMessage("生成规划指标表", Brushes.Gray); }
-
-            // 生成规划指标表
-            CreateJPGFolder(village_name);
-            CreateExcelGHZBB(village_name, pw, time_base);
-
             // 获取参数
             string def_folder = Project.Current.HomeFolderPath;     // 工程默认文件夹位置
             string def_gdb = Project.Current.DefaultGeodatabasePath;    // 工程默认数据库
@@ -2008,9 +2077,33 @@ namespace CCTool.Scripts.Manager
             string excel_path = input_folder_path + @"\" + village_name + @".xlsx";   // 输入excel路径
             string output_folder_path = def_folder + @"\2-输出文件";        // 输出文件包路径
             string output_excel_path = output_folder_path + @"\" + village_name + @"表格+图集";  // 输出文件夹的位置
-
+            string output_gdb = output_folder_path + @"\" + village_name + @"数据库\村庄规划数据库.gdb";  // 输出GDB的位置
             string yd_xz = in_gdb + @"\现状用地";    // 输入现状用地
             string yd_gh = in_gdb + @"\规划用地";    // 输入规划用地
+
+            // 复制制图包
+            BaseTool.CopyResourceRar(@"CCTool.Data.Village.制图包.rar", def_folder + @"\制图包.rar");
+
+            // 生成规划指标表
+            CreateJPGFolder(village_name);
+
+            // 获取【是否调用中间数据】
+            string txtPath = @"D:\ProSDKsettings\Settings.txt";
+            bool isReview = txtPath.GetAttFormTxtJson("isReview") switch
+            {
+                "False" => false,
+                "True" => true,
+                _ => false,
+            };
+
+            // 如果不允许调用   或  允许调用但不存在
+            bool isHaveTable = File.Exists($@"{output_excel_path}\规划指标一览表.xlsx");
+            if (isReview == false || (isReview == true && isHaveTable == false))
+            {
+                if (isAddMessage) { pw.AddMessage("生成规划指标表", Brushes.Gray); }
+                // 生成规划指标表
+                CreateExcelGHZBB(village_name, pw, time_base);
+            }
 
             // 获取excel单元格值的字典和列表
             Dictionary<string, string> dict = OfficeTool.GetDictFromExcel(excel_path + @"\sheet1$");
@@ -2018,9 +2111,6 @@ namespace CCTool.Scripts.Manager
             string village_fullName = dict["村庄名称"];
             // 获取规划期限
             string village_year = dict["规划期限"];
-
-            // 复制制图包
-            BaseTool.CopyResourceRar(@"CCTool.Data.Village.制图包.rar", def_folder + @"\制图包.rar");
 
             if (isAddMessage) { pw.AddProcessMessage(10, time_base, "生成地图要素", Brushes.Gray); }
 
@@ -2045,8 +2135,19 @@ namespace CCTool.Scripts.Manager
             }
             // 生成乡镇界周边
             Arcpy.Select(area_gdb + @"\" + town_name, in_gdb + @"\乡镇界_周边", "CZMC <> \'" + village_name + "\'");
-            // 生成GKBJ
-            CreateGKBJtoPath(village_name, in_gdb + @"\管控边界");
+
+            // 如果不允许调用 或  允许调用但不存在
+            bool isHaveFC = GisTool.IsHaveFeaturClass(output_gdb, "GKBJ");
+            if (isReview == false || (isReview == true && isHaveFC == false))
+            {
+                if (isAddMessage) { pw.AddProcessMessage(10, time_base, "生成GKBJ", Brushes.Gray); }
+                // 创建文件目录
+                CreateTarget(village_name, "MBNGH");
+                // 生成GKBJ
+                CreateGKBJtoPath(village_name, output_gdb + @"\MBNGH\GKBJ");
+            }
+
+            Arcpy.CopyFeatures(output_gdb + @"\MBNGH\GKBJ", in_gdb + @"\管控边界");
 
             if (isAddMessage) { pw.AddProcessMessage(10, time_base, "导入管制图布局", Brushes.Gray); }
 
@@ -2069,7 +2170,6 @@ namespace CCTool.Scripts.Manager
             Map map = mf.Map;                         // 获取主地图
             Layer mapBox = map.FindLayers("Mapbox影像")[0];     // 获取Mapbox影像图层
             Layer mapTD = map.FindLayers("天地图影像")[0];     // 获取天地图影像图层
-            string txtPath = @"D:\ProSDKsettings\Settings.txt";
             int mapIndex = int.Parse(txtPath.GetAttFormTxtJson("basemapIndex"));
 
             MapFrame mf_index = layout.FindElement("导航图") as MapFrame;             // 获取索引图框
@@ -2139,7 +2239,7 @@ namespace CCTool.Scripts.Manager
             JPEGFormat JPG = new JPEGFormat()
             {
                 HasWorldFile = true,
-                Resolution = DataStore.vgDPI,
+                Resolution = DataLib.vgDPI,
                 OutputFileName = output_excel_path + @"\管制边界图.jpg",
                 ColorMode = JPEGColorMode.TwentyFourBitTrueColor,
             };
@@ -2155,14 +2255,23 @@ namespace CCTool.Scripts.Manager
             MapProjectItem map_gh = Project.Current.GetItems<MapProjectItem>().FirstOrDefault(item => item.Name.Equals("管制"));
             Project.Current.RemoveItem(mapt_dh);
             Project.Current.RemoveItem(map_gh);
+
             // 移除中间要素
             List<string> list_delect = new List<string>() { "村界", "白底", "白底c", "乡镇界", "乡镇界_周边", "管控边界" };
             foreach (var delect in list_delect)
             {
                 Arcpy.Delect(in_gdb + @"\" + delect);
             }
-            // 删除文件
-            Directory.Delete(def_folder + @"\制图包", true);
+
+            //try
+            //{
+            //    // 删除文件
+            //    Directory.Delete(def_folder + @"\制图包", true);
+            //}
+            //catch (Exception)
+            //{
+            //    return;
+            //}
         }
 
         // 村庄功能映射

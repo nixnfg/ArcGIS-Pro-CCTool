@@ -1,9 +1,16 @@
 ﻿using ArcGIS.Core.Data;
+using ArcGIS.Core.Data.UtilityNetwork.Trace;
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Editing;
+using ArcGIS.Desktop.Framework.Dialogs;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Internal.Catalog;
 using ArcGIS.Desktop.Mapping;
 using CCTool.Scripts.Manager;
+using NPOI.HPSF;
+using NPOI.OpenXmlFormats.Dml.Diagram;
+using NPOI.XWPF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +22,15 @@ namespace CCTool.Scripts.ToolManagers
 {
     public class GisTool
     {
+
+        // 在表中插入行并赋值
+        public static void AddLayer(string path)
+        {
+            // 将要素类添加到当前地图
+            var map = MapView.Active.Map;
+            LayerFactory.Instance.CreateLayer(new Uri(path), map);
+        }
+
         // 在表中插入行并赋值
         public static string UpdataRowToTable(string in_table, string insert_value)
         {
@@ -141,17 +157,20 @@ namespace CCTool.Scripts.ToolManagers
                             // 获取value
                             var va = row2[firstKey];
                             // 如果符合
-                            if (va.ToString() == firstValue)
+                            if (va is not null)
                             {
-                                // 写入字段值
-                                foreach (var keyAndValue in keyAndValues)
+                                if (va.ToString() == firstValue)
                                 {
-                                    string key = keyAndValue.Split(",")[0];
-                                    string value = keyAndValue.Split(",")[1];
-                                    if (key != firstKey)
+                                    // 写入字段值
+                                    foreach (var keyAndValue in keyAndValues)
                                     {
-                                        double double_value = double.Parse(row2[key].ToString());
-                                        row2[key] = double_value + double.Parse(value);
+                                        string key = keyAndValue.Split(",")[0];
+                                        string value = keyAndValue.Split(",")[1];
+                                        if (key != firstKey)
+                                        {
+                                            double double_value = double.Parse(row2[key].ToString());
+                                            row2[key] = double_value + double.Parse(value);
+                                        }
                                     }
                                 }
                             }
@@ -234,15 +253,184 @@ namespace CCTool.Scripts.ToolManagers
             return outGDBPath;
         }
 
+        // 从路径或图层中获取字段Field列表。字段类型：
+        // allof=>真的全部
+        // all=>可编辑的全部
+        // notEdit=>不可编辑的全部
+        // text=>字符串
+        // float=>可编辑的浮点型
+        // float_all=>所有的浮点型
+        // int=>可编辑的整型
+        // int_all=>所有的整型
+        // math=>可编辑的数字型
+        // math_all=>所有的数字型
+        // oid=>OBJECTID
+        public static List<Field> GetFieldsFromTarget(object layerName, string field_type = "all")
+        {
+            List<Field> fields_ori = new List<Field>();     // 所有字段
+            List<Field> editFields = new List<Field>();    // 可编辑字段
+            List<Field> notEditFields = new List<Field>();   // 不可编辑字段
+            // 获取Table
+            Table table;
+            if (layerName is string)
+            {
+                table = ((string)layerName).TargetTable();
+            }
+            else if (layerName is FeatureLayer)
+            {
+                table = ((FeatureLayer)layerName).GetTable();
+            }
+            else
+            {
+                table = null;
+            }
+            // 获取所有字段
+            fields_ori = table.GetDefinition().GetFields().ToList();
+            // 可编辑和不可编辑的字段
+            foreach (var field in fields_ori)
+            {
+                if (field.IsEditable)
+                {
+                    editFields.Add(field);
+                }
+                else
+                {
+                    notEditFields.Add(field);
+                }
+            }
+
+            // 输出字段类型
+            if (field_type == "allof")  // 真的全部
+            {
+                return fields_ori;
+            }
+            else if (field_type == "all")  // 可编辑的全部
+            {
+                return editFields;
+            }
+            else if (field_type == "notEdit")    // 不可编辑的全部
+            {
+                return notEditFields;
+            }
+            else if (field_type == "text")  // 字符串
+            {
+                List<Field> text_fields = new List<Field>();
+                foreach (Field field in editFields)
+                {
+                    if (field.FieldType == FieldType.String)
+                    {
+                        text_fields.Add(field);
+                    }
+                }
+                return text_fields;
+            }
+            else if (field_type == "float")   // 可编辑的浮点型
+            {
+                List<Field> float_fields = new List<Field>();
+                foreach (Field field in editFields)
+                {
+                    if (field.FieldType == FieldType.Single || field.FieldType == FieldType.Double)
+                    {
+                        float_fields.Add(field);
+                    }
+                }
+                return float_fields;
+            }
+
+            else if (field_type == "float_all")   // 所有的浮点型
+            {
+                List<Field> float_fields = new List<Field>();
+                foreach (Field field in fields_ori)
+                {
+                    if (field.FieldType == FieldType.Single || field.FieldType == FieldType.Double)
+                    {
+                        float_fields.Add(field);
+                    }
+                }
+                return float_fields;
+            }
+
+            else if (field_type == "int")   // 可编辑的整型
+            {
+                List<Field> int_fields = new List<Field>();
+                foreach (Field field in editFields)
+                {
+                    if (field.FieldType == FieldType.SmallInteger || field.FieldType == FieldType.Integer)
+                    {
+                        int_fields.Add(field);
+                    }
+                }
+                return int_fields;
+            }
+
+            else if (field_type == "int_all")   // 所有的整型
+            {
+                List<Field> int_fields = new List<Field>();
+                foreach (Field field in fields_ori)
+                {
+                    if (field.FieldType == FieldType.SmallInteger || field.FieldType == FieldType.Integer)
+                    {
+                        int_fields.Add(field);
+                    }
+                }
+                return int_fields;
+            }
+
+            else if (field_type == "math")    // 可编辑的数字型
+            {
+                List<Field> float_fields = new List<Field>();
+                foreach (Field field in editFields)
+                {
+                    if (field.FieldType == FieldType.Single || field.FieldType == FieldType.Double || field.FieldType == FieldType.SmallInteger || field.FieldType == FieldType.Integer)
+                    {
+                        float_fields.Add(field);
+                    }
+                }
+                return float_fields;
+            }
+
+            else if (field_type == "math_all")    // 所有的数字型
+            {
+                // 获取数字型字段
+                List<Field> float_fields = new List<Field>();
+                foreach (Field field in fields_ori)
+                {
+                    if (field.FieldType == FieldType.Single || field.FieldType == FieldType.Double || field.FieldType == FieldType.SmallInteger || field.FieldType == FieldType.Integer)
+                    {
+                        float_fields.Add(field);
+                    }
+                }
+                return float_fields;
+            }
+
+            else if (field_type == "oid")    // OBJECTID
+            {
+                // 获取数字型字段
+                List<Field> oid_fields = new List<Field>();
+                foreach (Field field in fields_ori)
+                {
+                    if (field.FieldType == FieldType.OID)
+                    {
+                        oid_fields.Add(field);
+                    }
+                }
+                return oid_fields;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
         // 从路径或图层中获取字段Field列表【字段类型：all=>全部字段，text=>可写的字符串字段，float=>浮点型，int=>整型, notEdit=>不可编辑的】
-        public static List<Field> GetFieldsFromTarget(string layerName, string field_type = "all")
+        public static List<Field> GetFieldsFromTarget(FeatureLayer layer, string field_type = "all")
         {
             List<Field> fields_ori = new List<Field>();
             List<Field> editFields = new List<Field>();
             List<Field> notEditFields = new List<Field>();
             // 获取Table
-            Table table = layerName.TargetTable();
-
+            Table table = layer.GetTable();
             // 获取所有字段
             fields_ori = table.GetDefinition().GetFields().ToList();
             // 移除不可编辑的字段
@@ -413,6 +601,27 @@ namespace CCTool.Scripts.ToolManagers
             return input_table;
         }
 
+        // 属性映射/Dict
+        public static Dictionary<string, double> DicAttributeMapper(Dictionary<string, double> dict, string map_tabel)
+        {
+            // 复制一个dic
+            Dictionary<string, double> dicResult = new Dictionary<string, double>();
+
+            // 获取连接表的dic
+            Dictionary<string, string> dicMapper = OfficeTool.GetDictFromExcel(map_tabel);
+
+            foreach (var item in dict)
+            {
+                if (dicMapper.ContainsKey(item.Key))
+                {
+                    dicResult.Add(dicMapper[item.Key], item.Value);
+                }
+            }
+
+            return dicResult;
+        }
+
+
         // 属性映射
         public static string AttributeMapper(string in_data, string in_field, string map_field, string map_tabel, bool reverse = false)
         {
@@ -471,31 +680,33 @@ namespace CCTool.Scripts.ToolManagers
             // 根据需求生成三级用地编码和名称
             if (model >= 1)
             {
-                Arcpy.AddField(fcPath, "BM_1", "TEXT");     // 添加大类编码
+                EditTool.AddField(fcPath, "BM_1");   // 添加大类编码
                 Arcpy.CalculateField(fcPath, "BM_1", $"!{bmField}![:2]");   // 计算大类编码
                 if (isCreateMC)
                 {
-                    Arcpy.AddField(fcPath, "MC_1", "TEXT");     // 添加大类名称
+                    EditTool.AddField(fcPath, "MC_1");   // 添加大类名称
                     YDYHChange(fcPath, "BM_1", "MC_1");    // 编码转名称
                 }
             }
             if (model >= 2)
             {
-                Arcpy.AddField(fcPath, "BM_2", "TEXT");     // 添加中类编码
-                Arcpy.CalculateField(fcPath, "BM_2", $"!{bmField}![:4]");   // 计算中类编码
+                EditTool.AddField(fcPath, "BM_2");     // 添加中类编码
+                string code = "def ss(a):\r\n    if len(a)>2:\r\n        return a[:4]\r\n    else:\r\n        return \"\"";
+                Arcpy.CalculateField(fcPath, "BM_2", code);   // 计算中类编码
                 if (isCreateMC)
                 {
-                    Arcpy.AddField(fcPath, "MC_2", "TEXT");     // 添加中类名称
+                    EditTool.AddField(fcPath, "MC_2");     // 添加中类名称
                     YDYHChange(fcPath, "BM_2", "MC_2");    // 编码转名称
                 }
             }
             if (model >= 3)
             {
-                Arcpy.AddField(fcPath, "BM_3", "TEXT");     // 添加小类编码
-                Arcpy.CalculateField(fcPath, "BM_3", $"!{bmField}![:6]");   // 计算小类编码
+                EditTool.AddField(fcPath, "BM_3");     // 添加小类编码
+                string code = "def ss(a):\r\n    if len(a)>4:\r\n        return a[:6]\r\n    else:\r\n        return \"\"";
+                Arcpy.CalculateField(fcPath, "BM_3", code);   // 计算小类编码
                 if (isCreateMC)
                 {
-                    Arcpy.AddField(fcPath, "MC_3", "TEXT");     // 添加小类名称
+                    EditTool.AddField(fcPath, "MC_3");     // 添加小类名称
                     YDYHChange(fcPath, "BM_3", "MC_3");    // 编码转名称
                 }
             }
@@ -517,13 +728,14 @@ namespace CCTool.Scripts.ToolManagers
                     {
                         // 获取value
                         var key = row[in_field_01];
-                        if (key is not null)
+                        var value = row[in_field_02];
+                        if (key is not null && value is not null)
                         {
-                            var value = row[in_field_02].ToString();
+                            var va = value.ToString();
                             // 如果没有重复key值，则纳入dict
                             if (!dict.Keys.Contains(key.ToString()))
                             {
-                                dict.Add(key.ToString(), value);
+                                dict.Add(key.ToString(), va);
                             }
                         }
                     }
@@ -531,6 +743,38 @@ namespace CCTool.Scripts.ToolManagers
             }
             return dict;
         }
+
+        // 从路径或图层中获取Dictionary
+        public static Dictionary<string, double> GetDictFromPathDouble(string inputData, string in_field_01, string in_field_02)
+        {
+            Dictionary<string, double> dict = new();
+            // 获取Table
+            Table table = inputData.TargetTable();
+            // 逐行游标
+            using (RowCursor rowCursor = table.Search())
+            {
+                while (rowCursor.MoveNext())
+                {
+                    using (Row row = rowCursor.Current)
+                    {
+                        // 获取value
+                        var key = row[in_field_01];
+                        var value = row[in_field_02];
+                        if (key is not null && value is not null)
+                        {
+                            var va = double.Parse(value.ToString());
+                            // 如果没有重复key值，则纳入dict
+                            if (!dict.Keys.Contains(key.ToString()))
+                            {
+                                dict.Add(key.ToString(), va);
+                            }
+                        }
+                    }
+                }
+            }
+            return dict;
+        }
+
 
         // 从路径或图层中获取list
         public static List<string> GetListFromPath(string inputData, string inputField)
@@ -559,9 +803,16 @@ namespace CCTool.Scripts.ToolManagers
         }
 
         // 从路径或图层中获取value
-        public static string GetCellFromPath(string inputData, string inputField, string sql)
+        public static string GetCellFromPath(string inputData, string inputField, string sql="")
         {
             string value = "";
+
+            // sql预处理
+            if (sql == "")
+            {
+                var oidField = GisTool.GetIDFieldNameFromTarget(inputData);
+                sql = $"{oidField}=1";
+            }
 
             // 获取Table
             Table table = inputData.TargetTable();
@@ -586,38 +837,175 @@ namespace CCTool.Scripts.ToolManagers
         // 判断要素数据集是否存在
         public static bool IsHaveDataset(string gdb_path, string dt_name)
         {
-            // 打开地理数据库
-            using var geodatabase = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(gdb_path)));
-            // 获取所有要素数据集的名称
-            var datasets = geodatabase.GetDefinitions<FeatureDatasetDefinition>();
-            // 检查要素数据集是否存在
-            var exists = datasets.Any(datasetName => datasetName.GetName().Equals(dt_name));
-            return exists;
+            bool isHaveGDB = Directory.Exists(gdb_path);
+            if (!isHaveGDB)
+            {
+                return false;
+            }
+            else
+            {
+                // 打开地理数据库
+                using var geodatabase = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(gdb_path)));
+                // 获取所有要素数据集的名称
+                var datasets = geodatabase.GetDefinitions<FeatureDatasetDefinition>();
+                // 检查要素数据集是否存在
+                var exists = datasets.Any(datasetName => datasetName.GetName().Equals(dt_name));
+                return exists;
+            }
         }
 
         // 判断要素类是否存在
         public static bool IsHaveFeaturClass(string gdb_path, string fc_name)
         {
-            // 打开地理数据库
-            using var geodatabase = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(gdb_path)));
-            // 获取所有要素数据集的名称
-            var fcs = geodatabase.GetDefinitions<FeatureClassDefinition>();
-            // 检查要素数据集是否存在
-            var exists = fcs.Any(datasetName => datasetName.GetName().Equals(fc_name));
-            return exists;
+            bool isHaveGDB = Directory.Exists(gdb_path);
+            if (!isHaveGDB)
+            {
+                return false;
+            }
+            else
+            {
+                // 打开地理数据库
+                using var geodatabase = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(gdb_path)));
+                // 获取所有要素数据集的名称
+                var fcs = geodatabase.GetDefinitions<FeatureClassDefinition>();
+                // 检查要素数据集是否存在
+                var exists = fcs.Any(datasetName => datasetName.GetName().Equals(fc_name));
+                return exists;
+            }
         }
 
         // 判断独立表是否存在
         public static bool IsHaveStandaloneTable(string gdb_path, string tb_name)
         {
-            // 打开地理数据库
-            using var geodatabase = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(gdb_path)));
-            // 获取所有要素数据集的名称
-            var tables = geodatabase.GetDefinitions<TableDefinition>();
-            // 检查要素数据集是否存在
-            var exists = tables.Any(datasetName => datasetName.GetName().Equals(tb_name));
-            return exists;
+            bool isHaveGDB = Directory.Exists(gdb_path);
+            if (!isHaveGDB)
+            {
+                return false;
+            }
+            else
+            {
+                // 打开地理数据库
+                using var geodatabase = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(gdb_path)));
+                // 获取所有要素数据集的名称
+                var tables = geodatabase.GetDefinitions<TableDefinition>();
+                // 检查要素数据集是否存在
+                var exists = tables.Any(datasetName => datasetName.GetName().Equals(tb_name));
+                return exists;
+            }
         }
+
+        // 分解汇总表
+        public static Dictionary<string, double> DecomposeSummary(Dictionary<string, double> in_dic)
+        {
+            // 复制一个dic
+            Dictionary<string, double> dic = new Dictionary<string, double>();
+
+            foreach (var item in in_dic)
+            {
+                // 分不同情况处理
+                if (item.Key.Contains("+"))     // 如果是混合用地
+                {
+                    dic.Add(item.Key, item.Value);
+                    // 分析一下是不是纯混合用地
+                    string key1 = item.Key[..item.Key.IndexOf("+")];
+                    string key2 = item.Key[(item.Key.IndexOf("+") + 1)..];
+                    if (key1[..2] != "09" || key2[..2] != "09")
+                    {
+                        dic.Accumulation("HH", item.Value);
+                    }
+                    else    //  如果都是商业混合，那就算是商业用地
+                    {
+                        dic.Accumulation("09", item.Value);
+                    }
+                }
+                else    // 如果不是混合用地
+                {
+                    // 分解BM
+                    List<string> keyList = item.Key.DecomposeBM();
+                    foreach (var k in keyList)
+                    {
+                        dic.Accumulation(k, item.Value);
+                    }
+                }
+            }
+            return dic;
+        }
+
+
+        // 局部汇总
+        public static Dictionary<string, double> PartSummary(Dictionary<string, double> in_dic, Dictionary<string, List<string>> pairs)
+        {
+            Dictionary<string, double> result = new Dictionary<string, double>(in_dic);
+
+            foreach (var pair in pairs)
+            {
+                // 要汇总的列表
+                string bj = pair.Key;
+                List<string> keyList = pair.Value;
+
+                foreach (var item in in_dic)
+                {
+                    // 更新建设用地
+                    if (keyList.Contains(item.Key))
+                    {
+                        result.Accumulation(bj, item.Value);
+                    }
+                }
+            }
+
+            // 返回
+            return result;
+        }
+
+
+        // 汇总统计加强版Dic
+        public static Dictionary<string, double> MultiStatisticsToDic(string in_table, string statistics_field, List<string> case_fields, string total_field = "", double unit = 1)
+        {
+            Dictionary<string, double> dic = new Dictionary<string, double>();
+            // 中间用于计算的汇总表
+            string def_gdb = Project.Current.DefaultGeodatabasePath;
+            string out_table = @$"{def_gdb}\stb";
+            // 循环列表统计
+            for (int i = 0; i < case_fields.Count; i++)
+            {
+                // 调用GP工具【汇总】
+                Arcpy.Statistics(in_table, out_table, $"{statistics_field} SUM", case_fields[i]);
+                // 生成dic
+                Dictionary<string, double> re = GisTool.GetDictFromPathDouble(out_table, case_fields[i], $"SUM_{statistics_field}");
+
+                // 合并dic
+                dic = dic.Union(re).ToDictionary(kv => kv.Key, kv => kv.Value);
+            }
+
+
+            Dictionary<string, double> dict = new Dictionary<string, double>(dic);
+            // 如果要统计总值
+            if (total_field != "")
+            {
+                foreach (var item in dic)
+                {
+                    if (item.Key!="")
+                    {
+                        dict.Accumulation(total_field, item.Value);
+                    }
+                }
+            }
+            // 单位修改
+            if (unit != 1)
+            {
+                foreach (var item in dict)
+                {
+                    double va = item.Value;
+                    dict[item.Key] = va / unit;
+                }
+            }
+
+            // 删除中间表
+            Arcpy.Delect(out_table);
+            // 返回
+            return dict;
+        }
+
 
         // 汇总统计加强版
         public static void MultiStatistics(string in_table, string out_table, string statistics_fields, List<string> case_fields, string total_field = "合计", int unit = 0, bool is_output = false)
@@ -671,7 +1059,7 @@ namespace CCTool.Scripts.ToolManagers
         }
 
         // 裁剪平差计算
-        public static string Adjustment(string yd, string area, string clipfc_sort, string area_type = "投影", string unit = "平方米", int digit = 2, string areaField="")
+        public static string Adjustment(string yd, string area, string clipfc_sort, string area_type = "投影", string unit = "平方米", int digit = 2, string areaField = "")
         {
             string def_gdb = Project.Current.DefaultGeodatabasePath;
             string area_line = def_gdb + @"\area_line";
@@ -689,7 +1077,7 @@ namespace CCTool.Scripts.ToolManagers
             // 计算图斑的投影面积和图斑面积
             Arcpy.Clip(yd, area, clipfc);
 
-            if (areaField!="")
+            if (areaField != "")
             {
                 area_type = "图斑";
 
@@ -732,6 +1120,10 @@ namespace CCTool.Scripts.ToolManagers
 
             // 空间连接，找出变化图斑（即需要平差的图斑）
             Arcpy.FeatureToLine(area, area_line);
+            if (IsHaveFieldInTarget(area_line, "BJM"))
+            {
+                Arcpy.DeleteField(area_line, "BJM", "KEEP_FIELDS");
+            }
             Arcpy.SpatialJoin(clipfc, area_line, clipfc_updata);
             Arcpy.AddField(clipfc_updata, "平差", "TEXT");
             Arcpy.CalculateField(clipfc_updata, "平差", "''");
@@ -747,13 +1139,11 @@ namespace CCTool.Scripts.ToolManagers
             {
                 while (rowCursor.MoveNext())
                 {
-                    using (Row row = rowCursor.Current)
+                    using Row row = rowCursor.Current;
+                    var va = int.Parse(row["Join_Count"].ToString());
+                    if (va == 1)     // 如果是变化图斑
                     {
-                        var va = int.Parse(row["Join_Count"].ToString());
-                        if (va == 1)     // 如果是变化图斑
-                        {
-                            area_total += double.Parse(row[area_type].ToString());
-                        }
+                        area_total += double.Parse(row[area_type].ToString());
                     }
                 }
             }
@@ -774,8 +1164,9 @@ namespace CCTool.Scripts.ToolManagers
                             area_pc_1 += area_pc;
                             // 面积平差
                             row[area_type] = area_1 + area_pc;
+
+                            row.Store();
                         }
-                        row.Store();
                     }
                 }
             }
@@ -898,6 +1289,74 @@ namespace CCTool.Scripts.ToolManagers
             return out_fc;
         }
 
+        // 检查图层中是否包含相应字段
+        public static bool IsHaveFieldInTarget(string lyName, string fieldName)
+        {
+            bool result = false;
+            List<string> str_fields = new List<string>();
+            IReadOnlyList<Field> fields = new List<Field>();
 
+            var init_featureClass = lyName.TargetFeatureClass();
+            var init_table = lyName.TargetTable();
+
+            // 判断当前选择的是要素图层还是独立表
+            if (init_table is not null)
+            {
+                fields = init_table.GetDefinition().GetFields();
+            }
+            else if (init_featureClass is not null)
+            {
+                fields = init_featureClass.GetDefinition().GetFields();
+            }
+            // 生成字段列表
+            foreach (var item in fields)
+            {
+                str_fields.Add(item.Name);
+            }
+            // 提取错误信息
+            if (str_fields.Contains(fieldName))
+            {
+                result = true;
+            }
+
+            return result;
+        }
+
+
+        // 检查图层中是否包含相应字段// 排除文字exText
+        public static async void ClearGDBFiles(string gdbPath, string exText = "")
+        {
+            await QueuedTask.Run(() =>
+            {
+                using (Geodatabase gdb = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(gdbPath))))
+                {
+                    // 获取文件地理数据库中的所有要素类
+                    IReadOnlyList<FeatureClassDefinition> featureClassDefinitions = gdb.GetDefinitions<FeatureClassDefinition>();
+
+                    // 删除每个要素类
+                    foreach (var featureClassDefinition in featureClassDefinitions)
+                    {
+                        string fcName = featureClassDefinition.GetName();
+
+                        using FeatureClass featureClass = gdb.OpenDataset<FeatureClass>(fcName);
+
+                        if (exText != "")
+                        {
+                            if (!fcName.Contains(exText))
+                            {
+                                Arcpy.Delect(featureClass);
+                            }
+                        }
+                        else
+                        {
+                            // 删除要素类中的所有要素
+                            Arcpy.Delect(featureClass);
+                        }
+                    }
+                };
+            });
+
+
+        }
     }
 }

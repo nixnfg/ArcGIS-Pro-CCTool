@@ -6,21 +6,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="合并GDB数据库" Height="300" Width="550" WindowStartupLocation="CenterScreen"
+        Title="合并GDB数据库" Height="300" Width="550" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="输入合并后的GDB文件名【不带后缀】 ：（存放在原文件夹下）" HorizontalAlignment="Left" Margin="15,81,0,0" VerticalAlignment="Top" Width="353"/>
-        <Button x:Name="btn_go" Content="执行 " Margin="0,0,15,27" Width="69" Height="19" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Background="{x:Null}" Click="btn_go_Click"/>
         <Label Content="输入要合并的GDB数据所在的文件夹：" HorizontalAlignment="Left" Margin="15,15,0,0" VerticalAlignment="Top" Width="375"/>
-        <TextBox x:Name="textFolderPath" Margin="15,41,53,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
-        <Button x:Name="openForldrButton" Content="打开" Margin="0,41,15,0" HorizontalAlignment="Right" Width="33" Height="21" VerticalAlignment="Top" Background="{x:Null}" Click="openForldrButton_Click"/>
-        <TextBox x:Name="text_gdbName" Margin="373,83,15,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
+        <TextBox x:Name="textFolderPath" Margin="15,41,37,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="22"/>
+        <TextBox x:Name="text_gdbName" Margin="373,83,15,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="21"/>
+        <Button x:Name="openForldrButton" Style="{StaticResource btn_openFolder}" Margin="0,41,15,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openForldrButton_Click"/>
+
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,15,27"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,97,27" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+
     </Grid>
 </controls:ProWindow>

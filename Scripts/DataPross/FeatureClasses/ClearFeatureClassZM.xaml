@@ -6,18 +6,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="清除要素的ZM值" Height="400" Width="500" WindowStartupLocation="CenterScreen"
+        Title="清除要素的ZM值" Height="400" Width="500" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="选择要素图层：(输出要素放在原数据路径下)" HorizontalAlignment="Center" Margin="0,14,0,0" VerticalAlignment="Top" Width="480"/>
-        <Button x:Name="btn_go" Content="执行" Margin="0,0,10,19" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="56" Click="btn_go_click"/>
         <ListBox x:Name="listbox_fc" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="15,44,10,57"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,11,19"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,93,19" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_click"/>
+
     </Grid>
 </controls:ProWindow>

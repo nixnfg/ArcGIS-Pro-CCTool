@@ -48,12 +48,12 @@ namespace CCTool.Scripts.DataPross.FeatureClasses
 
         private void combox_origin_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_origin_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_origin_fc);
         }
 
         private void combox_identity_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_identity_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_identity_fc);
         }
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
@@ -61,11 +61,11 @@ namespace CCTool.Scripts.DataPross.FeatureClasses
             try
             {
                 // 获取数据
-                string origin_fc = combox_origin_fc.Text;
-                string identity_fc = combox_identity_fc.Text;
+                string origin_fc = combox_origin_fc.ComboxText();
+                string identity_fc = combox_identity_fc.ComboxText();
 
-                string origin_field = combox_origin_field.Text;
-                string identity_field = combox_identity_field.Text;
+                string origin_field = combox_origin_field.ComboxText();
+                string identity_field = combox_identity_field.ComboxText();
 
                 string defGDB = Project.Current.DefaultGeodatabasePath;
 
@@ -95,8 +95,7 @@ namespace CCTool.Scripts.DataPross.FeatureClasses
                     // 确保两个图层使用相同的空间参考
                     if (!originFeatureLayer.GetSpatialReference().Equals(identityFeatureLayer.GetSpatialReference()))
                     {
-                        MessageBox.Show("目标图层和源图层的空间参考不同！");
-                        return;
+                        pw.AddProcessMessage(0, time_base, "两个图层的坐标系可能存在不一致，请核查", Brushes.Red);
                     }
 
                     // 获取目标图层和源图层的要素游标
@@ -171,7 +170,7 @@ namespace CCTool.Scripts.DataPross.FeatureClasses
                     }
 
                 });
-                pw.AddProcessMessage(80, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -182,12 +181,18 @@ namespace CCTool.Scripts.DataPross.FeatureClasses
 
         private void combox_origin_field_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_origin_fc.Text,combox_origin_field);
+            UITool.AddTextFieldsToComboxPlus(combox_origin_fc.ComboxText(),combox_origin_field);
         }
 
         private void combox_identity_field_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_identity_fc.Text, combox_identity_field);
+            UITool.AddTextFieldsToComboxPlus(combox_identity_fc.ComboxText(), combox_identity_field);
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135829102?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

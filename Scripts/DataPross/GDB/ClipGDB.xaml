@@ -6,27 +6,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="按范围分割数据库" Height="400" Width="550" WindowStartupLocation="CenterScreen"
+        Title="按范围分割数据库" Height="400" Width="550" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
-        <Label Content="输入分割要素 ：" HorizontalAlignment="Left" Margin="15,68,0,0" VerticalAlignment="Top" Width="198"/>
-        <Button x:Name="btn_go" Content="执行 " Margin="0,0,15,27" Width="69" Height="19" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Background="{x:Null}" Click="btn_go_Click"/>
+        <Label Content="输入分割要素 ：" HorizontalAlignment="Left" Margin="15,129,0,0" VerticalAlignment="Top" Width="108"/>
         <Label Content="输入要分割的GDB数据库：" HorizontalAlignment="Left" Margin="15,15,0,0" VerticalAlignment="Top" Width="375"/>
-        <TextBox x:Name="textOriginalGDB" Margin="15,41,53,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
-        <Button x:Name="openOriginalGDBButton" Content="打开" Margin="0,41,15,0" HorizontalAlignment="Right" Width="33" Height="21" VerticalAlignment="Top" Background="{x:Null}" Click="openOriginalGDBButton_Click"/>
-        <Label Content="输出结果GDB数据库的位置：" HorizontalAlignment="Left" Margin="15,124,0,0" VerticalAlignment="Top" Width="375"/>
-        <TextBox x:Name="textResultGDB" Margin="15,155,53,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
-        <Button x:Name="openResultGDBButton" Content="打开" Margin="0,155,15,0" Height="21" VerticalAlignment="Top" Background="{x:Null}" Click="openResultGDBButton_Click" HorizontalAlignment="Right" Width="33"/>
-        <ComboBox x:Name="comboxClipFeature" HorizontalAlignment="Left" Margin="15,98,0,0" VerticalAlignment="Top" Width="216" DropDownOpened="comboxClipFeature_DropOpen"/>
-        <Label Content="分割字段（生成数据库字段值命名）：" HorizontalAlignment="Left" Margin="270,68,0,0" VerticalAlignment="Top" Width="215"/>
-        <ComboBox x:Name="comboxClipField" Margin="270,98,15,0" VerticalAlignment="Top" DropDownOpened="comboxClipField_DropOpen"/>
-        <Button x:Name="btn_check" Content="数据检查 " Margin="0,0,101,27" Width="72" Height="19" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Background="{x:Null}" Click="btn_check_Click"/>
+        <TextBox x:Name="textOriginalGDB" Margin="15,41,39,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="22"/>
+        <Label Content="输出结果GDB数据库的位置：" HorizontalAlignment="Left" Margin="15,71,0,0" VerticalAlignment="Top" Width="375"/>
+        <TextBox x:Name="textResultGDB" Margin="15,102,39,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="22"/>
+        <ComboBox x:Name="comboxClipFeature" Style="{StaticResource ComboBox_icon}" HorizontalAlignment="Left" Margin="15,157,0,0" VerticalAlignment="Top" Width="216" DropDownOpened="comboxClipFeature_DropOpen"/>
+        <Label Content="分割字段（生成数据库字段值命名）：" HorizontalAlignment="Left" Margin="16,181,0,0" VerticalAlignment="Top" Width="215"/>
+        <ComboBox x:Name="comboxClipField" Style="{StaticResource ComboBox_icon}" Margin="16,211,319,0" VerticalAlignment="Top" DropDownOpened="comboxClipField_DropOpen"/>
+        <Button x:Name="openResultGDBButton" Style="{StaticResource btn_openFolder}" Margin="0,102,15,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openResultGDBButton_Click"/>
+
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,16,28"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="btn_check" Style="{StaticResource btn_checkData}" Width="80" Margin="0,0,184,28" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Click="btn_check_Click"/>
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,98,28" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+
+        <Button x:Name="openOriginalGDBButton" Style="{StaticResource btn_openFolder}" Margin="0,41,15,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openOriginalGDBButton_Click"/>
+
     </Grid>
 </controls:ProWindow>

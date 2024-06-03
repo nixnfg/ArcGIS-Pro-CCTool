@@ -54,6 +54,18 @@ namespace CCTool.Scripts.UI.ProWindow
                     return;
                 }
 
+                // 获取目标数据库和点要素名
+                string gdbPath = featureClass_path[..(featureClass_path.IndexOf(".gdb") + 4)];
+                string fcName = featureClass_path[(featureClass_path.LastIndexOf(@"\") + 1)..];
+
+                // 判断要素名是不是以数字开头
+                bool isNum = fcName.IsNumeric();
+                if (isNum)
+                {
+                    MessageBox.Show("输出的要素名不规范，不能以数字开头！");
+                    return;
+                }
+
                 // 打开进度框
                 ProcessWindow pw = UITool.OpenProcessWindow(processwindow, tool_name);
                 DateTime time_base = DateTime.Now;
@@ -84,6 +96,10 @@ namespace CCTool.Scripts.UI.ProWindow
                         int index2 = short_path.LastIndexOf(@".shp");  // 最后一个【".shp"】的位置
                         string name = short_path.Substring(index1+ 1, index2 - index1 - 1);
                         string path = file.Replace( $@"\{name}.shp", "").Replace(@"\", @"/");
+
+                        pw.AddProcessMessage(0, time_base, file);
+
+
                         // 添加2个标记字段
                         Arcpy.AddField(file, "shpName", "TEXT");
                         Arcpy.AddField(file, "shpPath", "TEXT");
@@ -100,7 +116,7 @@ namespace CCTool.Scripts.UI.ProWindow
                     LayerFactory.Instance.CreateLayer(new Uri(featureClass_path), map);
 
                 });
-                pw.AddProcessMessage(40, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -119,5 +135,12 @@ namespace CCTool.Scripts.UI.ProWindow
         {
             textFolderPath.Text = UITool.OpenDialogFolder();
         }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135623839?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
+        }
+
     }
 }

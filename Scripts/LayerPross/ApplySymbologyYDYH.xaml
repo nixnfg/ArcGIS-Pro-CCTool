@@ -6,24 +6,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="应用符号系统" Height="199" Width="400" WindowStartupLocation="CenterOwner"
+        Title="应用符号系统" Height="250" Width="400" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
+
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
+
     <Grid>
         <Label Content="请选择用地名称字段 :" HorizontalAlignment="Left" Margin="148,14,0,0" VerticalAlignment="Top" Width="242"/>
-        <ComboBox x:Name="combox_field" Margin="155,44,10,0" VerticalAlignment="Top" DropDownOpened="combox_field_DropOpen"/>
-        <Button x:Name="btn_go" Content="执行" Margin="0,0,10,15" Click="btn_go_click" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="56"/>
-        <GroupBox Header="符号类别" Margin="10,14,267,15"/>
+        <ComboBox x:Name="combox_field" Style="{StaticResource ComboBox_icon}" Margin="155,44,14,0" VerticalAlignment="Top" DropDownOpened="combox_field_DropOpen"/>
+        <GroupBox Header="符号类别" Margin="10,14,257,15"/>
         <RadioButton x:Name="rb_gk" Content="国空用地(旧版)" HorizontalAlignment="Left" Margin="20,48,0,0" VerticalAlignment="Top" IsChecked="False" Width="108"/>
-        <RadioButton x:Name="rb_cg" Content="村规用地" HorizontalAlignment="Left" Margin="20,92,0,0" VerticalAlignment="Top"/>
-        <RadioButton x:Name="rb_sd" Content="三调用地" HorizontalAlignment="Left" Margin="20,114,0,0" VerticalAlignment="Top" Checked="rb_sd_Checked" Unchecked="rb_sd_Unchecked"/>
+        <RadioButton x:Name="rb_cg" Content="村规用地(福建)" HorizontalAlignment="Left" Margin="20,92,0,0" VerticalAlignment="Top" Width="113"/>
+        <RadioButton x:Name="rb_sd" Content="三调用地" HorizontalAlignment="Left" Margin="20,134,0,0" VerticalAlignment="Top" Checked="rb_sd_Checked" Unchecked="rb_sd_Unchecked"/>
         <RadioButton x:Name="rb_gk_new" Content="国空用地(新版)" HorizontalAlignment="Left" Margin="20,70,0,0" VerticalAlignment="Top" IsChecked="False" Width="103"/>
+        <CheckBox x:Name="checkBox_delete" Content="删除计数值为0的值" HorizontalAlignment="Left" Margin="155,81,0,0" VerticalAlignment="Top" IsChecked="True" Width="235"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,14,15"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,96,15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_click"/>
+        <RadioButton x:Name="rb_cg_zj" Content="村规用地(浙江)" HorizontalAlignment="Left" Margin="20,113,0,0" VerticalAlignment="Top" Width="113"/>
+        <RadioButton x:Name="rb_sd202" Content="三调用地~含202" HorizontalAlignment="Left" Margin="20,155,0,0" VerticalAlignment="Top" Checked="rb_sd_Checked" Unchecked="rb_sd_Unchecked" Width="113"/>
+
 
     </Grid>
 </controls:ProWindow>

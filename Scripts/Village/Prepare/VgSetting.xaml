@@ -6,25 +6,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="村规参数设置" Height="258" Width="400" Loaded="Form_Load" Closed="Form_Closed"
+        Title="村规参数设置" Height="258" Width="400" Loaded="Form_Load" Closed="Form_Closed" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="导出图纸DPI：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="85"/>
-        <TextBox x:Name="textDPI" Margin="105,12,0,0" TextWrapping="Wrap" Text="300" Height="21" VerticalAlignment="Top" HorizontalAlignment="Left" Width="79" FontSize="14"/>
-        <Button x:Name="btn_go" Content="确定" Margin="0,0,15,20" Height="19" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="66" Click="btn_go_Click"/>
+        <TextBox x:Name="textDPI" Margin="105,12,0,0" TextWrapping="NoWrap" Text="300" Height="21" VerticalAlignment="Top" HorizontalAlignment="Left" Width="79" FontSize="14"/>
         <ListBox x:Name="listBox" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="15,105,216,20"/>
         <Label Content="图纸列表：" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Width="85"/>
         <Label Content="导出图纸：" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="85"/>
-        <ComboBox x:Name="combox_pic" HorizontalAlignment="Center" Margin="0,59,0,0" VerticalAlignment="Top" Width="370" DropDownClosed="combox_pic_DropClosed"/>
-        <Label Content="导出图纸：" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top" Width="65"/>
+        <ComboBox x:Name="combox_pic" HorizontalAlignment="Left" Margin="15,60,0,0" VerticalAlignment="Top" Width="169" DropDownClosed="combox_pic_DropClosed"/>
+        <Label Content="影像底图：" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top" Width="65"/>
         <ComboBox x:Name="combox_basemap" Margin="0,12,15,0" VerticalAlignment="Top" DropDownClosed="combox_pic_DropClosed" HorizontalAlignment="Right" Width="112"/>
+        <CheckBox x:Name="check_review" Content="调用已有中间数据" HorizontalAlignment="Left" Margin="205,63,0,0" VerticalAlignment="Top" IsChecked="False"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_normal}" Margin="0,0,15,20"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" >
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/CCTool;component/Data/Icons/yes2.png" Height="16"/>
+                <TextBlock Text="确定"  Margin="8,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
 
     </Grid>
 </controls:ProWindow>

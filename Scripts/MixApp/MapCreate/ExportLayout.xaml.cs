@@ -169,5 +169,37 @@ namespace CCTool.Scripts.UI.ProWindow
             // 在列表框中加入Layouts
             UITool.AddLayoutsToListbox(listBox_layout);
         }
+
+        private void btn_select_Click(object sender, RoutedEventArgs e)
+        {
+            if (listBox_layout.Items.Count == 0)
+            {
+                MessageBox.Show("列表内没有字段！");
+                return;
+            }
+
+            var list_field = listBox_layout.Items;
+            foreach (CheckBox item in list_field)
+            {
+                item.IsChecked = true;
+            }
+        }
+
+        private void btn_unSelect_Click(object sender, RoutedEventArgs e)
+        {
+            if (listBox_layout.Items.Count == 0)
+            {
+                MessageBox.Show("列表内没有字段！");
+                return;
+            }
+
+            var list_field = listBox_layout.Items;
+            foreach (CheckBox item in list_field)
+            {
+                item.IsChecked = false;
+            }
+        }
+
+
     }
 }

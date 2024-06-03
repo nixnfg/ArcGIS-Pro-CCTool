@@ -75,5 +75,10 @@ namespace CCTool.Scripts.DataPross.Excel
             }
         }
 
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135838669?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
+        }
     }
 }

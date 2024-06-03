@@ -42,34 +42,34 @@ namespace CCTool.Scripts.GHApp.YDYH
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         private void combox_field_bm_old_DropDown(object sender, EventArgs e)
         {
-            string fc = combox_fc.Text;
-            UITool.AddTextFieldsToCombox(fc, combox_field_bm_old);
+            string fc = combox_fc.ComboxText();
+            UITool.AddTextFieldsToComboxPlus(fc, combox_field_bm_old);
         }
 
         private void combox_field_bm_new_DropDown(object sender, EventArgs e)
         {
-            string fc = combox_fc.Text;
-            UITool.AddTextFieldsToCombox(fc, combox_field_bm_new);
+            string fc = combox_fc.ComboxText();
+            UITool.AddTextFieldsToComboxPlus(fc, combox_field_bm_new);
         }
 
         private void combox_field_mc_new_DropDown(object sender, EventArgs e)
         {
-            string fc = combox_fc.Text;
-            UITool.AddTextFieldsToCombox(fc, combox_field_mc_new);
+            string fc = combox_fc.ComboxText();
+            UITool.AddTextFieldsToComboxPlus(fc, combox_field_mc_new);
         }
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
         {
             // 获取指标
-            string fc = combox_fc.Text;
-            string oldBM = combox_field_bm_old.Text;
-            string newBM = combox_field_bm_new.Text;
-            string newMC = combox_field_mc_new.Text;
+            string fc = combox_fc.ComboxText();
+            string oldBM = combox_field_bm_old.ComboxText();
+            string newBM = combox_field_bm_new.ComboxText();
+            string newMC = combox_field_mc_new.ComboxText();
 
             // 判断参数是否选择完全
             if (fc == "" || oldBM == "" || newBM == "")
@@ -119,6 +119,12 @@ namespace CCTool.Scripts.GHApp.YDYH
                 MessageBox.Show(ee.Message + ee.StackTrace);
                 return;
             }
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135771021?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

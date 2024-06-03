@@ -1,0 +1,45 @@
+﻿<controls:ProWindow x:Class="CCTool.Scripts.GHApp.QT.SQSXStatistics"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
+        mc:Ignorable="d"
+        Title="三线占用情况汇总表" Height="500" Width="500"
+                    WindowStartupLocation="CenterScreen"
+                    Icon="/CCTool;component/Data/Icons/Atoolbox.png"
+    >
+    <controls:ProWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </controls:ProWindow.Resources>
+    <Grid>
+
+        <Label Content="选择城镇开发边界：" HorizontalAlignment="Left" Margin="15,12,0,0" VerticalAlignment="Top" Width="113" Height="25"/>
+        <ComboBox x:Name="combox_kfbj" Style="{StaticResource ComboBox_icon}" Margin="128,14,15,0" VerticalAlignment="Top" DropDownOpened="combox_kfbj_DropDown" Grid.ColumnSpan="2" Height="21"/>
+        <Label Content="输出Excel文件路径：" HorizontalAlignment="Left" Margin="15,263,0,0" VerticalAlignment="Top" Width="375" Height="25"/>
+        <TextBox x:Name="textExcelPath" Style="{StaticResource TextBoxNormal}" Margin="15,293,38,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top"/>
+        <Button x:Name="openExcelButton" Style="{StaticResource btn_openFolder}" Margin="0,293,15,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openExcelButton_Click"/>
+
+        <Label Content="选择分区名称字段：" Margin="15,154,0,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Left" Width="113"/>
+        <ComboBox x:Name="combox_mcField" Style="{StaticResource ComboBox_icon}" Margin="128,156,15,0" VerticalAlignment="Top" DropDownOpened="combox_mcField_DropDown" Height="22"/>
+        <Label Content="面积类型：" Margin="15,190,377,0" VerticalAlignment="Top" Height="25"/>
+        <ComboBox x:Name="combox_areaType" Margin="128,192,15,0" VerticalAlignment="Top" Height="21"/>
+        <ComboBox x:Name="combox_areaUnit" Margin="128,227,15,0" VerticalAlignment="Top" RenderTransformOrigin="0.791,0.466" Height="25"  />
+        <Label Content="面积单位：" HorizontalAlignment="Left" Margin="15,227,0,0" VerticalAlignment="Top" Width="64"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,16,28"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,98,28" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+        <Label Content="选择永久基本农田：" HorizontalAlignment="Left" Margin="15,47,0,0" VerticalAlignment="Top" Width="113" Height="25"/>
+        <ComboBox x:Name="combox_jbnt" Style="{StaticResource ComboBox_icon}" Margin="128,49,15,0" VerticalAlignment="Top" DropDownOpened="combox_jbnt_DropDown" Height="21"/>
+        <Label Content="选择生态保护红线：" HorizontalAlignment="Left" Margin="15,82,0,0" VerticalAlignment="Top" Width="110" Height="25"/>
+        <ComboBox x:Name="combox_sthx" Style="{StaticResource ComboBox_icon}" Margin="128,84,15,0" VerticalAlignment="Top" DropDownOpened="combox_sthx_DropDown" Height="21"/>
+        <Label Content="选择分区图层：" HorizontalAlignment="Left" Margin="15,117,0,0" VerticalAlignment="Top" Width="110" Height="25"/>
+        <ComboBox x:Name="combox_zone" Style="{StaticResource ComboBox_icon}" Margin="128,119,15,0" VerticalAlignment="Top" DropDownOpened="combox_zone_DropDown" Height="21"/>
+
+    </Grid>
+</controls:ProWindow>

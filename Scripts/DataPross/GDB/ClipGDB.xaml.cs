@@ -50,8 +50,8 @@ namespace CCTool.Scripts.UI.ProWindow
             {
                 // 获取参数
                 string original_gdb = textOriginalGDB.Text;
-                string clip_fc = comboxClipFeature.Text;
-                string clip_field = comboxClipField.Text;
+                string clip_fc = comboxClipFeature.ComboxText();
+                string clip_field = comboxClipField.ComboxText();
                 string folder_resultGDB = textResultGDB.Text;
 
                 // 工程默认文件夹位置
@@ -110,7 +110,7 @@ namespace CCTool.Scripts.UI.ProWindow
                     // 删除中间数据
                     Directory.Delete(new_gdb, true);
                 });
-                pw.AddProcessMessage(70, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -121,21 +121,28 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void comboxClipFeature_DropOpen(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(comboxClipFeature);
+            UITool.AddFeatureLayersToComboxPlus(comboxClipFeature);
         }
 
         private void comboxClipField_DropOpen(object sender, EventArgs e)
         {
-            string clip = comboxClipFeature.Text;
-            UITool.AddTextFieldsToCombox(clip, comboxClipField);
+            string clip = comboxClipFeature.ComboxText();
+            UITool.AddTextFieldsToComboxPlus(clip, comboxClipField);
         }
 
         private async void btn_check_Click(object sender, RoutedEventArgs e)
         {
             string original_gdb = textOriginalGDB.Text;
-            string clip_fc = comboxClipFeature.Text;
-            string clip_field = comboxClipField.Text;
+            string clip_fc = comboxClipFeature.ComboxText();
+            string clip_field = comboxClipField.ComboxText();
             string folder_resultGDB = textResultGDB.Text;
+
+            // 判断参数是否选择完全
+            if (original_gdb == "" || clip_fc == "" || clip_field == "" || folder_resultGDB == "")
+            {
+                MessageBox.Show("有必选参数为空！！！");
+                return;
+            }
 
             // 打开检查框
             ProcessWindow pw = UITool.OpenProcessWindow(processwindow, "数据检查");
@@ -158,6 +165,12 @@ namespace CCTool.Scripts.UI.ProWindow
 
                 pw.AddProcessMessage(100, "检查完成。", Brushes.Blue);
             });
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135816584?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

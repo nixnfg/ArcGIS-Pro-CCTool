@@ -33,6 +33,7 @@ namespace CCTool.Scripts.UI.ProWindow
             combox_model.Items.Add("度分秒转十进制度");
             combox_model.Items.Add("十进制度转度分秒");
             combox_model.SelectedIndex = 0;
+
         }
 
         // 定义一个进度框
@@ -41,7 +42,8 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayerAndTableToCombox(combox_fc);
+            UITool.AddFeatureLayerAndTableToComboxPlus(combox_fc);
+
         }
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
@@ -49,7 +51,7 @@ namespace CCTool.Scripts.UI.ProWindow
             try
             {
                 // 获取参数
-                string fc_path = combox_fc.Text;
+                string fc_path = combox_fc.ComboxText();
                 string model = combox_model.Text;
 
                 // 判断参数是否选择完全
@@ -83,7 +85,7 @@ namespace CCTool.Scripts.UI.ProWindow
                         pw.AddProcessMessage(20, time_base, @$"处理字段： {oldFieldName}");
 
                         // 新字段名
-                        string modelName = model[(model.IndexOf("转")+1)..];
+                        string modelName = model[(model.IndexOf("转") + 1)..];
                         string oldNameUpdata = oldFieldName;
                         if (oldFieldName.Contains("_转_"))
                         {
@@ -196,7 +198,7 @@ namespace CCTool.Scripts.UI.ProWindow
                         }
                     }
                 });
-                pw.AddProcessMessage(80, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -207,60 +209,37 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void combox_model_Closed(object sender, EventArgs e)
         {
-            string model = combox_model.Text;
-            if (model=="")
-            {
-                combox_field.IsEditable = false;    
-            }
-            else if (model == "度分秒转十进制度")
-            {
-                combox_field.IsEditable = true;
-                combox_field.Items.Clear();
-                lb.Content = "选择度分秒字段 (文本型)：";
-                listBox_field.Items.Clear();
-            }
-            else if (model == "十进制度转度分秒")
-            {
-                combox_field.IsEditable = true;
-                combox_field.Items.Clear();
-                lb.Content = "选择十进制度字段 (双精度型)：";
-                listBox_field.Items.Clear();
-            }
+            UpdataFieldListBox();
         }
 
-        private void combox_field_DropDown(object sender, EventArgs e)
+        private void combox_fc_Closed(object sender, EventArgs e)
         {
-            string model = combox_model.Text;
-
-            if (model == "度分秒转十进制度")
-            {
-                UITool.AddTextFieldsToCombox(combox_fc.Text, combox_field);
-            }
-            else if (model == "十进制度转度分秒")
-            {
-                UITool.AddFloatFieldsToCombox(combox_fc.Text, combox_field);
-            }
+            UpdataFieldListBox();
         }
 
-        private void combox_field_Closed(object sender, EventArgs e)
+        // 更新字段列表框
+        private void UpdataFieldListBox()
         {
-            List<string> conList = new List<string>();
-            foreach (CheckBox item in listBox_field.Items)
+            string lyName = combox_fc.ComboxText();
+            string model = combox_model.Text;
+
+            if (lyName != "")
             {
-                string con = item.Content.ToString();
-                if (!conList.Contains(con))
+                if (model == "度分秒转十进制度")
                 {
-                    conList.Add(con);
+                    UITool.AddTextFieldsToListBox(listBox_field, lyName);
+                }
+                else if (model == "十进制度转度分秒")
+                {
+                    UITool.AddFloatFieldsToListBox(listBox_field, lyName);
                 }
             }
-            if (!conList.Contains(combox_field.Text) && combox_field.Text != "")
-            {
-                // 将txt文件做成checkbox放入列表中
-                CheckBox cb = new CheckBox();
-                cb.Content = combox_field.Text;
-                cb.IsChecked = true;
-                listBox_field.Items.Add(cb);
-            }
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135689034?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
         }
     }
 }

@@ -50,12 +50,14 @@ namespace CCTool.Scripts.Attribute.FieldFloat
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayerAndTableToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         private void combox_field_DropOpen(object sender, EventArgs e)
         {
-            UITool.AddFloatFieldsToCombox(combox_fc.Text, combox_field);
+            // 获取参数
+            string fc_path = combox_fc.ComboxText();
+            UITool.AddFloatFieldsToComboxPlus(fc_path, combox_field);
         }
 
         // 定义一个进度框
@@ -67,8 +69,8 @@ namespace CCTool.Scripts.Attribute.FieldFloat
             try
             {
                 // 获取参数
-                string fc_path = combox_fc.Text;
-                string area_field = combox_field.Text;
+                string fc_path = combox_fc.ComboxText();
+                string area_field = combox_field.ComboxText();
                 string area_type = combox_areaType.Text;
                 string unit = combox_unit.Text;
                 int digit = int.Parse(combox_digit.Text);
@@ -119,13 +121,19 @@ namespace CCTool.Scripts.Attribute.FieldFloat
                     Arcpy.CalculateField(fc_path, area_field, $"round(!shape.{areaType}!/{xs},{digit})");
                 });
 
-                pw.AddProcessMessage(40, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
                 MessageBox.Show(ee.Message + ee.StackTrace);
                 return;
             }
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135702090?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

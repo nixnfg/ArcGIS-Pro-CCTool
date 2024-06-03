@@ -169,9 +169,11 @@ namespace CCTool.Scripts.Manager
             {
                 // 判断当前选择的是要素图层还是独立表
                 Table table = lyName.TargetTable();
-              
+
+                var queryFilter = new QueryFilter();
+                queryFilter.WhereClause = sql;
                 // 逐行找出错误
-                using RowCursor rowCursor = table.Search();
+                using RowCursor rowCursor = table.Search(queryFilter);
                 while (rowCursor.MoveNext())
                 {
                     using Row row = rowCursor.Current;

@@ -81,12 +81,12 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void combox_field_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_field);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_field);
         }
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         private void openFolderButton_Click(object sender, RoutedEventArgs e)
@@ -99,16 +99,16 @@ namespace CCTool.Scripts.UI.ProWindow
             try
             {
                 // 参数获取
-                string in_fc = combox_fc.Text;
-                string zdh_field = combox_field.Text;
+                string in_fc = combox_fc.ComboxText();
+                string zdh_field = combox_field.ComboxText();
                 string excel_folder = textFolderPath.Text;
                 string zd_unit = combox_zd_unit.Text;
                 int zd_areaDigit = int.Parse(combox_zd_areaDigit.Text);
                 int ptDigit = int.Parse(combox_ptDigit.Text);
-                string qlr = combox_qlr.Text;
+                string qlr = combox_qlr.ComboxText();
                 bool xyReserve = (bool)check_xy.IsChecked;
                 bool haveJ = (bool)check_xy_J.IsChecked;
-                string jzmj = combox_jz_area.Text;
+                string jzmj = combox_jz_area.ComboxText();
                 string zdmj_type = combox_zd_type.Text;
                 string sh = combox_sh.Text;     //序号模式
                 string zbr = txt_zbr.Text;
@@ -235,14 +235,7 @@ namespace CCTool.Scripts.UI.ProWindow
                                     }
                                     else if (sh == "按点号排序")
                                     {
-                                        if (pointIndex - lastRowCount == mapPoints[i].Count)    // 找到当前环的最后一点
-                                        {
-                                            worksheet.Cells[rowIndex, 0].Value = $"{lastRowCount + 1 - i}";
-                                        }
-                                        else
-                                        {
-                                            worksheet.Cells[rowIndex, 0].Value = $"{pointIndex - i}";
-                                        }
+                                        worksheet.Cells[rowIndex, 0].Value = $"{pointIndex}";
                                     }
 
                                     double x = Math.Round(mapPoints[i][j].X, ptDigit);
@@ -261,7 +254,7 @@ namespace CCTool.Scripts.UI.ProWindow
                                     // 设置单元格为数字型，小数位数
                                     Aspose.Cells.Style style = worksheet.Cells[rowIndex, 2].GetStyle();
                                     style.Number = 4;   // 数字型
-                                                        // 小数位数
+                                    // 小数位数
                                     style.Custom = ptDigit switch
                                     {
                                         1 => "0.0",
@@ -290,10 +283,22 @@ namespace CCTool.Scripts.UI.ProWindow
                                     // 是否跨页
                                     if (rowIndex == 79 || (rowIndex - 79) % 85 == 0)
                                     {
-                                        rowIndex += 11;
-                                        // 点号回退1
-                                        j--;
-                                        pointIndex--;
+                                        // 但是如果是最后一个点，不就跨页了
+                                        if (pointIndex - lastRowCount != mapPoints[i].Count)
+                                        {
+                                            rowIndex += 11;
+                                            // 点号回退1
+                                            j--;
+                                            pointIndex--;
+                                        }
+                                        else
+                                        {
+                                            //rowIndex += 2;
+                                            rowIndex += 11;
+                                            // 点号回退1
+                                            j--;
+                                            pointIndex--;
+                                        }
                                     }
                                     else
                                     {
@@ -324,7 +329,7 @@ namespace CCTool.Scripts.UI.ProWindow
             // 获取要素的界址点总数
             var pointsCount = geometry.Points.Count;
             // 计算要生成的页数
-            long pageCount = (int)Math.Ceiling(((double)(pointsCount-36) / 37)) + 1;
+            long pageCount = (int)Math.Ceiling((double)(pointsCount-36) / 37) + 1;
 
             if (pageCount == 1)   // 只有一页，就删第二页
             {
@@ -392,13 +397,18 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void combox_qlr_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_qlr);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_qlr);
         }
 
         private void combox_jz_area_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFloatFieldsToCombox(combox_fc.Text, combox_jz_area);
+            UITool.AddFloatFieldsToComboxPlus(combox_fc.ComboxText(), combox_jz_area);
         }
 
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135836514?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
+        }
     }
 }

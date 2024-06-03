@@ -2,10 +2,13 @@
 using ArcGIS.Core.Data.Raster;
 using ArcGIS.Core.Data.UtilityNetwork.Trace;
 using ArcGIS.Core.Geometry;
+using ArcGIS.Core.Internal.CIM;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Internal.Mapping.CommonControls;
 using ArcGIS.Desktop.Internal.Mapping.Symbology;
 using ArcGIS.Desktop.Mapping;
+using CCTool.Scripts.LayerPross;
+using CCTool.Scripts.Manager;
 using Newtonsoft.Json.Linq;
 using NPOI.POIFS.FileSystem;
 using NPOI.SS.Formula.Functions;
@@ -19,19 +22,48 @@ using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Media;
+using static System.Net.Mime.MediaTypeNames;
+using CheckBox = System.Windows.Controls.CheckBox;
+using ComboBox = System.Windows.Controls.ComboBox;
+using ListBox = System.Windows.Controls.ListBox;
+using Match = System.Text.RegularExpressions.Match;
+using Path = System.IO.Path;
+using Polygon = ArcGIS.Core.Geometry.Polygon;
+using RichTextBox = System.Windows.Controls.RichTextBox;
+using Segment = ArcGIS.Core.Geometry.Segment;
+using SpatialReference = ArcGIS.Core.Geometry.SpatialReference;
 using Table = ArcGIS.Core.Data.Table;
 
 namespace CCTool.Scripts.ToolManagers
 {
     public static class BaseExtension
     {
+
+        public static List<string> GetCheckListBoxText(this ListBox lb)
+        {
+            List<string> list = new List<string>();
+
+            // 获取所有选中的txt
+            foreach (CheckBox item in lb.Items)
+            {
+                if (item.IsChecked == true)
+                {
+                    list.Add(item.Content.ToString());
+                }
+            }
+
+            return list;
+        }
+
         // 获取Excel的文件名
         public static string GetAttFormTxtJson(this string txtPath, string attName)
         {
@@ -318,11 +350,19 @@ namespace CCTool.Scripts.ToolManagers
         }
 
         //  获取字段的所有唯一值
-        public static List<string> GetFieldValues(this string targetPath, string fieldName)
+        public static List<string> GetFieldValues(this object targetPath, string fieldName)
         {
             List<string> fieldValues = new List<string>();
             // 获取Table
-            Table table = targetPath.TargetTable();
+            Table table;
+            if (targetPath is FeatureLayer layer)
+            {
+                table = layer.GetTable();
+            }
+            else
+            {
+                table = ((string)targetPath).TargetTable();
+            }
             // 逐行找出错误
             using RowCursor rowCursor = table.Search();
             while (rowCursor.MoveNext())
@@ -344,11 +384,19 @@ namespace CCTool.Scripts.ToolManagers
         }
 
         //  获取字段的所有唯一值(含同一值个数)
-        public static Dictionary<string, long> GetFieldValuesDic(this string targetPath, string fieldName)
+        public static Dictionary<string, long> GetFieldValuesDic(this object targetPath, string fieldName)
         {
             Dictionary<string, long> dic = new Dictionary<string, long>();
             // 获取Table
-            Table table = targetPath.TargetTable();
+            Table table;
+            if (targetPath is FeatureLayer layer)
+            {
+                table = layer.GetTable();
+            }
+            else
+            {
+                table = ((string)targetPath).TargetTable();
+            }
             // 逐行找出错误
             using RowCursor rowCursor = table.Search();
             while (rowCursor.MoveNext())
@@ -368,6 +416,43 @@ namespace CCTool.Scripts.ToolManagers
                     else
                     {
                         dic[result] += 1;
+                    }
+                }
+            }
+            return dic;
+        }
+
+
+        //  获取两个字段的值映射表
+        public static Dictionary<string, string> Get2FieldValueDic(this object targetPath, string fieldName01, string fieldName02)
+        {
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+            // 获取Table
+            Table table;
+            if (targetPath is FeatureLayer layer)
+            {
+                table = layer.GetTable();
+            }
+            else
+            {
+                table = ((string)targetPath).TargetTable();
+            }
+            // 逐行找出
+            using RowCursor rowCursor = table.Search();
+            while (rowCursor.MoveNext())
+            {
+                using ArcGIS.Core.Data.Row row = rowCursor.Current;
+                // 获取value
+                var va01 = row[fieldName01];
+                var va02 = row[fieldName02];
+                if (va01 != null && va02 != null)
+                {
+                    string txt01 = va01.ToString();
+                    string txt02 = va02.ToString();
+                    // 如果不在列表中，就加入
+                    if (!dic.ContainsKey(txt01))
+                    {
+                        dic.Add(txt01, txt02);
                     }
                 }
             }
@@ -844,6 +929,38 @@ namespace CCTool.Scripts.ToolManagers
             return layers.AddNumbersToDuplicates();
         }
 
+
+        // 获取地图中的所有可见图层【带图层结构】
+        public static List<string> CanseeFeatureLayers(this Map map)
+        {
+            List<string> layers = new List<string>();
+            // 获取所有可见图层
+            List<FeatureLayer> featureLayers = map.GetLayersAsFlattenedList().OfType<FeatureLayer>().ToList();
+            List<RasterLayer> rasterLayers = map.GetLayersAsFlattenedList().OfType<RasterLayer>().ToList();
+
+            if (featureLayers is not null)
+            {
+                foreach (FeatureLayer featureLayer in featureLayers)
+                {
+                    List<object> list = featureLayer.GetLayerFullName(map, featureLayer.Name);
+
+                    layers.Add((string)list[1]);
+                }
+            }
+
+            if (rasterLayers is not null)
+            {
+                foreach (RasterLayer rasterLayer in rasterLayers)
+                {
+                    List<object> list = rasterLayer.GetLayerFullName(map, rasterLayer.Name);
+
+                    layers.Add((string)list[1]);
+                }
+            }
+
+            return layers.AddNumbersToDuplicates();
+        }
+
         // 获取图层的图斑个数
         public static long GetFeatureCount(this FeatureLayer featureLayer)
         {
@@ -972,6 +1089,36 @@ namespace CCTool.Scripts.ToolManagers
             return strList;
         }
 
+        // 重排界址点，内外环都按逆时针
+        public static List<List<MapPoint>> ReshotMapPointWise(this Polygon polygon)
+        {
+            List<List<MapPoint>> result = new List<List<MapPoint>>();
+
+            // 获取面要素的所有点（内外环）
+            List<List<MapPoint>> mapPoints = polygon.MapPointsFromPolygon();
+
+            // 每个环进行处理
+            for (int j = 0; j < mapPoints.Count; j++)
+            {
+                List<MapPoint> vertices = mapPoints[j];
+
+                // 判断顺逆时针，如果有问题就调整反向
+                bool isClockwise = vertices.IsColckwise();
+                if (isClockwise)    // 如果是顺时针，则调整反向
+                {
+                    vertices.ReversePoint();
+                }
+
+                // 在末尾加起始点
+                vertices.Add(vertices[0]);
+
+                result.Add(vertices);
+            }
+            // 返回值
+            return result;
+        }
+
+
         // 重排界址点，从西北角开始，并理清顺逆时针
         public static List<List<MapPoint>> ReshotMapPoint(this Polygon polygon)
         {
@@ -1031,10 +1178,111 @@ namespace CCTool.Scripts.ToolManagers
             return result;
         }
 
+        // 重排界址点，自定义起始点，并理清顺逆时针
+        public static List<List<MapPoint>> ReshotMapPointByCustom(this Polygon polygon, List<double> xy)
+        {
+            List<List<MapPoint>> result = new List<List<MapPoint>>();
+
+            // 获取面要素的所有点（内外环）
+            List<List<MapPoint>> mapPoints = polygon.MapPointsFromPolygon();
+
+            // 每个环进行处理
+            for (int j = 0; j < mapPoints.Count; j++)
+            {
+                List<MapPoint> newVertices = new List<MapPoint>();
+                List<MapPoint> vertices = mapPoints[j];
+                // 获取要素的最西北点坐标
+                double XMin = xy[0];
+                double YMax = xy[1];
+
+                // 找出西北点【离西北角（Xmin,Ymax）最近的点】
+                int targetIndex = 0;
+                double maxDistance = 10000000;
+                for (int i = 0; i < vertices.Count; i++)
+                {
+                    // 计算和西北角的距离
+                    double distance = Math.Sqrt(Math.Pow(vertices[i].X - XMin, 2) + Math.Pow(vertices[i].Y - YMax, 2));
+                    // 如果小于上一个值，则保存新值，直到找出最近的点
+                    if (distance < maxDistance)
+                    {
+                        targetIndex = i;
+                        maxDistance = distance;
+                    }
+                }
+
+                // 根据最近点重排顺序
+                newVertices = vertices.GetRange(targetIndex, vertices.Count - targetIndex);
+                vertices.RemoveRange(targetIndex, vertices.Count - targetIndex);
+                newVertices.AddRange(vertices);
+
+                // 判断顺逆时针，如果有问题就调整反向
+                bool isClockwise = newVertices.IsColckwise();
+                if (!isClockwise && j == 0)    // 如果是外环，且逆时针，则调整反向
+                {
+                    newVertices.ReversePoint();
+                }
+                if (isClockwise && j > 0)    // 如果是内环，且顺时针，则调整反向
+                {
+                    newVertices.ReversePoint();
+                }
+
+                // 在末尾加起始点
+                newVertices.Add(newVertices[0]);
+
+                result.Add(newVertices);
+            }
+            // 返回值
+            return result;
+        }
+
         // 重排界址点，从西北角开始，并理清顺逆时针，并返回面要素
         public static Polygon ReshotMapPointReturnPolygon(this Polygon polygon)
         {
             List<List<MapPoint>> mapPoints = polygon.ReshotMapPoint();
+
+            // 判断是否有内环，如果没有内环
+            if (mapPoints.Count == 1)
+            {
+                Polygon resultPolygon = PolygonBuilderEx.CreatePolygon(mapPoints[0]);
+                // 返回值
+                return resultPolygon;
+            }
+            // 如果有内环
+            else
+            {
+                // 生成外环点集
+                List<Coordinate2D> outerPts = new List<Coordinate2D>();
+                foreach (MapPoint pt in mapPoints[0])
+                {
+                    outerPts.Add(new Coordinate2D(pt.X, pt.Y));
+                }
+                // 创建外环面
+                PolygonBuilderEx pb = new PolygonBuilderEx(outerPts);
+
+                // 移除外环，剩下内环进行处理
+                mapPoints.RemoveAt(0);
+                // 收集内环集合
+                foreach (List<MapPoint> innerPoints in mapPoints)
+                {
+                    // 获取内环点集
+                    List<Coordinate2D> innerPts = new List<Coordinate2D>();
+                    foreach (MapPoint pt in innerPoints)
+                    {
+                        innerPts.Add(new Coordinate2D(pt.X, pt.Y));
+                    }
+                    // 将内环点集加入到外环面处理
+                    pb.AddPart(innerPts);
+                }
+                // 返回最终的面
+                return pb.ToGeometry();
+            }
+        }
+
+
+        // 重排界址点，自定义起始点，并理清顺逆时针，并返回面要素
+        public static Polygon ReshotMapPointReturnPolygonByCustom(this Polygon polygon, List<double> xy)
+        {
+            List<List<MapPoint>> mapPoints = polygon.ReshotMapPointByCustom(xy);
 
             // 判断是否有内环，如果没有内环
             if (mapPoints.Count == 1)
@@ -1209,5 +1457,271 @@ namespace CCTool.Scripts.ToolManagers
             // 返回
             return cursor;
         }
+
+        // 获取面要素的最小图斑面积
+        public static double GetPolygonMinArea(this string lyName)
+        {
+            double minArea = 100000000;
+
+            // 获取原始图层的要素类
+            FeatureClass originFeatureClass = lyName.TargetFeatureClass();
+
+            // 获取原始图层的要素游标
+            using (RowCursor originCursor = originFeatureClass.Search())
+            {
+                // 遍历源图层的要素
+                while (originCursor.MoveNext())
+                {
+                    using (Feature originFeature = (Feature)originCursor.Current)
+                    {
+                        // 获取源要素的几何
+                        ArcGIS.Core.Geometry.Geometry originGeometry = originFeature.GetShape();
+                        // 要素面积
+                        double originArea = (originGeometry as ArcGIS.Core.Geometry.Polygon).Area;
+
+                        if (originArea < minArea)
+                        {
+                            minArea = originArea;
+                        }
+                    }
+                }
+            }
+
+            return minArea;
+        }
+
+        // 获取特定符号包裹的内容
+        public static string GetStringInside(this string input, string symText = "[]")
+        {
+            string result = "";
+            // 分解符号
+            var s1 = symText[0];
+            var s2 = symText[1];
+            // 设置标记
+            bool insideBraces = false;
+            int start = 0;
+            // 循环，找到起始和完结符号
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] == s1)
+                {
+                    insideBraces = true;
+                    start = i + 1;
+                }
+                else if (input[i] == s2 && insideBraces)
+                {
+                    insideBraces = false;
+                    int length = i - start;
+                    string content = input.Substring(start, length);
+                    string re = s1 + content + s2 + ",";
+                    if (!result.Contains(content))
+                    {
+                        result += re;
+                    }
+                }
+            }
+            return result[..(result.Length - 1)];
+        }
+
+        // 获取加强型combox的文本
+        public static string ComboxText(this ComboBox combox)
+        {
+            // 获取参数
+            ComboBoxContent flc_fc = (ComboBoxContent)combox.SelectedItem;
+            string fc_path = "";
+            if (flc_fc is not null) { fc_path = flc_fc.Name; }
+
+            return fc_path;
+        }
+
+        // 获取加强型listbox的文本
+        public static List<string> ListboxText(this ListBox listbox)
+        {
+            // 获取参数
+            List<string> names = new List<string>();
+            foreach (var item in listbox.Items)
+            {
+                ListBoxContent flc_fc = (ListBoxContent)item;
+
+                if (flc_fc.IsSelect == true) { names.Add(flc_fc.Name); }
+            }
+
+            return names;
+        }
+
+        // 分解三级用地编码
+        public static List<string> DecomposeBM(this string bm)
+        {
+            List<string> result = new List<string>();
+
+            if (bm.Length >= 2)
+            {
+                result.Add(bm[..2]);
+            }
+            if (bm.Length >= 4)
+            {
+                result.Add(bm[..4]);
+            }
+            if (bm.Length >= 6)
+            {
+                result.Add(bm[..6]);
+            }
+            return result;
+        }
+
+        // 给字典增加子顶，如果已有，则累加
+        public static void Accumulation(this Dictionary<string, double> dict, string key, double value)
+        {
+            // 复制一个
+            if (!dict.ContainsKey(key))
+            {
+                dict.Add(key, value);
+            }
+            else
+            {
+                dict[key] += value;
+            }
+        }
+
+        // 判断一个string是不是以数字开头
+        public static bool IsNumeric(this string st)
+        {
+            string str = st[0].ToString();
+            if (str == null || str.Length == 0)    //验证这个参数是否为空
+                return false;                           //是，就返回False
+            ASCIIEncoding ascii = new ASCIIEncoding();//new ASCIIEncoding 的实例
+            byte[] bytestr = ascii.GetBytes(str);         //把string类型的参数保存到数组里
+
+            foreach (byte c in bytestr)                   //遍历这个数组里的内容
+            {
+                if (c < 48 || c > 57)                          //判断是否为数字
+                {
+                    return false;                              //不是，就返回False
+                }
+            }
+            return true;                                        //是，就返回True
+        }
+
+        // 判断一个string是不是以数字开头
+        public static bool IsHasZ(this string target_fc)
+        {
+            bool hasZ = false;
+            
+            FeatureClass featureClass = target_fc.TargetFeatureClass();
+
+            // 遍历面要素类中的所有要素
+            RowCursor cursor = featureClass.Search();
+            while (cursor.MoveNext())
+            {
+                using var feature = cursor.Current as Feature;
+                // 获取要素的几何
+                Polygon geometry = feature.GetShape() as Polygon;
+
+                if (geometry.HasZ)
+                {
+                    hasZ = true;
+                    break;
+                }
+                else
+                {
+                    hasZ = false;
+                    break;
+                }
+            }
+            return hasZ;   
+        }
+
+
+        public static void ClearGDBItem(this string gdbPath)
+        {
+            // 打开gdb
+            using (Geodatabase gdb = new Geodatabase(new FileGeodatabaseConnectionPath(new Uri(gdbPath))))
+            {
+                // 获取要素类和独立表
+                var fcDefinitions = gdb.GetDefinitions<FeatureClassDefinition>();
+                var tableDefinitions = gdb.GetDefinitions<TableDefinition>();
+
+                // 删除空要素和表
+                if (fcDefinitions.Count != 0)
+                {
+                    foreach (var fcDefinition in fcDefinitions)
+                    {
+                        FeatureClass featureClass = gdb.OpenDataset<FeatureClass>(fcDefinition.GetName());
+                        // 删除
+                        Arcpy.Delect(featureClass);
+                    }
+                }
+                if (tableDefinitions.Count != 0)
+                {
+                    foreach (var tableDefinition in tableDefinitions)
+                    {
+                        Table table = gdb.OpenDataset<Table>(tableDefinition.GetName());
+                        // 删除
+                        Arcpy.Delect(table);
+                    }
+                }
+            };
+        }
+
+        // 度分秒转十进制度
+        public static string ToDecimal(this double cod)
+        {
+            double value = double.Parse(cod.ToString());
+            // 计算度分秒的值
+            int degree = (int)(value / 1);
+            int minutes = (int)(value % 1 * 60 / 1);
+            double seconds = (value % 1 * 60 - minutes) * 60;
+            // 合并为字符串
+            string dec = degree.ToString() + "°" + minutes.ToString() + "′" + seconds.ToString("0.00") + "″";
+
+            // 返回
+            return dec;
+        }
+
+
+        // 十进制度转度分秒
+        public static double ToDegree(this string dec)
+        {
+            // 初始化度分秒符号的位置
+            int index1 = -1;
+            int index2 = -1;
+            int index3 = -1;
+            // 定义度分秒可能的符号
+            List<string> list_degree = new List<string>() { "度", "°" };
+            List<string> list_minutes = new List<string>() { "分", "′", "'" };
+            List<string> list_seconds = new List<string>() { "秒", "″", "\"" };
+            // 找到度分秒符号的位置
+            foreach (var item in list_degree)
+            {
+                if (dec.ToString().IndexOf(item) != -1)
+                {
+                    index1 = dec.ToString().IndexOf(item);
+                }
+            }
+            foreach (var item in list_minutes)
+            {
+                if (dec.ToString().IndexOf(item) != -1)
+                {
+                    index2 = dec.ToString().IndexOf(item);
+                }
+            }
+            foreach (var item in list_seconds)
+            {
+                if (dec.ToString().IndexOf(item) != -1)
+                {
+                    index3 = dec.ToString().IndexOf(item);
+                }
+            }
+            // 计算度分秒数值
+            double degree = double.Parse(dec.ToString().Substring(0, index1));
+            double minutes = double.Parse(dec.ToString().Substring(index1 + 1, index2 - index1 - 1));
+            double seconds = double.Parse(dec.ToString().Substring(index2 + 1, index3 - index2 - 1));
+            // 计算赋值
+            double deg = degree + minutes / 60 + seconds / 3600;
+
+            // 返回
+            return deg;
+        }
+
     }
 }

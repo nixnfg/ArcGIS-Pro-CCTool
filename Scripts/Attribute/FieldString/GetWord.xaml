@@ -6,25 +6,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="提取特定文字" Height="350" Width="500" WindowStartupLocation="CenterScreen"
+        Title="提取特定文字" Height="350" Width="500" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="输入要素图层或独立表：" HorizontalAlignment="Left" Margin="18,14,0,0" VerticalAlignment="Top" Width="374"/>
-        <ComboBox x:Name="combox_fc" Margin="18,39,19,0" VerticalAlignment="Top" DropDownOpened="combox_fc_DropDown"/>
+        <ComboBox x:Name="combox_fc" Style="{StaticResource ComboBox_icon}" Margin="18,39,19,0" VerticalAlignment="Top" DropDownOpened="combox_fc_DropDown"/>
         <Label Content="输入原始文本字段：" HorizontalAlignment="Left" Margin="18,60,0,0" VerticalAlignment="Top" Width="164" Height="24"/>
-        <ComboBox x:Name="combox_field_in" Margin="18,85,18,0" VerticalAlignment="Top" Height="21" DropDownOpened="combox_field_in_DropDown"/>
+        <ComboBox x:Name="combox_field_in" Style="{StaticResource ComboBox_icon}" Margin="18,85,18,0" VerticalAlignment="Top" Height="21" DropDownOpened="combox_field_in_DropDown"/>
         <Label Content="输出文本字段：" HorizontalAlignment="Left" Margin="18,107,0,0" VerticalAlignment="Top" Width="164" Height="24"/>
-        <ComboBox x:Name="combox_field_out" VerticalAlignment="Top" Height="21" Margin="18,132,18,0" DropDownOpened="combox_field_out_DropDown"/>
+        <ComboBox x:Name="combox_field_out" Style="{StaticResource ComboBox_icon}" VerticalAlignment="Top" Height="21" Margin="18,132,18,0" DropDownOpened="combox_field_out_DropDown"/>
         <Label Content="提取模式：" HorizontalAlignment="Left" Margin="18,155,0,0" VerticalAlignment="Top" Width="164" Height="24"/>
         <ComboBox x:Name="combox_model" VerticalAlignment="Top" Height="21" Margin="18,181,0,0" HorizontalAlignment="Left" Width="112"/>
-        <Button x:Name="btn_go" Content="执行" Margin="0,0,19,26" HorizontalAlignment="Right" Width="63" Height="23" VerticalAlignment="Bottom" Click="btn_go_click"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,18,23" Click="btn_go_click" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="70" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,100,23" HorizontalAlignment="Right" Click="btn_help_click" Height="24" VerticalAlignment="Bottom"/>
+
 
     </Grid>
 </controls:ProWindow>

@@ -6,25 +6,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="合并文件夹下的所有CAD文件" Height="300" Width="500" WindowStartupLocation="CenterScreen"
+        Title="批量CAD合并为要素" Height="300" Width="500" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="输入包含CAD文件的文件夹：" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" Width="375"/>
-        <TextBox x:Name="textFolderPath" Margin="15,35,49,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
-        <Button x:Name="openFolderButton" Content="打开" Margin="0,35,10,0" HorizontalAlignment="Right" Width="34" Height="21" VerticalAlignment="Top" Background="{x:Null}" Click="openFolderButton_Click"/>
+        <TextBox x:Name="textFolderPath" Margin="15,35,36,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="22"/>
         <Label Content="输出gdb要素类：" HorizontalAlignment="Left" Margin="15,58,0,0" VerticalAlignment="Top" Width="375"/>
-        <Button x:Name="btn_go" Content="执行" HorizontalAlignment="Right" Margin="0,0,10,18" VerticalAlignment="Bottom" Width="57" Click="btn_go_Click"/>
-        <TextBox x:Name="textFeatureClassPath" Margin="15,86,49,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
-        <Button x:Name="openFeatureClassButton" Content="打开" Margin="0,86,10,0" HorizontalAlignment="Right" Width="33" Height="21" VerticalAlignment="Top" Background="{x:Null}" Click="openFeatureClassButton_Click"/>
+        <TextBox x:Name="textFeatureClassPath" Margin="15,86,36,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="22"/>
         <Label Content="输出数据类型：" HorizontalAlignment="Left" Margin="15,117,0,0" VerticalAlignment="Top" Width="375"/>
         <ComboBox x:Name="combox_type" HorizontalAlignment="Left" Margin="15,147,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,12,22"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,94,22" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+
+        <Button x:Name="openFolderButton" Style="{StaticResource btn_openFolder}" Margin="0,35,12,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openFolderButton_Click"/>
+
+        <Button x:Name="openFeatureClassButton" Style="{StaticResource btn_openFolder}" Margin="0,86,12,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openFeatureClassButton_Click"/>
 
     </Grid>
 </controls:ProWindow>

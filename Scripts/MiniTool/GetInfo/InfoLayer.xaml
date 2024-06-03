@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="获取当前地图内的图层" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="form_loaded"
+        Title="获取当前地图内的图层" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="form_loaded" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>

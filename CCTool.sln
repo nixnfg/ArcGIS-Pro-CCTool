@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CCTool", "CCTool.csproj", "{512C59A9-8E2C-44B6-B3B0-9EF9030679AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CCTool", "CCTool.csproj", "{512C59A9-8E2C-44B6-B3B0-9EF9030679AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

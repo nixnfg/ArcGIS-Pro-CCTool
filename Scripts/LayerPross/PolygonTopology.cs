@@ -86,14 +86,12 @@ namespace CCTool.Scripts.UI.ProButton
                     Arcpy.AddRuleToTopology(top_path, "Must Not Overlap (Area)", fc_path);
 
                     pw.AddProcessMessage(20, time_base, "生成重叠错误");
-
                     // 验证拓扑
                     Arcpy.ValidateTopology(top_path);
                     // 输出TOP错误
                     Arcpy.ExportTopologyErrors(top_path, gdb, "TopErr");
 
                     pw.AddProcessMessage(20, time_base, "生成空隙错误");
-
                     // 生成空隙
                     GisTool.GetCave(fc_path, gdb + @"\" + err_fc);
                     // 添加说明字段
@@ -151,7 +149,7 @@ namespace CCTool.Scripts.UI.ProButton
                     Arcpy.Delect(db_path);
                     File.Delete(copy_lyrx);
 
-                    pw.AddProcessMessage(10, time_base, "工具运行完成！！！", Brushes.Blue);
+                    pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
                 });
             }
 			catch (Exception ee)

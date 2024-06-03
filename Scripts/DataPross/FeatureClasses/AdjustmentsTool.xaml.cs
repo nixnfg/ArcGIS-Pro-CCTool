@@ -54,17 +54,17 @@ namespace CCTool.Scripts.DataPross.FeatureClasses
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         private void combox_field_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFloatFieldsToCombox(combox_fc.Text, combox_field);
+            UITool.AddFloatFieldsToComboxPlus(combox_fc.ComboxText(), combox_field);
         }
 
         private void combox_land_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_land);
+            UITool.AddFeatureLayersToComboxPlus(combox_land);
         }
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
@@ -72,15 +72,15 @@ namespace CCTool.Scripts.DataPross.FeatureClasses
             try
             {
                 // 获取参数
-                string fc_path = combox_fc.Text;
-                string fc_field = combox_field.Text;
-                string land_path = combox_land.Text;
+                string fc_path = combox_fc.ComboxText();
+                string fc_field = combox_field.ComboxText();
+                string land_path = combox_land.ComboxText();
                 string area_type = combox_areaType.Text[..2];
                 string unit = combox_unit.Text;
                 int digit = int.Parse(combox_digit.Text);
 
                 bool isFieldOpen = (bool)check_fd.IsChecked;
-                string areaField = combox_areaField.Text;
+                string areaField = combox_areaField.ComboxText();
 
                 // 默认数据库位置
                 var gdb_path = Project.Current.DefaultGeodatabasePath;
@@ -138,7 +138,7 @@ namespace CCTool.Scripts.DataPross.FeatureClasses
                     string re = fields.Substring(0, fields.Length - 1);
                     Arcpy.DeleteField(fcFullPath, re, "KEEP_FIELDS");
                 });
-                pw.AddProcessMessage(40, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -149,10 +149,10 @@ namespace CCTool.Scripts.DataPross.FeatureClasses
 
         private void combox_areaField_DropOpen(object sender, EventArgs e)
         {
-            string fd = combox_fc.Text;
+            string fd = combox_fc.ComboxText();
             if (fd is not null && fd!="")
             {
-                UITool.AddFloatFieldsToCombox(fd, combox_areaField);
+                UITool.AddFloatFieldsToComboxPlus(fd, combox_areaField);
             }
         }
 
@@ -166,5 +166,10 @@ namespace CCTool.Scripts.DataPross.FeatureClasses
             combox_areaField.IsEnabled = true;
         }
 
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135822374?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
+        }
     }
 }

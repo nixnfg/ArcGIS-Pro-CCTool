@@ -106,7 +106,7 @@ namespace CCTool.Scripts.UI.ProButton
                     // 刷新地图视图
                     MapView.Active.ZoomInFixed();
 
-                    pw.AddProcessMessage(20, time_base, "工具运行完成！！！", Brushes.Blue);
+                    pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
                 });
             }
             catch (Exception ee)

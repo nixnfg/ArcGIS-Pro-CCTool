@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CCTool.Scripts.Manager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -121,6 +122,12 @@ namespace CCTool.Scripts.MiniTool.MTool
                 return null;
             }
 
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/136170080?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

@@ -92,7 +92,7 @@ namespace CCTool.Scripts.UI.ProWindow
                     }
                 });
 
-                pw.AddProcessMessage(70, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -115,6 +115,12 @@ namespace CCTool.Scripts.UI.ProWindow
         private void openFolderButton_Click(object sender, RoutedEventArgs e)
         {
             textFolderPath.Text = UITool.OpenDialogFolder();
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135815310?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

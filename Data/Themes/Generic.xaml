@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+     <!--资源集合-->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ButtonStyle.xaml"/>
+        <ResourceDictionary Source="TextBoxStyle.xaml"/>
+        <ResourceDictionary Source="ComboBoxStyle.xaml"/>
+        <ResourceDictionary Source="ListBoxStyle.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+</ResourceDictionary>

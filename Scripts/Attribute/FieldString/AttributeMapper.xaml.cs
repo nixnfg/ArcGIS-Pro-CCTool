@@ -34,7 +34,7 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayerAndTableToCombox(combox_fc);
+            UITool.AddFeatureLayerAndTableToComboxPlus(combox_fc);
         }
 
 
@@ -52,9 +52,9 @@ namespace CCTool.Scripts.UI.ProWindow
             {
                 // 参数获取
                 string map_tabel = textExcelPath.Text;
-                string in_data = combox_fc.Text;
-                string in_field = combox_field_before.Text;
-                string map_field = combox_feild_after.Text;
+                string in_data = combox_fc.ComboxText();
+                string in_field = combox_field_before.ComboxText();
+                string map_field = combox_feild_after.ComboxText();
 
                 // 判断参数是否选择完全
                 if (map_tabel == "" || in_data == "" || in_field == "" || map_field == "")
@@ -74,7 +74,7 @@ namespace CCTool.Scripts.UI.ProWindow
                     pw.AddProcessMessage(10, "处理数据");
                     pw.AddProcessMessage(10, time_base, "属性映射");
                     GisTool.AttributeMapper(in_data, in_field, map_field, map_tabel);
-                    pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                    pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
                 });
             }
             catch (Exception ee)
@@ -86,12 +86,18 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void combox_be_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_field_before);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_field_before);
         }
 
         private void combox_af_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_feild_after);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_feild_after);
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135818775?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

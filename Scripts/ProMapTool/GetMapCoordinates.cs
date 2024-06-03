@@ -12,6 +12,8 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Layouts;
 using ArcGIS.Desktop.Mapping;
 using CCTool.Scripts.Manager;
+using CCTool.Scripts.MessageWindow;
+using CCTool.Scripts.ToolManagers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +29,7 @@ namespace CCTool.Scripts.UI.ProMapTool
             IsSketchTool = true;
             SketchType = SketchGeometryType.Point;
             SketchOutputMode = SketchOutputMode.Map;
+            UseSnapping= true;
         }
 
         protected override Task OnToolActivateAsync(bool active)
@@ -45,6 +48,9 @@ namespace CCTool.Scripts.UI.ProMapTool
                 e.Handled = true; //Handle the event args to get the call to the corresponding async method
         }
 
+        // 定义一个进度框
+        private XYInfoWindow _xyinfowindow = null;
+
         protected override Task HandleMouseDownAsync(MapViewMouseButtonEventArgs e)
         {
             return QueuedTask.Run(() =>
@@ -55,8 +61,13 @@ namespace CCTool.Scripts.UI.ProMapTool
                 double x_dec = mapPoint.X;
                 double y_dec = mapPoint.Y;
 
-                // 消息框提示
-                MessageBox.Show($"XY坐标:({x_dec},{y_dec})\r", "点坐标信息");
+                // 在UI线程上执行添加item的操作
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    // 打开XY信息框
+                    XYInfoWindow xyw = UITool.OpenXYInfoWindow(_xyinfowindow);
+                    xyw.AddXYInfo(x_dec, y_dec);
+                });
             });
         }
     }

@@ -33,7 +33,7 @@ namespace CCTool.Scripts.DataPross.SHP
 
         // 定义一个进度框
         private ProcessWindow processwindow = null;
-        string tool_name = "SHP按编号转KML";
+        string tool_name = "要素按编号转KMZ";
 
         private void openForderButton_Click(object sender, RoutedEventArgs e)
         {
@@ -42,13 +42,13 @@ namespace CCTool.Scripts.DataPross.SHP
 
         private void combox_field_DropDown(object sender, EventArgs e)
         {
-            string fc = combox_fc.Text;
-            UITool.AddFieldsToCombox(fc, combox_field);
+            string fc = combox_fc.ComboxText();
+            UITool.AddFieldsToComboxPlus(fc, combox_field);
         }
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
@@ -57,8 +57,8 @@ namespace CCTool.Scripts.DataPross.SHP
             {
                 // 获取指标
                 string folder_path = folderPath.Text;
-                string fc = combox_fc.Text;
-                string shot_field = combox_field.Text;
+                string fc = combox_fc.ComboxText();
+                string shot_field = combox_field.ComboxText();
 
                 // 判断参数是否选择完全
                 if (folder_path == "" || fc == "" || shot_field == "")
@@ -108,7 +108,7 @@ namespace CCTool.Scripts.DataPross.SHP
 
                     }
 
-                    pw.AddProcessMessage(80, time_base, "工具运行完成！！！", Brushes.Blue);
+                    pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
                 });
 
             }
@@ -117,6 +117,12 @@ namespace CCTool.Scripts.DataPross.SHP
                 MessageBox.Show(ee.Message + ee.StackTrace);
                 return;
             }
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135840446?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

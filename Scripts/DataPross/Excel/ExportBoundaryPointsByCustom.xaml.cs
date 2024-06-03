@@ -71,6 +71,7 @@ namespace CCTool.Scripts.DataPross.Excel
             combox_sh.Items.Add("按点号排序");
             combox_sh.Items.Add("按部件号排序");
             combox_sh.SelectedIndex = 0;
+
         }
 
         // 定义一个进度框
@@ -79,12 +80,12 @@ namespace CCTool.Scripts.DataPross.Excel
 
         private void combox_field_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_field);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_field);
         }
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         private void openFolderButton_Click(object sender, RoutedEventArgs e)
@@ -97,22 +98,25 @@ namespace CCTool.Scripts.DataPross.Excel
             try
             {
                 // 参数获取
-                string in_fc = combox_fc.Text;
-                string zdh_field = combox_field.Text;
+                string in_fc = combox_fc.ComboxText();
+                string zdh_field = combox_field.ComboxText();
                 string excel_folder = textFolderPath.Text;
                 string zd_unit = combox_zd_unit.Text;
                 int zd_areaDigit = int.Parse(combox_zd_areaDigit.Text);
                 int ptDigit = int.Parse(combox_ptDigit.Text);
-                string qlr = combox_qlr.Text;
+                string qlr = combox_qlr.ComboxText();
                 bool xyReserve = (bool)check_xy.IsChecked;
                 bool haveJ = (bool)check_xy_J.IsChecked;
-                string jzmj = combox_jz_area.Text;
+                string jzmj = combox_jz_area.ComboxText();
                 string zdmj_type = combox_zd_type.Text;
                 string sh = combox_sh.Text;     //序号模式
                 string zbx = txt_zbx.Text;
                 string qsly = txt_qsly.Text;
                 string zbrq = txt_zbrq.Text;
                 string clff = txt_clff.Text;
+                // 宗地面积_按字段
+                bool isZDFormField = (bool)checkBoxZD.IsChecked;
+                string zdmj = combox_zd_field.ComboxText();
 
                 // 判断参数是否选择完全
                 if (in_fc == "" || zdh_field == "" || excel_folder == "")
@@ -159,25 +163,36 @@ namespace CCTool.Scripts.DataPross.Excel
                         if (qlr != "") { QLR = feature[qlr]?.ToString() ?? ""; }
                         string JZMJ = "";                  // 建筑面积
                         if (jzmj != "") { JZMJ = feature[jzmj]?.ToString() ?? ""; }
-                        // 计算多边形的面积
-                        double xs = zd_unit switch    // 单位换算
+                        string ZDMJ = "";                  // 宗地面积_按字段
+                        if (zdmj != "") { ZDMJ = feature[zdmj]?.ToString() ?? ""; }
+
+                        // 计算宗地面积
+                        double ZDMJ_final;
+                        if (isZDFormField)
                         {
-                            "平方米" => 1,
-                            "公顷" => 10000,
-                            "平方公里" => 1000000,
-                            "亩" => 666.6667,
-                            _ => 0,
-                        };
-                        double polygonArea;
-                        if (zdmj_type == "椭球面积")
-                        {
-                            polygonArea = Math.Round(GeometryEngine.Instance.GeodesicArea(geometry) / xs, zd_areaDigit);
+                            ZDMJ_final = double.Parse(ZDMJ);
                         }
                         else
                         {
-                            polygonArea = Math.Round(geometry.Area / xs, zd_areaDigit);
+                            // 计算多边形的面积
+                            double xs = zd_unit switch    // 单位换算
+                            {
+                                "平方米" => 1,
+                                "公顷" => 10000,
+                                "平方公里" => 1000000,
+                                "亩" => 666.6667,
+                                _ => 0,
+                            };
+                            if (zdmj_type == "椭球面积")
+                            {
+                                ZDMJ_final = Math.Round(GeometryEngine.Instance.GeodesicArea(geometry) / xs, zd_areaDigit);
+                            }
+                            else
+                            {
+                                ZDMJ_final = Math.Round(geometry.Area / xs, zd_areaDigit);
+                            }
                         }
-
+                        
                         // 复制界址点Excel表
                         string excelPath = excel_folder + @$"\{oid} - {feature_name}界址点表.xlsx";
                         BaseTool.CopyResourceFile(@"CCTool.Data.Excel.【模板】界址点表_多页_自定义2.xlsx", excelPath);
@@ -193,7 +208,7 @@ namespace CCTool.Scripts.DataPross.Excel
 
 
                         // 设置分页信息
-                        SetPage(geometry, cells, feature_name, QLR, polygonArea, JZMJ, zd_unit, zbx, qsly, zbrq);
+                        SetPage(geometry, cells, feature_name, QLR, ZDMJ_final, JZMJ, zd_unit, zbx, qsly, zbrq);
 
                         if (geometry != null)
                         {
@@ -235,14 +250,7 @@ namespace CCTool.Scripts.DataPross.Excel
                                     }
                                     else if (sh == "按点号排序")
                                     {
-                                        if (pointIndex - lastRowCount == mapPoints[i].Count)    // 找到当前环的最后一点
-                                        {
-                                            worksheet.Cells[rowIndex, 0].Value = $"{lastRowCount + 1 - i}";
-                                        }
-                                        else
-                                        {
-                                            worksheet.Cells[rowIndex, 0].Value = $"{pointIndex - i}";
-                                        }
+                                        worksheet.Cells[rowIndex, 0].Value = $"{pointIndex}";
                                     }
                                     // 写入测量方法
                                     worksheet.Cells[rowIndex, 2].Value = clff;
@@ -293,10 +301,18 @@ namespace CCTool.Scripts.DataPross.Excel
                                     // 是否跨页
                                     if (rowIndex == 79 || (rowIndex - 79) % 85 == 0)
                                     {
-                                        rowIndex += 11;
-                                        // 点号回退1
-                                        j--;
-                                        pointIndex--;
+                                        // 但是如果是最后一个点，不就跨页了
+                                        if (pointIndex - lastRowCount != mapPoints[i].Count)
+                                        {
+                                            rowIndex += 11;
+                                            // 点号回退1
+                                            j--;
+                                            pointIndex--;
+                                        }
+                                        else
+                                        {
+                                            rowIndex += 2;
+                                        }
                                     }
                                     else
                                     {
@@ -392,12 +408,50 @@ namespace CCTool.Scripts.DataPross.Excel
 
         private void combox_qlr_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_qlr);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_qlr);
         }
 
         private void combox_jz_area_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFloatFieldsToCombox(combox_fc.Text, combox_jz_area);
+            UITool.AddFloatFieldsToComboxPlus(combox_fc.ComboxText(), combox_jz_area);
+        }
+
+        // UI选项刷新
+        public void RefreshUI()
+        {
+            try
+            {
+                bool isShow = (bool)checkBoxZD.IsChecked;
+
+                label_digit.IsEnabled = !isShow;
+                label_type.IsEnabled = !isShow;
+                label_unit.IsEnabled = !isShow;
+                combox_zd_areaDigit.IsEnabled = !isShow;
+                combox_zd_type.IsEnabled = !isShow;
+                combox_zd_unit.IsEnabled = !isShow;
+
+                combox_zd_field.IsEnabled = isShow;
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message+ee.StackTrace);
+                return;
+            }
+        }
+
+        private void checkBoxZD_Uncheck(object sender, RoutedEventArgs e)
+        {
+            RefreshUI();
+        }
+
+        private void checkBoxZD_Check(object sender, RoutedEventArgs e)
+        {
+            RefreshUI();
+        }
+
+        private void combox_zd_field_DropOpen(object sender, EventArgs e)
+        {
+            UITool.AddFloatFieldsToComboxPlus(combox_fc.ComboxText(), combox_zd_field);
         }
     }
 }

@@ -35,6 +35,12 @@ namespace CCTool.Scripts
             combox_version.Items.Add("旧版");
             combox_version.Items.Add("新版");
             combox_version.SelectedIndex = 0;
+
+            combox_unit.Items.Add("平方米");
+            combox_unit.Items.Add("公顷");
+            combox_unit.Items.Add("平方公里");
+            combox_unit.Items.Add("亩");
+            combox_unit.SelectedIndex = 0;
         }
 
         // 定义一个进度框
@@ -54,12 +60,12 @@ namespace CCTool.Scripts
         private void combox_field_DropDown(object sender, EventArgs e)
         {
             // 将图层字段加入到Combox列表中
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_bmField);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_bmField);
         }
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         // 运行
@@ -70,20 +76,18 @@ namespace CCTool.Scripts
                 // 获取默认数据库
                 var init_gdb = Project.Current.DefaultGeodatabasePath;
                 // 获取参数
-                string fc_path = combox_fc.Text;
-                string field_bm = combox_bmField.Text;
+                string fc_path = combox_fc.ComboxText();
+                string field_bm = combox_bmField.ComboxText();
                 string output_table = init_gdb + @"\output_table";
                 string excel_path = textExcelPath.Text;
 
+                string unit = combox_unit.Text;
+
                 string version = combox_version.Text;
 
-                string areaField = combox_areaField.Text;
-                string statistics_fields = $"{areaField} SUM";
-                string sta_result = $"SUM_{areaField}";
+                string areaField = combox_areaField.ComboxText();
 
-                List<string> bm1 = new List<string>() { "BM_1" };
-                List<string> bm2 = new List<string>() { "BM_1", "BM_2" };
-                List<string> bm3 = new List<string>() { "BM_1", "BM_2", "BM_3" };
+                List<string> bmList = new List<string>() { field_bm };
 
                 // 判断参数是否选择完全
                 if (fc_path == "" || field_bm == "" || output_table == "")
@@ -96,39 +100,48 @@ namespace CCTool.Scripts
                 ProcessWindow pw = UITool.OpenProcessWindow(processwindow, tool_name);
                 DateTime time_base = DateTime.Now;
                 pw.AddMessage("开始执行" + tool_name + "工具…………" + time_base + "\r", Brushes.Green);
+                pw.AddMessage("GO", Brushes.Green);
 
                 // 模式转换
                 int model = 1;
                 if (combox_model.Text == "中类") { model = 2; }
                 else if (combox_model.Text == "小类") { model = 3; }
 
+                // 单位系数设置
+                double unit_xs = unit switch
+                {
+                    "平方米" => 1,
+                    "公顷" => 10000,
+                    "平方公里" => 1000000,
+                    "亩" => 666.66667,
+                    _ => 1,
+                };
+
                 Close();
                 await QueuedTask.Run(() =>
                 {
-                    pw.AddProcessMessage(20, "生成地类编码");
-                    // 生成地类编码
-                    GisTool.CreateYDYHBM(fc_path, field_bm, model, false);
-                    // 汇总用地
+
+                     // 汇总用地
                     if (model == 1)         // 大类
                     {
                         // 复制嵌入资源中的Excel文件
                         BaseTool.CopyResourceFile(@"CCTool.Data.Excel.【模板】用地用海_大类.xlsx", excel_path);
+                        string excel_sheet = excel_path + @"\用地用海$";
                         pw.AddProcessMessage(20, time_base, "汇总大类指标");
-                        // 汇总大类
-                        GisTool.MultiStatistics(fc_path, output_table, statistics_fields, bm1, "合计", 1);
-                        
-                        pw.AddProcessMessage(20, time_base, "指标写入Excel");
+                        // 汇总大、中、小类
+                        Dictionary<string, double> dic = GisTool.MultiStatisticsToDic(fc_path, areaField, bmList, "合计", unit_xs);
 
-                        // 保留2位小数
-                        Arcpy.CalculateField(output_table, sta_result, $"round(!{sta_result}!,2)");
-                        // 将映射属性表中获取字典Dictionary
-                        Dictionary<string, string> dict = GisTool.GetDictFromPath(output_table, @"分组", sta_result);
+                        pw.AddProcessMessage(10, time_base, "分割指标");
+                        // 指标分割
+                        Dictionary<string, double> dict = GisTool.DecomposeSummary(dic);
+
+                        pw.AddProcessMessage(20, time_base, "指标写入Excel");
                         // 属性映射大类
-                        OfficeTool.ExcelAttributeMapper(excel_path + @"\用地用海$", 1, 3, dict, 3);
+                        OfficeTool.ExcelAttributeMapperDouble(excel_sheet, 1, 3, dict, 3);
                         // 删除0值行
-                        OfficeTool.ExcelDeleteNullRow(excel_path + @"\用地用海$", 3, 3);
-                        // 删除中间字段
-                        Arcpy.DeleteField(fc_path, "BM_1");
+                        OfficeTool.ExcelDeleteNullRow(excel_sheet, 3, 3);
+                        // 改Excel中的单位
+                        OfficeTool.ExcelWriteCell(excel_path, 2, 3, $"用地面积({unit})");
                     }
                     else if (model == 2)       // 中类
                     {
@@ -144,27 +157,28 @@ namespace CCTool.Scripts
 
                         // 复制嵌入资源中的Excel文件
                         BaseTool.CopyResourceFile(@$"CCTool.Data.Excel.{excelName}.xlsx", excel_path);
+                        string excel_sheet = excel_path + @"\用地用海$";
                         pw.AddProcessMessage(20, time_base, "汇总大、中类指标");
-                        // 汇总大、中类
-                        GisTool.MultiStatistics(fc_path, output_table, statistics_fields, bm2, "合计", 1);
-                        
+                        // 汇总大、中、小类
+                        Dictionary<string, double> dic = GisTool.MultiStatisticsToDic(fc_path, areaField, bmList, "合计", unit_xs);
+
+                        pw.AddProcessMessage(10, time_base, "分割指标");
+                        // 指标分割
+                        Dictionary<string, double> dict = GisTool.DecomposeSummary(dic);
+
                         pw.AddProcessMessage(20, time_base, "指标写入Excel");
-                        // 保留2位小数
-                        Arcpy.CalculateField(output_table, sta_result, $"round(!{sta_result}!,2)");
-                        // 将映射属性表中获取字典Dictionary
-                        Dictionary<string, string> dict = GisTool.GetDictFromPath(output_table, @"分组", sta_result);
                         // 属性映射大类
-                        OfficeTool.ExcelAttributeMapper(excel_path + @"\用地用海$", 7, 4, dict, 4);
+                        OfficeTool.ExcelAttributeMapperDouble(excel_sheet, 7, 4, dict, 4);
                         // 属性映射中类
-                        OfficeTool.ExcelAttributeMapper(excel_path + @"\用地用海$", 8, 4, dict, 4);
+                        OfficeTool.ExcelAttributeMapperDouble(excel_sheet, 8, 4, dict, 4);
                         // 删除0值行
-                        OfficeTool.ExcelDeleteNullRow(excel_path + @"\用地用海$", 4, 4);
+                        OfficeTool.ExcelDeleteNullRow(excel_sheet, 4, 4);
                         // 删除指定列
                         OfficeTool.ExcelDeleteCol(excel_path + @"\用地用海$", new List<int>() { 8, 7 });
-                        // 删除中间字段
-                        Arcpy.DeleteField(fc_path, "BM_2");
+                        // 改Excel中的单位
+                        OfficeTool.ExcelWriteCell(excel_path, 2, 4, $"用地面积({unit})");
                     }
-                    else if (model == 3)       // 小类
+                    if (model == 3)       // 小类
                     {
                         string excelName = "";
                         if (version == "旧版")
@@ -178,33 +192,31 @@ namespace CCTool.Scripts
 
                         // 复制嵌入资源中的Excel文件
                         BaseTool.CopyResourceFile(@$"CCTool.Data.Excel.{excelName}.xlsx", excel_path);
+                        string excel_sheet = excel_path + @"\用地用海$";
                         pw.AddProcessMessage(20, time_base, "汇总大、中、小类指标");
                         // 汇总大、中、小类
-                        GisTool.MultiStatistics(fc_path, output_table, statistics_fields, bm3, "合计", 1);
+                        Dictionary<string, double> dic =  GisTool.MultiStatisticsToDic(fc_path, areaField, bmList, "合计", unit_xs);
+
+                        pw.AddProcessMessage(10, time_base, "分割指标");
+                        // 指标分割
+                        Dictionary<string, double> dict = GisTool.DecomposeSummary(dic);
 
                         pw.AddProcessMessage(20, time_base, "指标写入Excel");
-                        // 保留2位小数
-                        Arcpy.CalculateField(output_table, sta_result, $"round(!{sta_result}!,2)");
-                        // 将映射属性表中获取字典Dictionary
-                        Dictionary<string, string> dict = GisTool.GetDictFromPath(output_table, @"分组", sta_result);
                         // 属性映射大类
-                        OfficeTool.ExcelAttributeMapper(excel_path + @"\用地用海$", 7, 5, dict, 4);
+                        OfficeTool.ExcelAttributeMapperDouble(excel_sheet, 7, 5, dict, 4);
                         // 属性映射中类
-                        OfficeTool.ExcelAttributeMapper(excel_path + @"\用地用海$", 8, 5, dict, 4);
+                        OfficeTool.ExcelAttributeMapperDouble(excel_sheet, 8, 5, dict, 4);
                         // 属性映射小类
-                        OfficeTool.ExcelAttributeMapper(excel_path + @"\用地用海$", 9, 5, dict, 4);
+                        OfficeTool.ExcelAttributeMapperDouble(excel_sheet, 9, 5, dict, 4);
                         // 删除0值行
-                        OfficeTool.ExcelDeleteNullRow(excel_path + @"\用地用海$", 5, 4);
+                        OfficeTool.ExcelDeleteNullRow(excel_sheet, 5, 4);
                         // 删除指定列
-                        OfficeTool.ExcelDeleteCol(excel_path + @"\用地用海$", new List<int>() { 9, 8, 7 });
-                        // 删除中间字段
-                        Arcpy.DeleteField(fc_path, "BM_3");
+                        OfficeTool.ExcelDeleteCol(excel_sheet, new List<int>() { 9, 8, 7 });
+                        // 改Excel中的单位
+                        OfficeTool.ExcelWriteCell(excel_path, 2, 5, $"用地面积({unit})");
                     }
-
-                    // 删除中间数据和中间字段
-                    Arcpy.Delect(output_table);
                 });
-                pw.AddProcessMessage(40, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -216,8 +228,14 @@ namespace CCTool.Scripts
 
         private void combox_areaField_DropDown(object sender, EventArgs e)
         {
-            string fc_path = combox_fc.Text;
-            UITool.AddAllFloatFieldsToCombox(fc_path, combox_areaField);
+            string fc_path = combox_fc.ComboxText();
+            UITool.AddAllFloatFieldsToComboxPlus(fc_path, combox_areaField);
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135694013?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

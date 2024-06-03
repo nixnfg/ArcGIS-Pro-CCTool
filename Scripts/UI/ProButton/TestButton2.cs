@@ -56,6 +56,14 @@ using Brushes = System.Windows.Media.Brushes;
 using CCTool.Scripts.ToolManagers;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using static System.Windows.Forms.MonthCalendar;
+using ArcGIS.Core.Data.UtilityNetwork.Trace;
+using Aspose.Cells.Drawing;
+using NPOI.SS.Formula.Functions;
+using NPOI.Util;
+using NPOI.XWPF.UserModel;
+using Aspose.Cells;
+using Aspose.Words;
 
 namespace CCTool.Scripts.UI.ProButton
 {
@@ -70,42 +78,36 @@ namespace CCTool.Scripts.UI.ProButton
 
             try
             {
-                var prj = Project.Current;
-                var map = MapView.Active;
-                string defGDB = Project.Current.DefaultGeodatabasePath;
-                string copyly = defGDB + @"\line_copy";
-
                 // 打开进度框
                 ProcessWindow pw = UITool.OpenProcessWindow(processwindow, "进度");
                 DateTime time_base = DateTime.Now;
                 pw.AddMessage("开始执行工具…………" + time_base + "\r", Brushes.Green);
+                pw.AddMessage("GO", Brushes.Green);
 
+                // 默认数据库位置
+                var gdb_path = Project.Current.DefaultGeodatabasePath;
+
+                string lyName = "分地块";
+
+                List<string> result = new List<string>();
 
                 await QueuedTask.Run(() =>
                 {
-                    // 文件路径
-                    string filePath = @"C:\Users\Administrator\Desktop\lab.xlsx\new$";
+                    FeatureClass featureClass = lyName.TargetFeatureClass();
 
-                    // 创建文件流
-                    FileStream fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    // 打开工作簿
-                    XSSFWorkbook wb = new XSSFWorkbook(fs);
-                    // 获取第一个工作表
-                    ISheet sheet = wb.GetSheetAt(0);
-                    IRow row = sheet.GetRow(6);
-                    sheet.RemoveRowBreak(3);
-                    // 获取第3行（索引从0开始）
-                    ICell cell = sheet.GetRow(0).GetCell(0);
-                    cell.SetCellValue("base");
+                    // 逐行游标
+                    using RowCursor rowCursor = featureClass.Search();
+                    while (rowCursor.MoveNext())
+                    {
+                        using Feature feature = rowCursor.Current as Feature;
 
-                    // 保存工作簿
-                    using FileStream saveFile = new FileStream(filePath, FileMode.Create);
-                    wb.Write(saveFile);
+                        string va = feature["Name"].ToString();
 
-                    //OfficeTool.ExcelWriteCell(filePath, 6, 6, "更新");
+                        Arcpy.CopyFeatures(feature, @$"{gdb_path}\{va}_结果");
+                    }
                 });
 
-                pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -115,3 +117,4 @@ namespace CCTool.Scripts.UI.ProButton
         }
     }
 }
+

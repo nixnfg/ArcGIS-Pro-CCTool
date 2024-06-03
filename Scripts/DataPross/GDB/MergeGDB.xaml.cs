@@ -2,6 +2,7 @@
 using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Mapping;
 using CCTool.Scripts.Manager;
 using CCTool.Scripts.ToolManagers;
 using System;
@@ -18,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Table = ArcGIS.Core.Data.Table;
 
 namespace CCTool.Scripts.DataPross.GDB
 {
@@ -73,6 +75,8 @@ namespace CCTool.Scripts.DataPross.GDB
                     List<string> dataBaseNames = new List<string>();
                     // 要素类列表
                     List<string> featureClassNames = new List<string>();
+                    // 独立表列表
+                    List<string> tableNames = new List<string>();
 
 
                     foreach (string gdbFile in gdbFiles)
@@ -121,19 +125,49 @@ namespace CCTool.Scripts.DataPross.GDB
                                     }
                                 }
                             }
+
+                            // 获取独立表
+                            IReadOnlyList<TableDefinition> tables = gdb.GetDefinitions<TableDefinition>();
+                            // 新建独立表
+                            if (tables.Count > 0)
+                            {
+                                foreach (var table in tables)
+                                {
+                                    string tbName = table.GetName();
+                                    Table tb = gdb.OpenDataset<Table>(tbName);
+                                    // 获取独立表路径
+                                    string tbPath = tb.GetPath().ToString().Replace("file:///", "").Replace("/", @"\");
+                                    // 获取目标路径
+                                    string targetPath = gdbPath + tbPath[(tbPath.IndexOf(".gdb") + 4)..];
+
+                                    if (!tableNames.Contains(tbName))   // 如果是新的，就复制独立表
+                                    {
+                                        Arcpy.CopyRows(tbPath, targetPath);
+                                        tableNames.Add(tbName);
+                                    }
+                                    else   // 如果已经有独立表了，就追加
+                                    {
+                                        Arcpy.Append(tbPath, targetPath);
+                                    }
+                                }
+                            }
                         }
                     }
 
-
-
                 });
-                pw.AddProcessMessage(70, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
                 MessageBox.Show(ee.Message + ee.StackTrace);
                 return;
             }
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135813877?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

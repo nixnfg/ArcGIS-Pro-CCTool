@@ -6,21 +6,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="Excel表格转图片" Height="150" Width="500" WindowStartupLocation="CenterScreen"
+        Title="Excel表格转图片" Height="170" Width="500" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="输入Excel文件：" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" Width="433"/>
-        <TextBox x:Name="textExcelPath" Margin="15,35,52,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
-        <Button x:Name="openExcelButton" Content="打开" Margin="0,35,10,0" HorizontalAlignment="Right" Width="37" Height="21" VerticalAlignment="Top" Click="openExcelButton_Click">
-        </Button>
-        <Button x:Name="btn_go" Content="运 行" HorizontalAlignment="Right" Margin="0,0,10,24" VerticalAlignment="Bottom" Width="58" Height="20" Click="btn_go_Click"/>
-        <Label Content="导出的图片放在Excel所在文件夹下" HorizontalAlignment="Left" Margin="15,0,0,22" VerticalAlignment="Bottom" Width="412" Foreground="#FF4B9CBF"/>
+        <TextBox x:Name="textExcelPath" Margin="15,35,35,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="22"/>
+        <Label Content="导出的图片放在Excel所在文件夹下" HorizontalAlignment="Left" Margin="15,72,0,0" Width="217" Foreground="#FF4B9CBF" Height="25" VerticalAlignment="Top"/>
+        <Button x:Name="openExcelButton" Style="{StaticResource btn_openFolder}" Margin="0,35,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openExcelButton_Click"/>
+
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,11,17"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,93,17" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+
     </Grid>
 </controls:ProWindow>

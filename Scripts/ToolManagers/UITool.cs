@@ -7,20 +7,41 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Internal.GeoProcessing.Controls;
 using ArcGIS.Desktop.Layouts;
 using ArcGIS.Desktop.Mapping;
+using CCTool.Scripts.MessageWindow;
 using CCTool.Scripts.ToolManagers;
 using Microsoft.Win32;
 using NPOI.OpenXmlFormats.Shared;
+using SixLabors.ImageSharp.ColorSpaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace CCTool.Scripts.Manager
 {
     public class UITool
     {
+        // 获取富文本的所有文字
+        public static string GetRichText(RichTextBox rb)
+        {
+            TextRange textRange = new TextRange(rb.Document.ContentStart, rb.Document.ContentEnd);
+            var text = textRange.Text;
+
+            var result = text.Replace("\n", "").Replace("\r", "");
+
+            if (result is null)
+            {
+                result = "";
+            }
+
+            return result;
+        }
+
+
         // 将当前地图的所有要素图层加入到Combox中
         public static void AddFeatureLayersToCombox(ComboBox comboBox)
         {
@@ -42,14 +63,186 @@ namespace CCTool.Scripts.Manager
                 MessageBox.Show(ee.Message + ee.StackTrace);
                 throw;
             }
-            
+
         }
 
-        // 将当前地图的所有独立表加入到Combox中
-        public static void AddAllStandeTableToCombox(ComboBox comboBox)
+        // 将当前地图的所有要素图层加入到Combox中
+        public static void AddFeatureLayersToComboxPlus(ComboBox comboBox)
         {
-            // 清空combox_field
-            comboBox.Items.Clear();
+            try
+            {
+                // 获取当前地图
+                Map map = MapView.Active.Map;
+                // 获取所有要素图层
+                List<string> featureLayers = map.AllFeatureLayers();
+
+                List<ComboBoxContent> flc = new List<ComboBoxContent>();
+
+                // 图层图片
+                string imagePath = "/CCTool;component/Data/Icons/layer.png";
+                // 加到combox中
+                foreach (string featureLayer in featureLayers)
+                {
+                    flc.Add(new ComboBoxContent() { Path = imagePath , Name = featureLayer});
+                }
+                comboBox.ItemsSource = flc;
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message + ee.StackTrace);
+                throw;
+            }
+
+        }
+
+
+        // 初始化一个要素图层加入到Combox中
+        public static void InitFeatureLayerToComboxPlus(ComboBox comboBox, string lyName)
+        {
+            try
+            {
+                // 获取当前地图
+                Map map = MapView.Active.Map;
+                // 获取要素图层
+                FeatureLayer featureLayer = map.FindLayers(lyName).FirstOrDefault() as FeatureLayer;
+
+                List<ComboBoxContent> flc = new List<ComboBoxContent>();
+
+                // 图层图片
+                string imagePath = "/CCTool;component/Data/Icons/layer.png";
+
+                // 加到combox中
+                flc.Add(new ComboBoxContent() { Path = imagePath, Name = lyName });
+
+                comboBox.ItemsSource = flc;
+
+                comboBox.SelectedIndex= 0;
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message + ee.StackTrace);
+                throw;
+            }
+
+        }
+
+        // 将被选择图斑的要素图层加入到Combox中
+        public async static void AddSelectFeatureLayersToCombox(ComboBox comboBox)
+        {
+            try
+            {
+                // 设置一个空集合
+                List<string> lys = new List<string>();
+
+                await QueuedTask.Run(() =>
+                {
+                    // 获取活动地图视图中选定的要素集合
+                    var selectedSet = MapView.Active.Map.GetSelection();
+                    // 将选定的要素集合转换为字典形式
+                    var selectedList = selectedSet.ToDictionary();
+
+                    // 遍历每个选定图层及其关联的对象 ID
+                    foreach (var layer in selectedList)
+                    {
+                        // 获取图层和关联的对象 ID
+                        FeatureLayer featureLayer = layer.Key as FeatureLayer;
+                        if (!lys.Contains(featureLayer.Name))
+                        {
+                            lys.Add(featureLayer.Name);
+                        }
+                    }
+                });
+                /// 加入combox
+                // 获取当前地图
+                Map map = MapView.Active.Map;
+                // 清空combox_field
+                comboBox.Items.Clear();
+                // 将图层加入combox
+                foreach (var layer in lys)
+                {
+                    // 获取要素图层
+                    FeatureLayer featureLayer = map.GetLayersAsFlattenedList().OfType<FeatureLayer>().Where(l => l.Name == layer).FirstOrDefault();
+                    comboBox.Items.Add(featureLayer.Name);
+                }
+                // 设置一个默认项
+                if (lys.Count > 0)
+                {
+                    comboBox.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message + ee.StackTrace);
+                return;
+            }
+
+        }
+
+
+        // 将被选择图斑的要素图层加入到Combox中
+        public async static void AddSelectFeatureLayersToComboxPlus(ComboBox comboBox)
+        {
+            try
+            {
+                // 设置一个空集合
+                List<string> lys = new List<string>();
+
+                await QueuedTask.Run(() =>
+                {
+                    // 获取活动地图视图中选定的要素集合
+                    var selectedSet = MapView.Active.Map.GetSelection();
+                    // 将选定的要素集合转换为字典形式
+                    var selectedList = selectedSet.ToDictionary();
+
+                    // 遍历每个选定图层及其关联的对象 ID
+                    foreach (var layer in selectedList)
+                    {
+                        // 获取图层和关联的对象 ID
+                        FeatureLayer featureLayer = layer.Key as FeatureLayer;
+                        if (!lys.Contains(featureLayer.Name))
+                        {
+                            lys.Add(featureLayer.Name);
+                        }
+                    }
+                });
+                /// 加入combox
+                // 获取当前地图
+                Map map = MapView.Active.Map;
+
+                // 定义一个空包
+                List<ComboBoxContent> flc = new List<ComboBoxContent>();
+                // 图层和表的图标
+                string imagePath = "/CCTool;component/Data/Icons/layer.png";
+
+                // 将图层加入combox
+                foreach (var layer in lys)
+                {
+                    // 获取要素图层
+                    FeatureLayer featureLayer = map.GetLayersAsFlattenedList().OfType<FeatureLayer>().Where(l => l.Name == layer).FirstOrDefault();
+                    flc.Add(new ComboBoxContent() { Path = imagePath, Name = featureLayer.Name });
+                }
+
+                // 应用
+                comboBox.ItemsSource = flc;
+                // 设置一个默认项
+                if (lys.Count > 0)
+                {
+                    comboBox.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message + ee.StackTrace);
+                return;
+            }
+
+        }
+
+        // 将当前地图的所有要素图层和独立表加入到Combox中
+        public static void AddFeatureLayerAndTableToCombox(ComboBox comboBox)
+        {
+            // 添加所有要素图层
+            AddFeatureLayersToCombox(comboBox);
             // 获取当前地图
             Map map = MapView.Active.Map;
             // 获取所有要素图层
@@ -62,10 +255,37 @@ namespace CCTool.Scripts.Manager
         }
 
         // 将当前地图的所有要素图层和独立表加入到Combox中
-        public static void AddFeatureLayerAndTableToCombox(ComboBox comboBox)
+        public static void AddFeatureLayerAndTableToComboxPlus(ComboBox comboBox)
         {
-            // 添加所有要素图层
-            AddFeatureLayersToCombox(comboBox);
+            // 获取当前地图
+            Map map = MapView.Active.Map;
+            // 获取所有要素图层
+            List<string> featureLayers = map.AllFeatureLayers();
+            // 获取所有独立表
+            List<string> standaloneTables = map.AllStandaloneTables();
+            // 定义一个空包
+            List<ComboBoxContent> flc = new List<ComboBoxContent>();
+
+            // 图层和表的图标
+            string imagePath = "/CCTool;component/Data/Icons/layer.png";
+            string imagePath2 = "/CCTool;component/Data/Icons/table.png";
+
+            // 把图层和表加到combox中
+            foreach (string featureLayer in featureLayers)
+            {
+                flc.Add(new ComboBoxContent() { Path = imagePath, Name = featureLayer });
+            }
+            foreach (var standaloneTable in standaloneTables)
+            {
+                flc.Add(new ComboBoxContent() { Path = imagePath2, Name = standaloneTable });
+            }
+            // 应用
+            comboBox.ItemsSource = flc;
+        }
+
+        // 将当前地图的所有独立表加入到Combox中
+        public static void AddTableToComboxPlus(ComboBox comboBox)
+        {
             // 获取当前地图
             Map map = MapView.Active.Map;
             // 获取所有要素图层
@@ -121,7 +341,7 @@ namespace CCTool.Scripts.Manager
             return listName;
         }
 
-        // 将所有图层加入到ListBox中【带复选框】
+        // 将所有要素图层加入到ListBox中【带复选框】
         public static void AddFeatureLayersToListbox(ListBox listBox, List<string> excludeItems = null)
         {
             // 清空listBox
@@ -130,6 +350,42 @@ namespace CCTool.Scripts.Manager
             Map map = MapView.Active.Map;
             // 获取所有要素图层
             List<string> featureLayers = map.AllFeatureLayers();
+
+            foreach (var featureLayer in featureLayers)
+            {
+                if (excludeItems is not null)           // 如果有排除图层
+                {
+                    if (!excludeItems.Contains(featureLayer))
+                    {
+                        CheckBox cb = new()
+                        {
+                            Content = featureLayer,
+                            IsChecked = false
+                        };
+                        listBox.Items.Add(cb);
+                    }
+                }
+                else              // 如果默认没有排除图层
+                {
+                    CheckBox cb = new()
+                    {
+                        Content = featureLayer,
+                        IsChecked = false
+                    };
+                    listBox.Items.Add(cb);
+                }
+            }
+        }
+
+        // 将所有可见图层加入到ListBox中【带复选框】
+        public static void AddCanseeLayersToListbox(ListBox listBox, List<string> excludeItems = null)
+        {
+            // 清空listBox
+            listBox.Items.Clear();
+            // 获取当前地图
+            Map map = MapView.Active.Map;
+            // 获取所有要素图层
+            List<string> featureLayers = map.CanseeFeatureLayers();
 
             foreach (var featureLayer in featureLayers)
             {
@@ -290,6 +546,13 @@ namespace CCTool.Scripts.Manager
             }
         }
 
+        // 清空Combox列表
+        public static void ClearComboxPlus(ComboBox comboBox)
+        {
+            List<ComboBoxContent> flc = new List<ComboBoxContent>();
+            comboBox.ItemsSource = flc;
+        }
+
         // 将图层字段加入到Combox列表中
         public static async void AddFieldsToCombox(string LayerName, ComboBox comboBox)
         {
@@ -316,6 +579,53 @@ namespace CCTool.Scripts.Manager
                     });
                 }
             });
+        }
+
+        // 将图层字段加入到Combox列表中
+        public static async void AddFieldsToComboxPlus(string LayerName, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (LayerName == "")
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+
+            var fields = await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                return GisTool.GetFieldsFromTarget(LayerName);
+            });
+
+            if (fields is null)
+            {
+                return;
+            }
+
+            List<ComboBoxContent> flc = new List<ComboBoxContent>();
+            // 图层图片
+            string stringImagePath = "/CCTool;component/Data/Icons/string.png";
+            string floatImagePath = "/CCTool;component/Data/Icons/float.png";
+            string intgerImagePath = "/CCTool;component/Data/Icons/intger.png";
+
+            // 加到combox中
+            foreach (Field field in fields)
+            {
+                if (field.FieldType == FieldType.String) 
+                {
+                    flc.Add(new ComboBoxContent() { Path = stringImagePath, Name = field.Name });
+                }
+                else if (field.FieldType == FieldType.Integer || field.FieldType == FieldType.SmallInteger)
+                {
+                    flc.Add(new ComboBoxContent() { Path = intgerImagePath, Name = field.Name });
+                }
+                else if (field.FieldType == FieldType.Single || field.FieldType == FieldType.Double)
+                {
+                    flc.Add(new ComboBoxContent() { Path = floatImagePath, Name = field.Name });
+                }
+            }
+
+            comboBox.ItemsSource = flc;
         }
 
         // 将图层字段【TEXT】加入到Combox列表中
@@ -351,6 +661,96 @@ namespace CCTool.Scripts.Manager
             });
         }
 
+        // 初始化图层字段加入到Combox列表中
+        public static void InitFieldToComboxPlus(ComboBox comboBox, string fieldName, string fieldType)
+        {
+
+            List<ComboBoxContent> flc = new List<ComboBoxContent>();
+
+            // 图层图片
+            string stringImagePath = "/CCTool;component/Data/Icons/string.png";
+            string floatImagePath = "/CCTool;component/Data/Icons/float.png";
+            string intgerImagePath = "/CCTool;component/Data/Icons/intger.png";
+
+            // 加到combox中
+            if (fieldType == "string")
+            {
+                flc.Add(new ComboBoxContent() { Path = stringImagePath, Name = fieldName });
+            }
+            else if (fieldType == "int")
+            {
+                flc.Add(new ComboBoxContent() { Path = intgerImagePath, Name = fieldName });
+            }
+            else if (fieldType == "float")
+            {
+                flc.Add(new ComboBoxContent() { Path = floatImagePath, Name = fieldName });
+            }
+
+            comboBox.ItemsSource = flc;
+
+            comboBox.SelectedIndex = 0;
+        }
+
+        // 将Excel字段加入到Combox列表中
+        public static void AddExcelFieldsToComboxPlus(string excelPath, ComboBox comboBox)
+        {
+            // 判断输入路径是否为空
+            if (excelPath == "")
+            {
+                MessageBox.Show("输入的Excel路径是否为空");
+                return;
+            }
+
+            List<string> fields = OfficeTool.GetColListFromExcel(excelPath);
+
+            List<ComboBoxContent> flc = new List<ComboBoxContent>();
+            // 图层图片
+            string imagePath = "/CCTool;component/Data/Icons/string.png";
+
+            // 加到combox中
+            foreach (var field in fields)
+            {
+                flc.Add(new ComboBoxContent() { Path = imagePath, Name = field });
+            }
+
+            comboBox.ItemsSource = flc;
+        }
+
+
+        // 将图层字段【TEXT】加入到Combox列表中
+        public static async void AddTextFieldsToComboxPlus(string LayerName, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (LayerName == "")
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+
+            var fields = await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                return GisTool.GetFieldsFromTarget(LayerName, "text");
+            });
+
+            if (fields is null)
+            {
+                return;
+            }
+
+            List<ComboBoxContent> flc = new List<ComboBoxContent>();
+            // 图层图片
+            string imagePath = "/CCTool;component/Data/Icons/string.png";
+
+            // 加到combox中
+            foreach (var field in fields)
+            {
+                flc.Add(new ComboBoxContent() { Path = imagePath, Name = field.Name });
+            }
+
+            comboBox.ItemsSource = flc;
+        }
+
         // 将图层字段【Float】加入到Combox列表中
         public static async void AddFloatFieldsToCombox(string LayerName, ComboBox comboBox)
         {
@@ -384,6 +784,41 @@ namespace CCTool.Scripts.Manager
         }
 
         // 将图层字段【Float】加入到Combox列表中
+        public static async void AddFloatFieldsToComboxPlus(string LayerName, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (LayerName == "")
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+
+            var fields = await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                return GisTool.GetFieldsFromTarget(LayerName, "float");
+            });
+
+            if (fields is null)
+            {
+                return;
+            }
+
+            List<ComboBoxContent> flc = new List<ComboBoxContent>();
+            // 图层图片
+            string imagePath = "/CCTool;component/Data/Icons/float.png";
+
+            // 加到combox中
+            foreach (var field in fields)
+            {
+                flc.Add(new ComboBoxContent() { Path = imagePath, Name = field.Name });
+            }
+
+            comboBox.ItemsSource = flc;
+        }
+
+
+        // 将图层字段【Float】加入到Combox列表中
         public static async void AddAllFloatFieldsToCombox(string LayerName, ComboBox comboBox)
         {
             // 判断是否选择了图层
@@ -413,6 +848,49 @@ namespace CCTool.Scripts.Manager
                     });
                 }
             });
+        }
+
+        // 将图层字段【Float】加入到Combox列表中
+        public static async void AddAllFloatFieldsToComboxPlus(string LayerName, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (LayerName == "")
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+
+            var fields = await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                return GisTool.GetFieldsFromTarget(LayerName, "float_all");
+            });
+
+            if (fields is null)
+            {
+                return;
+            }
+
+            List<ComboBoxContent> flc = new List<ComboBoxContent>();
+            // 图层图片
+            string floatImagePath = "/CCTool;component/Data/Icons/float.png";
+            string floatBImagePath = "/CCTool;component/Data/Icons/floatB.png";
+
+            // 加到combox中
+            foreach (var field in fields)
+            {
+                if (field.IsEditable)
+                {
+                    flc.Add(new ComboBoxContent() { Path = floatImagePath, Name = field.Name });
+                }
+                else
+                {
+                    flc.Add(new ComboBoxContent() { Path = floatBImagePath, Name = field.Name });
+                }
+            }
+
+            comboBox.ItemsSource = flc;
+
         }
 
         // 将图层字段【Int】加入到Combox列表中
@@ -445,6 +923,232 @@ namespace CCTool.Scripts.Manager
                     });
                 }
             });
+        }
+
+
+        // 将图层字段加入到Combox列表中
+        public static async void AddFieldsToCombox(FeatureLayer layer, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (layer == null)
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+            // 清空combox_field
+            comboBox.Items.Clear();
+
+            await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                var fields = GisTool.GetFieldsFromTarget(layer);
+                foreach (var field in fields)
+                {
+                    // 在UI线程上执行添加item的操作
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        // 将所有字段名添加到combox_field中
+                        comboBox.Items.Add(field.Name);
+                    });
+                }
+            });
+        }
+
+        // 将图层字段【TEXT】加入到Combox列表中
+        public static async void AddTextFieldsToCombox(FeatureLayer layer, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (layer == null)
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+
+            // 清空combox_field
+            comboBox.Items.Clear();
+
+            await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                List<Field> fields = GisTool.GetFieldsFromTarget(layer, "text");
+                if (fields is null)
+                {
+                    return;
+                }
+                foreach (Field field in fields)
+                {
+                    // 在UI线程上执行添加item的操作
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        // 将所有字段名添加到combox_field中
+                        comboBox.Items.Add(field.Name);
+                    });
+                }
+            });
+        }
+
+        // 将图层字段【TEXT】加入到Combox列表中
+        public static async void AddTextFieldsToComboxPlus(FeatureLayer layer, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (layer == null)
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+
+            var fields = await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                return GisTool.GetFieldsFromTarget(layer, "text");
+            });
+
+            if (fields is null)
+            {
+                return;
+            }
+
+            List<ComboBoxContent> flc = new List<ComboBoxContent>();
+            // 图层图片
+            string imagePath = "/CCTool;component/Data/Icons/string.png";
+
+            // 加到combox中
+            foreach (var field in fields)
+            {
+                flc.Add(new ComboBoxContent() { Path = imagePath, Name = field.Name });
+            }
+
+            comboBox.ItemsSource = flc;
+        }
+
+        // 将图层字段【Float】加入到Combox列表中
+        public static async void AddFloatFieldsToCombox(FeatureLayer layer, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (layer == null)
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+            // 清空combox_field
+            comboBox.Items.Clear();
+
+            await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                var fields = GisTool.GetFieldsFromTarget(layer, "float");
+                if (fields is null)
+                {
+                    return;
+                }
+                foreach (var field in fields)
+                {
+                    // 在UI线程上执行添加item的操作
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        // 将所有字段名添加到combox_field中
+                        comboBox.Items.Add(field.Name);
+                    });
+                }
+            });
+        }
+
+        // 将图层字段【Float】加入到Combox列表中
+        public static async void AddAllFloatFieldsToCombox(FeatureLayer layer, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (layer == null)
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+            // 清空combox_field
+            comboBox.Items.Clear();
+
+            await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                var fields = GisTool.GetFieldsFromTarget(layer, "float_all");
+                if (fields is null)
+                {
+                    return;
+                }
+                foreach (var field in fields)
+                {
+                    // 在UI线程上执行添加item的操作
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        // 将所有字段名添加到combox_field中
+                        comboBox.Items.Add(field.Name);
+                    });
+                }
+            });
+        }
+
+        // 将图层字段【Int】加入到Combox列表中
+        public static async void AddIntFieldsToCombox(FeatureLayer layer, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (layer == null)
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+            // 清空combox_field
+            comboBox.Items.Clear();
+
+            await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                var fields = GisTool.GetFieldsFromTarget(layer, "int");
+                if (fields is null)
+                {
+                    return;
+                }
+                foreach (var field in fields)
+                {
+                    // 在UI线程上执行添加item的操作
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        // 将所有字段名添加到combox_field中
+                        comboBox.Items.Add(field.Name);
+                    });
+                }
+            });
+        }
+
+        // 将图层字段【Int】加入到Combox列表中
+        public static async void AddIntFieldsToComboxPlus(FeatureLayer layer, ComboBox comboBox)
+        {
+            // 判断是否选择了图层
+            if (layer == null)
+            {
+                MessageBox.Show("请选择一个要素图层或表");
+                return;
+            }
+
+            var fields = await QueuedTask.Run(() =>
+            {
+                // 获取所选图层的所有字段
+                return GisTool.GetFieldsFromTarget(layer, "int");
+            });
+
+            if (fields is null)
+            {
+                return;
+            }
+
+            List<ComboBoxContent> flc = new List<ComboBoxContent>();
+            // 图层图片
+            string imagePath = "/CCTool;component/Data/Icons/intger.png";
+
+            // 加到combox中
+            foreach (var field in fields)
+            {
+                flc.Add(new ComboBoxContent() { Path = imagePath, Name = field.Name });
+            }
+
+            comboBox.ItemsSource = flc;
         }
 
         // 将当前地图的图层组或单个图层加入到Combox中
@@ -489,7 +1193,7 @@ namespace CCTool.Scripts.Manager
 
         // 将ListBox中选中的要素加入到List中
         public static List<string> GetCheckboxStringFromListBox(ListBox listBox)
-        {      
+        {
             List<string> result = new List<string>();
             foreach (CheckBox checkbox in listBox.Items)
             {
@@ -502,7 +1206,7 @@ namespace CCTool.Scripts.Manager
         }
 
         // 将要素的字段加入到ListBox中
-        public static async void AddFieldsToListBox(ListBox listBox, string fcPath)
+        public static async void AddFieldsToListBox(ListBox listBox, object fcPath, bool isHaveCheck = true)
         {
             // 清除listbox
             listBox.Items.Clear();
@@ -515,17 +1219,44 @@ namespace CCTool.Scripts.Manager
 
             foreach (Field field in fields)
             {
-                if (field.FieldType == FieldType.OID || field.FieldType == FieldType.Geometry || !field.IsEditable)
+                if (field.FieldType == FieldType.Geometry)
                 {
                     continue;
                 }
                 else
                 {
-                    // 将filed做成checkbox放入列表中
-                    CheckBox cb = new CheckBox();
-                    cb.Content = field.Name;
-                    cb.IsChecked = true;
-                    listBox.Items.Add(cb);
+                    if (isHaveCheck == true)
+                    {
+                        // 将filed做成checkbox放入列表中
+                        CheckBox cb = new CheckBox();
+                        cb.Content = field.Name;
+                        cb.IsChecked = false;
+                        listBox.Items.Add(cb);
+                    }
+                    else
+                    {
+                        listBox.Items.Add(field.Name);
+                    }
+                }
+            }
+        }
+
+        // 将指定文字插入富文本中光标所处的位置
+        public static void AddTextToRichTextBox(RichTextBox textBox, string text)
+        {
+            if (textBox is null)
+            {
+                return;
+            }
+
+            textBox.CaretPosition.InsertTextInRun(text);
+
+            if (textBox.CaretPosition.LogicalDirection == LogicalDirection.Backward)
+            {
+                TextPointer tp = textBox.CaretPosition.GetPositionAtOffset(text.Length, LogicalDirection.Forward);
+                if (tp != null)
+                {
+                    textBox.CaretPosition = tp;
                 }
             }
         }
@@ -539,21 +1270,63 @@ namespace CCTool.Scripts.Manager
             // 获取所有非Geo字段
             var fields = await QueuedTask.Run(() =>
             {
-                return GisTool.GetFieldsFromTarget(fcPath);
+                return GisTool.GetFieldsFromTarget(fcPath, "text");
             });
 
             foreach (Field field in fields)
             {
-                if (field.FieldType == FieldType.String)
-                {
-                    // 将filed做成checkbox放入列表中
-                    CheckBox cb = new CheckBox();
-                    cb.Content = field.Name;
-                    cb.IsChecked = true;
-                    listBox.Items.Add(cb);
-                }
+                // 将filed做成checkbox放入列表中
+                CheckBox cb = new CheckBox();
+                cb.Content = field.Name;
+                cb.IsChecked = false;
+                listBox.Items.Add(cb);
             }
         }
+
+        // 将要素的字段加入到ListBox中【可编辑浮点型】
+        public static async void AddFloatFieldsToListBox(ListBox listBox, string fcPath)
+        {
+            // 清除listbox
+            listBox.Items.Clear();
+
+            // 获取所有非Geo字段
+            var fields = await QueuedTask.Run(() =>
+            {
+                return GisTool.GetFieldsFromTarget(fcPath, "float");
+            });
+
+            foreach (Field field in fields)
+            {
+                // 将filed做成checkbox放入列表中
+                CheckBox cb = new CheckBox();
+                cb.Content = field.Name;
+                cb.IsChecked = false;
+                listBox.Items.Add(cb);
+            }
+        }
+
+        // 将要素的字段加入到ListBox中【所有的浮点型】
+        public static async void AddAllFloatFieldsToListBox(ListBox listBox, string fcPath)
+        {
+            // 清除listbox
+            listBox.Items.Clear();
+
+            // 获取所有非Geo字段
+            var fields = await QueuedTask.Run(() =>
+            {
+                return GisTool.GetFieldsFromTarget(fcPath, "float_all");
+            });
+
+            foreach (Field field in fields)
+            {
+                // 将filed做成checkbox放入列表中
+                CheckBox cb = new CheckBox();
+                cb.Content = field.Name;
+                cb.IsChecked = false;
+                listBox.Items.Add(cb);
+            }
+        }
+
 
         // 打开Excel文件
         public static string OpenDialogExcel()
@@ -562,7 +1335,7 @@ namespace CCTool.Scripts.Manager
             {
                 Title = "选择一个要素",        //打开对话框标题
                 Multiselect = false,             //是否可以多选
-                Filter = "Excel文件|*.xlsx",       //类型筛选
+                Filter = "Excel文件|*.xlsx;*.xls",       //类型筛选
             };
             // 打开对话框
             bool? ok = openDlg.ShowDialog();
@@ -580,7 +1353,7 @@ namespace CCTool.Scripts.Manager
         {
             OpenFileDialog openDlg = new OpenFileDialog()
             {
-                Title = "选择一个要素",        //打开对话框标题
+                Title = "选择一个mdb数据库",        //打开对话框标题
                 Multiselect = false,             //是否可以多选
                 Filter = "MDB文件|*.mdb",       //类型筛选
             };
@@ -620,7 +1393,7 @@ namespace CCTool.Scripts.Manager
         {
             OpenItemDialog openDlg = new OpenItemDialog()
             {
-                Title = "选择一个要素",        //打开对话框标题
+                Title = "选择一个文件夹",        //打开对话框标题
                 MultiSelect = false,             //是否可以多选
                 Filter = ItemFilters.Folders,       //类型筛选
             };
@@ -660,7 +1433,7 @@ namespace CCTool.Scripts.Manager
         {
             OpenItemDialog openDlg = new OpenItemDialog()
             {
-                Title = "选择一个要素",        //打开对话框标题
+                Title = "选择一个gdb数据库",        //打开对话框标题
                 MultiSelect = false,             //是否可以多选
                 Filter = ItemFilters.Geodatabases,       //类型筛选
             };
@@ -680,7 +1453,7 @@ namespace CCTool.Scripts.Manager
         {
             OpenItemDialog openDlg = new OpenItemDialog()
             {
-                Title = "选择一个要素",        //打开对话框标题
+                Title = "选择一个表",        //打开对话框标题
                 MultiSelect = false,             //是否可以多选
                 Filter = ItemFilters.Tables_All,       //类型筛选
             };
@@ -700,8 +1473,46 @@ namespace CCTool.Scripts.Manager
         {
             SaveFileDialog openDlg = new SaveFileDialog()
             {
-                Title = "选择一个要素",        //打开对话框标题
+                Title = "选择一个Excel文件",        //打开对话框标题
                 Filter = "Excel文件|*.xlsx",       //类型筛选
+            };
+            // 打开对话框
+            bool? ok = openDlg.ShowDialog();
+            // 如果没有选择内容，则返回
+            if (!ok.HasValue || openDlg.FileNames.Count() == 0)
+                return null;
+            // 如果有选择内容，返回选择的内容
+            var item = openDlg.FileNames.First();
+            // 返回路径
+            return item;
+        }
+
+        // 保存CAD文件
+        public static string SaveDialogCAD()
+        {
+            SaveFileDialog openDlg = new SaveFileDialog()
+            {
+                Title = "选择一个CAD文件",        //打开对话框标题
+                Filter = "CAD文件|*.dwg",       //类型筛选
+            };
+            // 打开对话框
+            bool? ok = openDlg.ShowDialog();
+            // 如果没有选择内容，则返回
+            if (!ok.HasValue || openDlg.FileNames.Count() == 0)
+                return null;
+            // 如果有选择内容，返回选择的内容
+            var item = openDlg.FileNames.First();
+            // 返回路径
+            return item;
+        }
+
+        // 保存KMZ文件
+        public static string SaveDialogKMZ()
+        {
+            SaveFileDialog openDlg = new SaveFileDialog()
+            {
+                Title = "选择一个KMZ文件",        //打开对话框标题
+                Filter = "KMZ文件|*.kmz",       //类型筛选
             };
             // 打开对话框
             bool? ok = openDlg.ShowDialog();
@@ -720,7 +1531,7 @@ namespace CCTool.Scripts.Manager
             SaveFileDialog openDlg = new SaveFileDialog()
             {
                 Title = "选择一个图片",        //打开对话框标题
-                Filter = "Excel文件|*.jpg;*.png",       //类型筛选
+                Filter = "图片文件|*.jpg;*.png",       //类型筛选
             };
             // 打开对话框
             bool? ok = openDlg.ShowDialog();
@@ -757,7 +1568,7 @@ namespace CCTool.Scripts.Manager
         {
             SaveItemDialog saveDlg = new SaveItemDialog()
             {
-                Title = "选择一个要素",        //打开对话框标题
+                Title = "选择一个gdb数据库",        //打开对话框标题
                 Filter = ItemFilters.Geodatabases,       //类型筛选
             };
             // 打开对话框
@@ -768,7 +1579,7 @@ namespace CCTool.Scripts.Manager
             // 如果有选择内容，返回选择的内容
             var item = saveDlg.FilePath;
             // 返回路径
-            return item+".gdb";
+            return item + ".gdb";
         }
 
         // 保存独立表文件
@@ -776,7 +1587,7 @@ namespace CCTool.Scripts.Manager
         {
             SaveItemDialog saveDlg = new SaveItemDialog()
             {
-                Title = "选择一个要素",        //打开对话框标题
+                Title = "选择一个表",        //打开对话框标题
                 Filter = ItemFilters.Tables_All,       //类型筛选
             };
             // 打开对话框
@@ -800,5 +1611,40 @@ namespace CCTool.Scripts.Manager
             processWindow.Show();
             return processWindow;
         }
+
+        // 打开自定义的XY信息框 
+        public static XYInfoWindow OpenXYInfoWindow(XYInfoWindow xyInfoWindow)
+        {
+            xyInfoWindow = new XYInfoWindow();
+            xyInfoWindow.Owner = FrameworkApplication.Current.MainWindow;
+            xyInfoWindow.Closed += (o, e) => { xyInfoWindow = null; };
+            xyInfoWindow.Show();
+            return xyInfoWindow;
+        }
+
+        // 网页链接
+        public static void Link2Web(string url)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true,
+                });
+            }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message + ee.StackTrace);
+                return;
+            }
+        }
+    }
+
+    // 图层
+    public class ComboBoxContent
+    {
+        public string Path { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -17,13 +17,13 @@
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="输入MDB数据库：" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" Width="375"/>
-        <TextBox x:Name="textMDBPath" Margin="15,35,60,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
+        <TextBox x:Name="textMDBPath" Margin="15,35,60,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="21"/>
         <Button x:Name="openMDBButton" Content="打开" Margin="0,35,10,0" HorizontalAlignment="Right" Width="45" Height="21" VerticalAlignment="Top" Click="openMDBButton_Click">
 
         </Button>
         <Label Content="输出GDB数据库：" HorizontalAlignment="Left" Margin="15,58,0,0" VerticalAlignment="Top" Width="375"/>
         <Button x:Name="btn_go" Content="运行" HorizontalAlignment="Right" Margin="0,0,10,18" VerticalAlignment="Bottom" Width="83" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}" Height="26" Click="btn_go_Click"/>
-        <TextBox x:Name="textGDBPath" Margin="15,86,60,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
+        <TextBox x:Name="textGDBPath" Margin="15,86,60,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="21"/>
         <Button x:Name="openGDBButton" Content="打开" Margin="0,86,10,0" HorizontalAlignment="Right" Width="45" Height="21" VerticalAlignment="Top" Click="openGDBButton_Click">
         </Button>
 

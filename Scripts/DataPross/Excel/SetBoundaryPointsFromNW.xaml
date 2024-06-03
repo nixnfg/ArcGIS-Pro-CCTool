@@ -7,19 +7,22 @@
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
         Title="设置界址点从西北角开始" Height="150" Width="350"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterOwner" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="输入面要素图层：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="325"/>
-        <ComboBox x:Name="combox_fc" Margin="15,35,15,0" VerticalAlignment="Top" DropDownOpened="combox_fc_DropDown"/>
-        <Button x:Name="btn_go" Content="运行" Margin="0,0,15,20" Height="19" VerticalAlignment="Bottom" Click="btn_go_Click" HorizontalAlignment="Right" Width="59"/>
+        <ComboBox x:Name="combox_fc" Style="{StaticResource ComboBox_icon}" Margin="15,35,15,0" VerticalAlignment="Top" DropDownOpened="combox_fc_DropDown"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,15,16"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,97,16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+
 
     </Grid>
 </controls:ProWindow>

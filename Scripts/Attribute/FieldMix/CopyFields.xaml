@@ -6,12 +6,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="复制字段" Height="370" Width="500" WindowStartupLocation="CenterScreen"
+        Title="复制字段" Height="420" Width="500" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
@@ -20,16 +20,23 @@
             <ColumnDefinition Width="253*"/>
             <ColumnDefinition Width="247*"/>
         </Grid.ColumnDefinitions>
-        <Label Content="含字段的要素图层：" Margin="15,10,19,0" VerticalAlignment="Top" Height="25"/>
-        <ComboBox x:Name="combox_fc_before" Margin="15,35,19,0" VerticalAlignment="Top" DropDownOpened="combox_fc_before_DropDown" Height="21" DropDownClosed="combox_fc_before_DropClose"/>
+        <Label Content="含字段的要素图层或独立表：" Margin="15,10,19,0" VerticalAlignment="Top" Height="25"/>
+        <ComboBox x:Name="combox_fc_before" Style="{StaticResource ComboBox_icon}" Margin="15,35,19,0" VerticalAlignment="Top" DropDownOpened="combox_fc_before_DropDown" Height="21" DropDownClosed="combox_fc_before_DropClose"/>
         <Label Content="目标要素图层：" Margin="18,10,15,0" VerticalAlignment="Top" Height="25" Grid.Column="1"/>
-        <Button x:Name="btn_go" Content="执行" HorizontalAlignment="Right" Margin="0,0,15,18" VerticalAlignment="Bottom" Width="57" Click="btn_go_Click" Grid.Column="1" Height="19"/>
         <Label Content="选择要复制的字段：" Margin="15,61,19,0" VerticalAlignment="Top" Height="25"/>
-        <ListBox x:Name="listbox_field" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="15,86,19,79"/>
-        <Button x:Name="btn_select" Content="全选" HorizontalAlignment="Left" Margin="15,0,0,55" Width="65" Click="btn_select_Click" Height="19" VerticalAlignment="Bottom"/>
-        <Button x:Name="btn_unSelect" Content="取消全选" HorizontalAlignment="Center" Margin="0,0,0,55" Width="65" Click="btn_unSelect_Click" Height="19" VerticalAlignment="Bottom"/>
-        <ListBox x:Name="listbox_targetFeature" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="18,35,10,79" Grid.Column="1"/>
-        <Button x:Name="btn_select_fc" Content="全选" HorizontalAlignment="Left" Margin="20,0,0,55" Width="65" Click="btn_select_fc_Click" Height="19" VerticalAlignment="Bottom" Grid.Column="1"/>
-        <Button x:Name="btn_unSelect_fc" Content="取消全选" HorizontalAlignment="Left" Margin="99,0,0,55" Width="65" Click="btn_unSelect_fc_Click" Grid.Column="1" Height="19" VerticalAlignment="Bottom"/>
+        <ListBox Style="{DynamicResource ListBoxStyle1}" x:Name="listbox_field" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="15,86,19,97"/>
+        <ListBox x:Name="listbox_targetFeature" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="18,35,10,97" Grid.Column="1"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,10,19"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" Grid.Column="1" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,92,19" Click="btn_help_Click" Grid.Column="1" HorizontalAlignment="Right" Width="70" Height="24" VerticalAlignment="Bottom"/>
+
+        <Button x:Name="btn_select" Style="{StaticResource btn_selectAll}" Margin="15,0,0,65"  VerticalAlignment="Bottom" Click="btn_select_Click" HorizontalAlignment="Left" Width="70" />
+
+        <Button x:Name="btn_unSelect" Style="{StaticResource btn_unSelectAll}" Margin="97,0,0,65"  VerticalAlignment="Bottom" Click="btn_unSelect_Click" HorizontalAlignment="Left" Width="70" />
+
+        <Button x:Name="btn_select_fc" Style="{StaticResource btn_selectAll}" Margin="18,0,0,65"  VerticalAlignment="Bottom" Click="btn_select_fc_Click" HorizontalAlignment="Left" Width="70" Grid.Column="1" />
+
+        <Button x:Name="btn_unSelect_fc" Style="{StaticResource btn_unSelectAll}" Margin="100,0,0,65"  VerticalAlignment="Bottom" Click="btn_unSelect_fc_Click" HorizontalAlignment="Left" Width="70" Grid.Column="1" />
+
     </Grid>
 </controls:ProWindow>

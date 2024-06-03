@@ -6,21 +6,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="更新字段别名(属性映射)" Height="400" Width="500" WindowStartupLocation="CenterScreen"
+        Title="更新字段别名(属性映射)" Height="400" Width="500" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="选择要素图层或表：" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Top" Width="186"/>
-        <Button x:Name="btn_go" Content="执行" Margin="0,0,10,19" Height="23" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="56" Click="btn_go_click"/>
         <Label Content="输入名称与别名对照表：" HorizontalAlignment="Left" Margin="15,232,0,0" VerticalAlignment="Top" Width="375"/>
-        <TextBox x:Name="textExcelPath" Margin="15,262,53,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21"/>
-        <Button x:Name="openExcelButton" Content="打开" Margin="0,262,10,0" HorizontalAlignment="Right" Width="38" Height="21" VerticalAlignment="Top" Click="openExcelButton_Click" Background="{x:Null}"/>
+        <TextBox x:Name="textExcelPath" Margin="15,262,34,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Height="22"/>
         <ListBox x:Name="listbox_fc" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="15,44,10,0" Height="184" VerticalAlignment="Top"/>
+        <Button x:Name="openExcelButton" Style="{StaticResource btn_picture}" Margin="0,262,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openExcelButton_Click">
+            <Image Source="/CCTool;component/Data/Icons/openFile3.png" Height="16"/>
+        </Button>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,10,20"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,92,20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_click"/>
+
     </Grid>
 </controls:ProWindow>

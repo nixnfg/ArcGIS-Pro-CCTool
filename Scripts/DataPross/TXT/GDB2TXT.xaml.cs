@@ -55,7 +55,7 @@ namespace CCTool.Scripts.DataPross.TXT
 
         // 定义一个进度框
         private ProcessWindow processwindow = null;
-        string tool_name = "SHP要素转TXT";
+        string tool_name = "SHP转TXT";
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
         {
@@ -65,16 +65,16 @@ namespace CCTool.Scripts.DataPross.TXT
                 string folder_path = txtFolder.Text;
                 string folder_txt = txtFolder2.Text;
                 var cb_shps = listbox_shp.Items;
-                string field_mc = combox_mc.Text;
-                string field_yt = combox_yt.Text;
+                string field_mc = combox_mc.ComboxText();
+                string field_yt = combox_yt.ComboxText();
                 int digit_xy = int.Parse(combox_digit.Text);
                 string txt_head = txtBox_head.Text;
 
                 bool xyReserve = (bool)check_xy.IsChecked;
                 bool haveJ = (bool)check_xy_J.IsChecked;
 
-                string field_mj = combox_mj.Text;
-                string field_bh = combox_time.Text;
+                string field_mj = combox_mj.ComboxText();
+                string field_bh = combox_time.ComboxText();
 
                 // 判断参数是否选择完全
                 if (folder_path == "" || folder_txt == "" || cb_shps.Count == 0)
@@ -134,7 +134,7 @@ namespace CCTool.Scripts.DataPross.TXT
                                     string ft_mj = "";
                                     if (field_mj != "") { ft_mj = row[field_mj]?.ToString() ?? ""; }
                                     string ft_bh = "";
-                                    if (ft_bh != "") { ft_bh = row[field_bh]?.ToString() ?? ""; }
+                                    if (field_bh != "") { ft_bh = row[field_bh]?.ToString() ?? ""; }
 
                                     // 获取面要素的JSON文字
                                     Polygon polygon = feature.GetShape() as Polygon;
@@ -147,7 +147,7 @@ namespace CCTool.Scripts.DataPross.TXT
                                     {
                                         count += points.Count;
                                     }
-                                    string title = $"{count},{ft_mj},{ft_bh},{ft_mc},,,{ft_yt},,@ " + "\r\n";
+                                    string title = $"{count},{ft_mj},{ft_bh},{ft_mc},,,{ft_yt},,@" + "\r\n";
                                     txt_all += title;
 
                                     int index = 1;   // 点号
@@ -206,7 +206,7 @@ namespace CCTool.Scripts.DataPross.TXT
                         File.WriteAllText(txtPath, txt_all);
                     }
                 });
-                pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
 
             }
             catch (Exception ee)
@@ -256,7 +256,7 @@ namespace CCTool.Scripts.DataPross.TXT
                     break;
                 }
 
-                UITool.AddTextFieldsToCombox(shpPath, combox_mc);
+                UITool.AddTextFieldsToComboxPlus(shpPath, combox_mc);
 
             }
             catch (Exception ee)
@@ -284,7 +284,7 @@ namespace CCTool.Scripts.DataPross.TXT
                     break;
                 }
 
-                UITool.AddTextFieldsToCombox(shpPath, combox_yt);
+                UITool.AddTextFieldsToComboxPlus(shpPath, combox_yt);
             }
             catch (Exception ee)
             {
@@ -314,7 +314,7 @@ namespace CCTool.Scripts.DataPross.TXT
                 break;
             }
 
-            UITool.AddFloatFieldsToCombox(shpPath, combox_mj);
+            UITool.AddFloatFieldsToComboxPlus(shpPath, combox_mj);
         }
 
         private void combox_time_Open(object sender, EventArgs e)
@@ -332,7 +332,7 @@ namespace CCTool.Scripts.DataPross.TXT
                 break;
             }
 
-            UITool.AddTextFieldsToCombox(shpPath, combox_time);
+            UITool.AddTextFieldsToComboxPlus(shpPath, combox_time);
         }
     }
 }

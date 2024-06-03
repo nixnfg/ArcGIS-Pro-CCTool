@@ -21,7 +21,7 @@
         <Label Content="输入面积字段：" HorizontalAlignment="Left" Margin="15,60,0,0" VerticalAlignment="Top" Width="375"/>
         <ComboBox x:Name="combox_field_BM" Margin="15,85,15,0" VerticalAlignment="Top" DropDownOpened="combox_field_BM_DropDown"/>
         <Label Content="输出Excel表：" HorizontalAlignment="Left" Margin="15,107,0,0" VerticalAlignment="Top" Width="375"/>
-        <TextBox x:Name="textTablePath" Margin="15,135,53,0" TextWrapping="Wrap" Text="" Height="21" VerticalAlignment="Top"/>
+        <TextBox x:Name="textTablePath" Margin="15,135,53,0" TextWrapping="NoWrap" Text="" Height="21" VerticalAlignment="Top"/>
         <Button x:Name="openTableButton" Content="打开" Margin="0,135,15,0" HorizontalAlignment="Right" Width="33" Height="21" VerticalAlignment="Top" Background="{x:Null}" Click="openTableButton_Click"/>
         <Button x:Name="btn_go" Content="执行" Margin="0,0,15,20" Height="19" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="66" Click="btn_go_Click"/>
 

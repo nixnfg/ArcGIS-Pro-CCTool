@@ -45,9 +45,9 @@ namespace CCTool.Scripts
             try
             {
                 // 获取参数
-                string fc_path = combox_fc.Text;
-                string bm_field = combox_field_BM.Text;
-                string mc_field = combox_field_MC.Text;
+                string fc_path = combox_fc.ComboxText();
+                string bm_field = combox_field_BM.ComboxText();
+                string mc_field = combox_field_MC.ComboxText();
                 string version = combox_version.Text;
 
                 // 复制资源文件
@@ -142,7 +142,7 @@ namespace CCTool.Scripts
                     // 删除中间数据
                     File.Delete(outputPath);
                 });
-                pw.AddProcessMessage(70, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -153,17 +153,23 @@ namespace CCTool.Scripts
 
         private void combox_field_BM_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_field_BM);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_field_BM);
         }
 
         private void combox_field_MC_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_field_MC);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_field_MC);
         }
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135774436?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
         }
     }
 }

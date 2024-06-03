@@ -72,6 +72,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static Org.BouncyCastle.Math.Primes;
 using NPOI.HPSF;
+using Microsoft.VisualBasic;
+using static NPOI.HSSF.UserModel.HeaderFooter;
+using static System.Windows.Forms.MonthCalendar;
+using System.Reflection;
+using QueryFilter = ArcGIS.Core.Data.QueryFilter;
+using System.Windows.Controls;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+using VerticalAlignment = ArcGIS.Core.CIM.VerticalAlignment;
+using HorizontalAlignment = ArcGIS.Core.CIM.HorizontalAlignment;
+using NPOI.OpenXmlFormats.Vml;
+using ArcGIS.Desktop.Internal.Catalog;
+using static NPOI.POIFS.Crypt.CryptoFunctions;
+using Camera = ArcGIS.Desktop.Mapping.Camera;
+using Aspose.Words.Drawing;
+using System.Threading;
+using MathNet.Numerics.Distributions;
+using ArcGIS.Desktop.Internal.GeoProcessing;
+using System.Runtime.Intrinsics.Arm;
+using ArcGIS.Desktop.Internal.Mapping.Ribbon;
+using ArcGIS.Core.Internal.Geometry;
 
 namespace CCTool.Scripts.UI.ProButton
 {
@@ -83,75 +103,22 @@ namespace CCTool.Scripts.UI.ProButton
 
         protected override void OnClick()
         {
+            //Ogr.RegisterAll();// 注册所有的驱动
+            //Gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "YES");
+            //Gdal.SetConfigOption("SHAPE_ENCODING", "");
+
+            // 获取参数
+            string def_folder = Project.Current.HomeFolderPath;     // 工程默认文件夹位置
+            string def_gdb = Project.Current.DefaultGeodatabasePath;    // 工程默认数据库
 
             try
             {
-                string out_path = @"c:\users\administrator\documents\arcgis\projects\test\test.gdb\demo_3_raste";  //输出的栅格路径，要替换
-                var par = Geoprocessing.MakeValueArray("\"Extract_demo1\" + \"Extract_demo2\"", out_path);    // 表达式里的栅格图层要替换
-                Geoprocessing.ExecuteToolAsync("sa.RasterCalculator", par);
-
-                //var prj = Project.Current;
-                //var map = MapView.Active;
-                //string defGDB = Project.Current.DefaultGeodatabasePath;
-                //string in_fc = "规划用地_CopyFeatures3";
-
                 // 打开进度框
                 ProcessWindow pw = UITool.OpenProcessWindow(processwindow, "进度");
                 DateTime time_base = DateTime.Now;
                 pw.AddMessage("开始执行工具…………" + time_base + "\r", Brushes.Green);
 
-
-                //// 读取文件内容
-                //string filePath = "C:\\ProSDKsettings\\Settings.txt";  // 替换为你的文件路径
-                //string jsonContent = File.ReadAllText(filePath);
-
-                //// 解析 JSON 数据
-                //JObject jsonObject = JObject.Parse(jsonContent);
-
-                //// 获取 "dpi" 属性的值
-                //int dpiValue = (int)jsonObject["dpi"];
-                //pw.AddMessage(dpiValue.ToString());
-
-                //await QueuedTask.Run(() =>
-                //{
-                //    // 获取活动地图视图中选定的要素集合
-                //    var selectedSet = MapView.Active.Map.GetSelection();
-
-                //    // 将选定的要素集合转换为字典形式
-                //    var selectedList = selectedSet.ToDictionary();
-                //    // 创建一个新的 Inspector 对象以检索要素属性
-                //    var inspector = new Inspector();
-
-                //    // 遍历每个选定图层及其关联的对象 ID
-                //    foreach (var layer in selectedList)
-                //    {
-                //        // 获取图层
-                //        FeatureLayer featureLayer = layer.Key as FeatureLayer;
-                //        // 获取图层和关联的对象 ID
-                //        MapMember mapMember = layer.Key;
-                //        List<long> oids = layer.Value;
-                //        // 使用当前图层的第一个对象 ID 加载 Inspector
-                //        inspector.Load(mapMember, oids[0]);
-                //        // 获取选定要素的几何类型
-                //        var geometryType = inspector.Shape.GeometryType;
-                //        // 检查几何类型是否为面要素
-                //        if (geometryType == GeometryType.Polygon)
-                //        {
-                //            // 遍历当前图层中的每个对象 ID
-                //            foreach (var oid in oids)
-                //            {
-                //                // 使用当前对象 ID 加载 Inspector
-                //                inspector.Load(mapMember, oid);
-                //                // 将要素转换为多边形
-                //                Polygon selectPolygon = inspector.Shape as Polygon;
-                //                //selectPolygon = GeometryEngine.Instance.Buffer(polygon, 0.1) as Polygon;
-                //            }
-                //        }
-                //    }
-
-                //});
-
-                pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -160,8 +127,5 @@ namespace CCTool.Scripts.UI.ProButton
             }
         }
 
-
-
     }
 }
-

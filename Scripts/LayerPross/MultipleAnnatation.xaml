@@ -6,12 +6,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="多分式标注" Height="247" Width="500"
+        Title="多分式标注" Height="440
+                    " Width="750" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
@@ -19,21 +20,42 @@
         <Grid.RowDefinitions>
 
         </Grid.RowDefinitions>
-        <Label Content="———————————————————" Margin="160,77,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="174" Height="25"/>
-        <ComboBox x:Name="combox_Up" Width="120" Height="20" DropDownOpened="combox_Up_DropOpen" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="190,40,0,0"/>
-        <TextBox x:Name="txt_UF" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="20" Background="#FFD7F7EE" HorizontalAlignment="Left" Margin="190,16,0,0"/>
-        <TextBox x:Name="txt_UB" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="20" Background="#FFD7F7EE" Margin="190,64,0,0" HorizontalAlignment="Left"/>
-        <ComboBox x:Name="combox_Down" Height="20" HorizontalAlignment="Left" Width="120" DropDownOpened="combox_Down_DropOpen" VerticalAlignment="Top" Margin="190,120,0,0"/>
-        <TextBox x:Name="txt_DF" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="20" Background="#FFD7F7EE" Margin="190,96,0,0"/>
-        <TextBox x:Name="txt_DB" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="20" Background="#FFD7F7EE" Margin="190,144,0,0"/>
-        <CheckBox x:Name="checkBox_add" Content="添加前后缀" Margin="380,13,0,0" Checked="checkBox_add_Checked" Unchecked="checkBox_add_UnChecked" Height="15" VerticalAlignment="Top" HorizontalAlignment="Left" Width="80"/>
-        <ComboBox x:Name="combox_Left" Height="20" HorizontalAlignment="Left" Width="120" DropDownOpened="combox_Left_DropOpen" VerticalAlignment="Top" Margin="40,80,0,0"/>
-        <TextBox x:Name="txt_LB" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="20" Background="#FFD7F7EE" Margin="40,104,0,0" HorizontalAlignment="Left"/>
-        <TextBox x:Name="txt_LF" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="20" Background="#FFD7F7EE" Margin="40,56,0,0"/>
-        <ComboBox x:Name="combox_Right" Height="20" HorizontalAlignment="Left" Width="120" DropDownOpened="combox_Right_DropOpen" VerticalAlignment="Top" Margin="340,80,0,0"/>
-        <TextBox x:Name="txt_RB" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="20" Background="#FFD7F7EE" Margin="340,104,0,0" HorizontalAlignment="Left"/>
-        <TextBox x:Name="txt_RF" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="20" Background="#FFD7F7EE" Margin="340,56,0,0"/>
-        <Button x:Name="btn_go" Content="执行" HorizontalAlignment="Left" Margin="380,164,0,0" VerticalAlignment="Top" Width="80" Height="23" Click="btn_go_Click"/>
+        <Label Content="———————————————————" Margin="416,91,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="68" Height="25"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,24,14"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,106,14" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+
+        <ListBox x:Name="listbox_field" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,33,0,14" HorizontalAlignment="Left" Width="141" Loaded="listbox_field_Load" MouseDoubleClick="listbox_field_DoubleClick"/>
+        <Label Content="字段（双击添加）" HorizontalAlignment="Left" Margin="10,7,0,0" VerticalAlignment="Top" Width="141"/>
+        <RichTextBox x:Name="text_top" Margin="331,33,0,0" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" Width="240" GotFocus="text_top_GotFocus">
+            <FlowDocument/>
+        </RichTextBox>
+        <RichTextBox x:Name="text_left" Margin="171,86,0,0" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" Width="240" GotFocus="text_left_GotFocus">
+            <FlowDocument/>
+        </RichTextBox>
+        <RichTextBox x:Name="text_right" Margin="489,86,0,0" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" Width="240" GotFocus="text_right_GotFocus">
+            <FlowDocument/>
+        </RichTextBox>
+        <RichTextBox x:Name="text_bottom" Margin="331,137,0,0" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" Width="240" GotFocus="text_bottom_GotFocus">
+            <FlowDocument/>
+        </RichTextBox>
+        <Button x:Name="btn_clear" Style="{StaticResource btn_normal}" Margin="616,148,0,0" VerticalAlignment="Top" Width="110" Click="btn_clear_Click" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/CCTool;component/Data/Icons/cancer2.png" Height="16"/>
+                <TextBlock Text="清除所有标签"  Margin="8,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+        <GroupBox Header="参数设置" Margin="171,192,24,0" Height="115" VerticalAlignment="Top"/>
+        <Label Content="中间横线紧凑度：" HorizontalAlignment="Left" Margin="182,220,0,0" VerticalAlignment="Top" Width="104"/>
+        <Slider x:Name="sliderLine" HorizontalAlignment="Left" Margin="291,224,0,0" VerticalAlignment="Top" Width="70" Minimum="-50" Maximum="0" Value="-30" IsSnapToTickEnabled="True"/>
+        <TextBox x:Name="textLine" Text="{Binding ElementName=sliderLine, Path=Value}"  HorizontalAlignment="Left" Margin="366,224,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="56" Height="18" IsEnabled="False"/>
+        <Label Content="上下两行紧凑度：" HorizontalAlignment="Left" Margin="467,220,0,0" VerticalAlignment="Top" Width="104"/>
+        <Slider x:Name="sliderTopBottom" HorizontalAlignment="Left" Margin="576,224,0,0" VerticalAlignment="Top" Width="70" Maximum="10" Value="1" IsSnapToTickEnabled="True" Minimum="-2"/>
+        <TextBox x:Name="textTopBotton" Text="{Binding ElementName=sliderTopBottom, Path=Value}"  HorizontalAlignment="Left" Margin="651,224,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="56" Height="18" IsEnabled="False"/>
+        <Label Content="中间横线长度：" HorizontalAlignment="Left" Margin="182,258,0,0" VerticalAlignment="Top" Width="104"/>
+        <Slider x:Name="sliderLineLength" HorizontalAlignment="Left" Margin="291,262,0,0" VerticalAlignment="Top" Width="70" Minimum="1" Maximum="7" Value="4" IsSnapToTickEnabled="True"/>
+        <TextBox x:Name="textLineLength" Text="{Binding ElementName=sliderLineLength, Path=Value}"  HorizontalAlignment="Left" Margin="366,262,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="56" Height="18" IsEnabled="False"/>
+        <Label Content="如果执行后不显示标注，大概率是填写不规范，请认真看帮助里的示例！" HorizontalAlignment="Left" Margin="171,312,0,0" Width="387" Foreground="#FFDE4B4B" Height="25" VerticalAlignment="Top"/>
 
     </Grid>
 </controls:ProWindow>

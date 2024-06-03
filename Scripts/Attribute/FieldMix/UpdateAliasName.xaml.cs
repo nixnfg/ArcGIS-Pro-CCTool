@@ -98,13 +98,19 @@ namespace CCTool.Scripts.UI.ProWindow
                         }
                     }
                 });
-                pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
                 MessageBox.Show(ee.Message + ee.StackTrace);
                 return;
             }
+        }
+
+        private void btn_help_click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135665185?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
         }
     }
 }

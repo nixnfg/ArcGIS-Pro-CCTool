@@ -6,36 +6,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="用地用海指标汇总" Height="398" Width="500" WindowStartupLocation="CenterScreen"
+        Title="用地用海指标汇总" Height="398" Width="500" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
 
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
 
-        <Label Content="输入要素图层：" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" Width="375" Grid.ColumnSpan="2" Height="25"/>
-        <ComboBox x:Name="combox_fc" Margin="15,35,15,0" VerticalAlignment="Top" DropDownOpened="combox_fc_DropDown" Grid.ColumnSpan="2" Height="21"/>
-        <Label Content="输出Excel文件路径：" HorizontalAlignment="Left" Margin="15,105,0,0" VerticalAlignment="Top" Width="375" Grid.ColumnSpan="2" Height="25"/>
-        <Label Content="汇总模式：" HorizontalAlignment="Left" Margin="15,155,0,0" VerticalAlignment="Top" Width="216" Height="25"/>
-        <ComboBox x:Name="combox_model" Margin="15,0,111,0" VerticalAlignment="Center" Height="21"/>
-        <Button x:Name="btn_go" Content="执行 " Margin="0,0,15,15" Width="59" Height="19" VerticalAlignment="Bottom" Click="btn_go_Click" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Background="{x:Null}" Grid.Column="1"/>
-        <TextBox x:Name="textExcelPath" Margin="15,135,53,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="21" Grid.ColumnSpan="2"/>
-        <Button x:Name="openExcelButton" Content="打开" Margin="0,135,15,0" HorizontalAlignment="Right" Width="33" Height="21" VerticalAlignment="Top" Click="openExcelButton_Click" Background="{x:Null}" Grid.Column="1"/>
-        <Label Content="输入用地编码字段：" Margin="15,59,19,0" VerticalAlignment="Top" Height="25" Grid.ColumnSpan="2"/>
-        <ComboBox x:Name="combox_bmField" Margin="15,84,19,0" VerticalAlignment="Top" DropDownOpened="combox_field_DropDown" Height="21"/>
-        <Label Content="面积字段：" Margin="22,59,22,0" VerticalAlignment="Top" Height="25" Grid.Column="1"/>
-        <ComboBox x:Name="combox_areaField" Margin="22,84,15,0" VerticalAlignment="Top" DropDownOpened="combox_areaField_DropDown" Height="21" Grid.Column="1"/>
-        <Label Content="用地用海版本：" HorizontalAlignment="Left" Margin="15,202,0,0" VerticalAlignment="Top" Width="368" Grid.ColumnSpan="2"/>
-        <ComboBox x:Name="combox_version" Margin="15,227,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="124"/>
+        <Label Content="输入要素图层：" HorizontalAlignment="Left" Margin="15,12,0,0" VerticalAlignment="Top" Width="93" Height="25"/>
+        <ComboBox x:Name="combox_fc" Style="{StaticResource ComboBox_icon}" Margin="128,14,15,0" VerticalAlignment="Top" DropDownOpened="combox_fc_DropDown" Grid.ColumnSpan="2" Height="21"/>
+        <Label Content="输出Excel文件路径：" HorizontalAlignment="Left" Margin="15,219,0,0" VerticalAlignment="Top" Width="375" Height="25"/>
+        <Label Content="汇总模式：" HorizontalAlignment="Left" Margin="15,116,0,0" VerticalAlignment="Top" Width="110" Height="25"/>
+        <ComboBox x:Name="combox_model" Margin="128,118,15,0" VerticalAlignment="Top" Height="21"/>
+        <TextBox x:Name="textExcelPath" Style="{StaticResource TextBoxNormal}" Margin="15,249,38,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top"/>
+        <Button x:Name="openExcelButton" Style="{StaticResource btn_picture}" Margin="0,249,15,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="openExcelButton_Click">
+            <Image Source="/CCTool;component/Data/Icons/openFile3.png" Height="16"/>
+        </Button>
+        <Label Content="输入用地编码字段：" Margin="15,46,0,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Left" Width="113"/>
+        <ComboBox x:Name="combox_bmField" Style="{StaticResource ComboBox_icon}" Margin="128,48,15,0" VerticalAlignment="Top" DropDownOpened="combox_field_DropDown" Height="22" Grid.ColumnSpan="2"/>
+        <Label Content="面积字段：" Margin="15,82,29,0" VerticalAlignment="Top" Height="25"/>
+        <ComboBox x:Name="combox_areaField" Style="{StaticResource ComboBox_icon}" Margin="128,84,15,0" VerticalAlignment="Top" DropDownOpened="combox_areaField_DropDown" Height="21"/>
+        <Label Content="用地用海版本：" HorizontalAlignment="Left" Margin="15,149,0,0" VerticalAlignment="Top" Width="103"/>
+        <ComboBox x:Name="combox_version" Margin="128,151,15,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="combox_unit" Margin="128,186,16,0" VerticalAlignment="Top" RenderTransformOrigin="0.791,0.466" Height="25"  />
+        <Label Content="面积单位：" HorizontalAlignment="Left" Margin="15,186,0,0" VerticalAlignment="Top" Width="64"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,16,28"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,98,28" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+
 
     </Grid>
 </controls:ProWindow>

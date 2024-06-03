@@ -39,7 +39,7 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void combox_fc_DropOpen(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayerAndTableToCombox(combox_fc);
+            UITool.AddFeatureLayerAndTableToComboxPlus(combox_fc);
         }
 
         private async void btn_go_click(object sender, RoutedEventArgs e)
@@ -47,7 +47,7 @@ namespace CCTool.Scripts.UI.ProWindow
             try
             {
                 // 获取参数
-                string input_fc = combox_fc.Text;
+                string input_fc = combox_fc.ComboxText();
                 // 符号系统选择
                 string model = "";
                 if (rb_string_clearSpace.IsChecked == true) { model = "string_clearSpace"; }
@@ -110,7 +110,7 @@ namespace CCTool.Scripts.UI.ProWindow
                             GisTool.Zero2Null(input_fc, field.Name);
                         }
                     }
-                    pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                    pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
                 });
             }
             catch (Exception ee)
@@ -118,6 +118,12 @@ namespace CCTool.Scripts.UI.ProWindow
                 MessageBox.Show(ee.Message + ee.StackTrace);
                 return;
             }
+        }
+
+        private void btn_help_click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135753052?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

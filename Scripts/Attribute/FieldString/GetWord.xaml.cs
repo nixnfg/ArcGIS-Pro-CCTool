@@ -49,17 +49,17 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayerAndTableToCombox(combox_fc);
+            UITool.AddFeatureLayerAndTableToComboxPlus(combox_fc);
         }
 
         private void combox_field_in_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_field_in);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_field_in);
         }
 
         private void combox_field_out_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_field_out);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_field_out);
         }
 
         private async void btn_go_click(object sender, RoutedEventArgs e)
@@ -67,9 +67,9 @@ namespace CCTool.Scripts.UI.ProWindow
             try
             {
                 // 获取数据
-                string layer_path = combox_fc.Text;
-                string field_in = combox_field_in.Text;
-                string field_out = combox_field_out.Text;
+                string layer_path = combox_fc.ComboxText();
+                string field_in = combox_field_in.ComboxText();
+                string field_out = combox_field_out.ComboxText();
                 string model = combox_model.Text;
 
                 // 判断参数是否选择完全
@@ -112,13 +112,19 @@ namespace CCTool.Scripts.UI.ProWindow
                         }
                     }
                 });
-                pw.AddProcessMessage(80, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
                 MessageBox.Show(ee.Message + ee.StackTrace);
                 return;
             }
+        }
+
+        private void btn_help_click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135619170?spm=1001.2014.3001.5502";
+            UITool.Link2Web(url);
         }
     }
 }

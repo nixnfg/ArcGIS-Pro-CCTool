@@ -6,24 +6,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="三调名称转用地用海名称" Height="348" Width="500" WindowStartupLocation="CenterScreen"
+        Title="三调名称转用地用海名称" Height="348" Width="500" WindowStartupLocation="CenterScreen" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-
+                <ResourceDictionary Source="/CCTool;component/Data/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
         <Label Content="输入三调图层：" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" Width="375"/>
-        <ComboBox x:Name="combox_fc" Margin="15,35,15,0" VerticalAlignment="Top" DropDownOpened="combox_fc_DropDown"/>
-        <Button x:Name="btn_go" Content="执行 " Margin="0,0,15,27" Width="59" Height="19" VerticalAlignment="Bottom" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Background="{x:Null}" Click="btn_go_Click"/>
+        <ComboBox x:Name="combox_fc" Style="{StaticResource ComboBox_icon}" Margin="15,35,15,0" VerticalAlignment="Top" DropDownOpened="combox_fc_DropDown"/>
         <Label Content="三调字段【DLMC】：" HorizontalAlignment="Left" Margin="15,56,0,0" VerticalAlignment="Top" Width="375"/>
-        <ComboBox x:Name="combox_field_before" Margin="15,81,15,0" VerticalAlignment="Top" DropDownOpened="combox_be_DropDown"/>
+        <ComboBox x:Name="combox_field_before" Style="{StaticResource ComboBox_icon}" Margin="15,81,15,0" VerticalAlignment="Top" DropDownOpened="combox_be_DropDown"/>
         <Label Content="输出的用地用海名称字段：" HorizontalAlignment="Left" Margin="15,103,0,0" VerticalAlignment="Top" Width="375"/>
-        <ComboBox x:Name="combox_feild_after" Margin="15,128,15,0" VerticalAlignment="Top" DropDownOpened="combox_af_DropDown"/>
-        <Label Content="版本：" HorizontalAlignment="Left" Margin="15,155,0,0" VerticalAlignment="Top" Width="375"/>
-        <ComboBox x:Name="combox_version" Margin="0,180,336,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="149"/>
+        <ComboBox x:Name="combox_feild_after" Style="{StaticResource ComboBox_icon}" Margin="15,128,15,0" VerticalAlignment="Top" DropDownOpened="combox_af_DropDown"/>
+        <Label Content="版本：" HorizontalAlignment="Left" Margin="335,155,0,0" VerticalAlignment="Top" Width="149"/>
+        <ComboBox x:Name="combox_version" Margin="335,180,16,0" VerticalAlignment="Top"/>
+        <Button x:Name="btn_go" Style="{StaticResource btn_run}" Margin="0,0,16,32"  VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_go_Click" />
+
+        <Button x:Name="btn_help" Style="{StaticResource btn_help}" Margin="0,0,98,32" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="btn_help_Click"/>
+        <GroupBox Header="转换标准" Margin="15,166,0,32" HorizontalAlignment="Left" Width="273"/>
+        <RadioButton x:Name="rb_dxf" Content="一对多的转为【待细分】" HorizontalAlignment="Left" Margin="36,202,0,0" VerticalAlignment="Top" Width="188" IsChecked="True"/>
+        <RadioButton x:Name="rb_level1" Content="一对多的转为一级类" HorizontalAlignment="Left" Margin="36,229,0,0" VerticalAlignment="Top" Width="188"/>
+        <RadioButton x:Name="rb_all" Content="全部转为一级类" HorizontalAlignment="Left" Margin="36,255,0,0" VerticalAlignment="Top" Width="188"/>
+
     </Grid>
 </controls:ProWindow>

@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using static System.Net.Mime.MediaTypeNames;
 using ArcGIS.Desktop.Framework.Dialogs;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
+using SixLabors.ImageSharp.ColorSpaces;
 
 namespace CCTool.Scripts.Manager
 {
@@ -27,7 +28,6 @@ namespace CCTool.Scripts.Manager
         public ProcessWindow()
         {
             InitializeComponent();
-
         }
 
         // 变更进度条的进度【100%】
@@ -57,6 +57,15 @@ namespace CCTool.Scripts.Manager
                 newRange.ApplyPropertyValue(TextElement.ForegroundProperty, solidColorBrush);
                 // 设置新添加文字的样式
                 newRange.ApplyPropertyValue(TextElement.FontStyleProperty, FontStyles.Normal);
+
+                //tb_message.Focus();        // RichTextBox获取焦点，有时也可以不用
+                tb_message.ScrollToEnd();        // RichTextBox滚动到光标位置
+
+                // 如果有结束语句,lb显示工具执行结束
+                if (add_text.Contains("工具运行完成"))
+                {
+                    lb.Content = "工具执行结束！";
+                }
             });
         }
 

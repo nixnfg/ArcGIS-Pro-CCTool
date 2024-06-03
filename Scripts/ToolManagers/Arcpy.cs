@@ -13,11 +13,14 @@ using ICSharpCode.SharpZipLib.Zip.Compression;
 using NPOI.OpenXmlFormats.Dml.Diagram;
 using NPOI.OpenXmlFormats.Vml;
 using NPOI.POIFS.Crypt.Dsig;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Org.BouncyCastle.Math.Primes;
 
 namespace CCTool.Scripts.Manager
 {
@@ -72,6 +75,21 @@ namespace CCTool.Scripts.Manager
             return in_data;
         }
 
+        // 更改要素别名
+        public static object AlterAliasName(object in_data, string aliasName, bool is_output = false)
+        {
+            // 初始化输入数据
+            in_data = InitData(in_data);
+            // 设置默认GPExecuteToolFlags
+            GPExecuteToolFlags executeFlags = SetGPFlag(is_output);
+            // 生成GP参数
+            var par = Geoprocessing.MakeValueArray(in_data, aliasName);
+            // 执行GP工具
+            Geoprocessing.ExecuteToolAsync("AlterAliasName", par, null, null, null, executeFlags);
+            // 返回结果
+            return in_data;
+        }
+
         // 复制要素
         public static string CopyFeatures(object in_featureClass, string out_featureClass, bool is_output = false, string Z = "Disabled", string M = "Disabled")
         {
@@ -120,10 +138,12 @@ namespace CCTool.Scripts.Manager
         {
             in_raster = InitData(in_raster);
             GPExecuteToolFlags executeFlags = SetGPFlag(is_output);
-            var par = Geoprocessing.MakeValueArray(in_raster, "", out_raster, mask, "-1", "ClippingGeometry", "MAINTAIN_EXTENT");
+            var par = Geoprocessing.MakeValueArray(in_raster, "", out_raster, mask, "0", "ClippingGeometry", "MAINTAIN_EXTENT");
             Geoprocessing.ExecuteToolAsync("management.Clip", par, null, null, null, executeFlags);
             return out_raster;
         }
+
+
         // 合并
         public static object Merge(List<string> in_tables, object out_table, bool is_output = false)
         {
@@ -234,6 +254,12 @@ namespace CCTool.Scripts.Manager
         // 创建GDB数据库
         public static string CreateFileGDB(string file_path, string gdb_name, bool is_output = false)
         {
+            // 如果不存在指定文件夹，则新建一个
+            if (!Directory.Exists(file_path))
+            {
+                Directory.CreateDirectory(file_path);
+            }
+
             GPExecuteToolFlags executeFlags = SetGPFlag(is_output);
             var par = Geoprocessing.MakeValueArray(file_path, gdb_name);
             Geoprocessing.ExecuteToolAsync("management.CreateFileGDB", par, null, null, null, executeFlags);
@@ -604,6 +630,36 @@ namespace CCTool.Scripts.Manager
         {
             var par = Geoprocessing.MakeValueArray(in_featureClasses);
             Geoprocessing.ExecuteToolAsync("management.Delete", par);
+        }
+
+        // 表转Excel
+        public static string TableToExcel(object in_featureClasses, string out_excel, bool is_output = false)
+        {
+            in_featureClasses = InitData(in_featureClasses);
+            GPExecuteToolFlags executeFlags = SetGPFlag(is_output);
+            var par = Geoprocessing.MakeValueArray(in_featureClasses, out_excel, "ALIAS", "CODE");
+            Geoprocessing.ExecuteToolAsync("conversion.TableToExcel", par, null, null, null, executeFlags);
+            return out_excel;
+        }
+
+        // 要素转CAD
+        public static string ExportCAD(object in_featureClasses, string out_cad, bool is_output = false)
+        {
+            in_featureClasses = InitData(in_featureClasses);
+            GPExecuteToolFlags executeFlags = SetGPFlag(is_output);
+            var par = Geoprocessing.MakeValueArray(in_featureClasses, "DWG_R2004", out_cad, "Ignore_Filenames_in_Tables", "Overwrite_Existing_Files");
+            Geoprocessing.ExecuteToolAsync("conversion.ExportCAD", par, null, null, null, executeFlags);
+            return out_cad;
+        }
+
+        // 要素转KMZ
+        public static string ExportKMZ(object in_featureClasses, string out_kmz, bool is_output = false)
+        {
+            in_featureClasses = InitData(in_featureClasses);
+            GPExecuteToolFlags executeFlags = SetGPFlag(is_output);
+            var par = Geoprocessing.MakeValueArray(in_featureClasses, out_kmz);
+            Geoprocessing.ExecuteToolAsync("conversion.LayerToKML", par, null, null, null, executeFlags);
+            return out_kmz;
         }
 
     }

@@ -56,14 +56,18 @@ namespace CCTool.Scripts.UI.ProButton
                     string fc_path = ly.Name.LayerSourcePath();
 
                     pw.AddProcessMessage(10, "按空间位置排序【右下至左上】");
+                    // 获取符号系统
+                    CIMRenderer cr = ly.GetRenderer();
                     // 排序
                     Arcpy.Sort(ly, gdb + @"\sort_fc", "Shape ASCENDING", "LR");
 
                     pw.AddProcessMessage(50, time_base, "按空间位置排序【更新要素】");
                     // 更新要素
-                    Arcpy.CopyFeatures(gdb + @"\sort_fc", fc_path, true);
-
-                    pw.AddProcessMessage(40, time_base, "工具运行完成！！！", Brushes.Blue);
+                    Arcpy.Update(fc_path, gdb + @"\sort_fc", gdb + @"\sort_fc2");
+                    Arcpy.CopyFeatures(gdb + @"\sort_fc2", fc_path, true);
+                    // 应用符号系统
+                    ly.SetRenderer(cr);
+                    pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
                 });
             }
             catch (Exception ee)

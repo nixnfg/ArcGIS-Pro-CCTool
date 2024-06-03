@@ -33,13 +33,13 @@ namespace CCTool.Scripts.UI.ProWindow
 
         // 定义一个进度框
         private ProcessWindow processwindow = null;
-        string tool_name = "现状规划用地变化检查(按规范字段)";
+        string tool_name = "现状规划用地变化检查(村规)";
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
         {
             // 获取指标
-            string fc_xz_txt = combox_fc_xz.Text;
-            string fc_gh_txt = combox_fc_gh.Text;
+            string fc_xz_txt = combox_fc_xz.ComboxText();
+            string fc_gh_txt = combox_fc_gh.ComboxText();
             string field_change = @"用地变化";
 
             // 判断参数是否选择完全
@@ -91,7 +91,7 @@ namespace CCTool.Scripts.UI.ProWindow
                     Arcpy.Identity(DefalutGDB + @"\tem_xz", DefalutGDB + @"\tem_gh", identityFeatureClass);
 
                     // 添加字段
-                    Arcpy.AddField(identityFeatureClass, field_change, "TEXT");
+                    EditTool.AddField(identityFeatureClass, field_change);
 
                     pw.AddProcessMessage(20, time_base, "计算字段，找出变化图斑");
 
@@ -149,7 +149,7 @@ namespace CCTool.Scripts.UI.ProWindow
                     Arcpy.Delect(DefalutGDB + @"\tem_xz");
                     Arcpy.Delect(DefalutGDB + @"\tem_gh");
                 });
-                pw.AddProcessMessage(20, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
             }
             catch (Exception ee)
             {
@@ -160,13 +160,18 @@ namespace CCTool.Scripts.UI.ProWindow
 
         private void combox_fc_xz_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc_xz);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc_xz);
         }
 
         private void combox_fc_gh_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc_gh);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc_gh);
         }
 
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135773697?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
+        }
     }
 }

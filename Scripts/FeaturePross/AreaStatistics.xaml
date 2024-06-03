@@ -7,7 +7,7 @@
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
         Title="面积统计" Height="250" Width="450"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterOwner" Icon="/CCTool;component/Data/Icons/Atoolbox.png"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
@@ -18,22 +18,22 @@
     </controls:ProWindow.Resources>
     <Grid>
         <GroupBox Header="投影面积" Margin="21,10,0,0" Height="158" VerticalAlignment="Top" HorizontalAlignment="Left" Width="190" FontWeight="Bold"/>
-        <TextBox x:Name="text_area_squ" HorizontalAlignment="Left" Margin="33,42,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
+        <TextBox x:Name="text_area_squ" HorizontalAlignment="Left" Margin="33,42,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
         <Label Content="平方米" HorizontalAlignment="Left" Margin="145,39,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="text_area_ha" HorizontalAlignment="Left" Margin="33,72,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
+        <TextBox x:Name="text_area_ha" HorizontalAlignment="Left" Margin="33,72,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
         <Label Content="公顷" HorizontalAlignment="Left" Margin="145,69,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="text_area_km" HorizontalAlignment="Left" Margin="33,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
+        <TextBox x:Name="text_area_km" HorizontalAlignment="Left" Margin="33,102,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
         <Label Content="平方公里" HorizontalAlignment="Left" Margin="145,99,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="text_area_mu" HorizontalAlignment="Left" Margin="33,132,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
+        <TextBox x:Name="text_area_mu" HorizontalAlignment="Left" Margin="33,132,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
         <Label Content="亩" HorizontalAlignment="Left" Margin="145,129,0,0" VerticalAlignment="Top"/>
         <GroupBox Header="椭球面积" Margin="239,10,0,0" HorizontalAlignment="Left" Width="190" Height="158" VerticalAlignment="Top" FontWeight="Bold"/>
-        <TextBox x:Name="text_geoarea_squ" HorizontalAlignment="Left" Margin="251,42,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
+        <TextBox x:Name="text_geoarea_squ" HorizontalAlignment="Left" Margin="251,42,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
         <Label x:Name="lb_1" Content="平方米" HorizontalAlignment="Left" Margin="363,39,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="text_geoarea_ha" HorizontalAlignment="Left" Margin="251,72,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
+        <TextBox x:Name="text_geoarea_ha" HorizontalAlignment="Left" Margin="251,72,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
         <Label x:Name="lb_2" Content="公顷" HorizontalAlignment="Left" Margin="363,69,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="text_geoarea_km" HorizontalAlignment="Left" Margin="251,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
+        <TextBox x:Name="text_geoarea_km" HorizontalAlignment="Left" Margin="251,102,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
         <Label x:Name="lb_3" Content="平方公里" HorizontalAlignment="Left" Margin="363,99,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="text_geoarea_mu" HorizontalAlignment="Left" Margin="251,132,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
+        <TextBox x:Name="text_geoarea_mu" HorizontalAlignment="Left" Margin="251,132,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="105" TextAlignment="Right"/>
         <Label x:Name="lb_4" Content="亩" HorizontalAlignment="Left" Margin="363,129,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lb_count" Content="Label" HorizontalAlignment="Left" Margin="21,176,0,0" VerticalAlignment="Top" Width="306"/>
         <Label x:Name="lb_warning" Content="所选面要素无坐标系信息！！" HorizontalAlignment="Left" Margin="251,38,0,0" VerticalAlignment="Top" Width="163" FontWeight="Bold"/>

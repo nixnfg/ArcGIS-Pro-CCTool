@@ -34,43 +34,60 @@ namespace CCTool.Scripts.MiniTool.GetInfo
 
         private async void combox_field_DropClosed(object sender, EventArgs e)
         {
-            // 清空文本
-            tb_message.Document.Blocks.Clear();
-            
-            string lyName = combox_layer.Text;
-            string fieldName = combox_field.Text;
-
-            Dictionary<string, long> fieldValues = await QueuedTask.Run(() =>
+            try
             {
-                return lyName.GetFieldValuesDic(fieldName);
-            });
+                // 清空文本
+                tb_message.Document.Blocks.Clear();
 
-            // 加入文本
-            int index = 1;
-            foreach (var fieldValue in fieldValues)
-            {
-                if (index < 1000)
+                string lyName = combox_layer.ComboxText();
+                string fieldName = combox_field.ComboxText();
+
+                Dictionary<string, long> fieldValues = await QueuedTask.Run(() =>
                 {
-                    tb_message.AddMessage($"{fieldValue.Key}                      【{fieldValue.Value}】行\r", Brushes.BlueViolet);
-                }
-                else
+                    return lyName.GetFieldValuesDic(fieldName);
+                });
+
+                // 加入文本
+                tb_message.AddMessage($"获取字段的所有唯一值，共计：{fieldValues.Count}个\r", Brushes.Green);
+
+                int index = 1;
+                foreach (var fieldValue in fieldValues)
                 {
-                    MessageBox.Show("超过1000个值，后续的不再显示！");
-                    break;
+                    if (index < 1000)
+                    {
+                        tb_message.AddMessage($"{fieldValue.Key}                      【{fieldValue.Value}】行\r", Brushes.BlueViolet);
+                    }
+                    else
+                    {
+                        MessageBox.Show("超过1000个值，后续的不再显示！");
+                        break;
+                    }
+                    index++;
                 }
-                index++;
             }
+            catch (Exception ee)
+            {
+                MessageBox.Show(ee.Message + ee.StackTrace);
+                return;
+            }
+
         }
 
         private void combox_field_DropDown(object sender, EventArgs e)
         {
-            string lyName = combox_layer.Text;
-            UITool.AddFieldsToCombox(lyName, combox_field);
+            string lyName = combox_layer.ComboxText();
+            UITool.AddFieldsToComboxPlus(lyName, combox_field);
         }
 
         private void combox_layer_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayerAndTableToCombox(combox_layer);
+            UITool.AddFeatureLayerAndTableToComboxPlus(combox_layer);
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/136078187?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

@@ -250,6 +250,9 @@ namespace CCTool.Scripts.UI.ProWindow
                         }
                         // 保存编辑
                         Project.Current.SaveEditsAsync();
+
+                        // 修复几何
+                        Arcpy.RepairGeometry(@$"{shpPath}\{shp_name}.shp");
                     }
 
                     pw.AddProcessMessage("工具运行完成！！！", 10, time_base, Brushes.Blue);

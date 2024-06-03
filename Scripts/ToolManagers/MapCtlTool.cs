@@ -80,11 +80,17 @@ namespace CCTool.Scripts.ToolManagers
             {
                 if (ly.Parent is Map)
                 {
-                    dic.Add(ly.Name, ly.IsVisible);
+                    if (!dic.ContainsKey(ly.Name))
+                    {
+                        dic.Add(ly.Name, ly.IsVisible);
+                    }
                 }
                 else
                 {
-                    dic.Add($"{ly.Parent}+++{ly.Name}", ly.IsVisible);
+                    if (!dic.ContainsKey($"{ly.Parent}+++{ly.Name}"))
+                    {
+                        dic.Add($"{ly.Parent}+++{ly.Name}", ly.IsVisible);
+                    }
                 }
             }
             return dic;

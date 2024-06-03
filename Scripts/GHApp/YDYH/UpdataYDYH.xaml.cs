@@ -60,17 +60,17 @@ namespace CCTool.Scripts.GHApp.YDYH
 
         private void combox_fc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddFeatureLayersToCombox(combox_fc);
+            UITool.AddFeatureLayersToComboxPlus(combox_fc);
         }
 
         private async void btn_go_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string lyName = combox_fc.Text;
+                string lyName = combox_fc.ComboxText();
                 string YDYH = combox_YDYH.Text;
-                string ydbmField = combox_bm.Text;
-                string ydmcField = combox_mc.Text;
+                string ydbmField = combox_bm.ComboxText();
+                string ydmcField = combox_mc.ComboxText();
                 List<string> fieldNameList = new List<string>() { ydbmField, ydmcField };
 
                 await QueuedTask.Run(() =>
@@ -124,12 +124,12 @@ namespace CCTool.Scripts.GHApp.YDYH
 
         private void combox_bm_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_bm);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_bm);
         }
 
         private void combox_mc_DropDown(object sender, EventArgs e)
         {
-            UITool.AddTextFieldsToCombox(combox_fc.Text, combox_mc);
+            UITool.AddTextFieldsToComboxPlus(combox_fc.ComboxText(), combox_mc);
         }
 
         private void combox_version_Closed(object sender, EventArgs e)
@@ -143,6 +143,12 @@ namespace CCTool.Scripts.GHApp.YDYH
                 UpdataLabel(combox_YDYH, "用地用海合并字段_新.xlsx");
             }
             
+        }
+
+        private void btn_help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = "https://blog.csdn.net/xcc34452366/article/details/135771891?spm=1001.2014.3001.5501";
+            UITool.Link2Web(url);
         }
     }
 }

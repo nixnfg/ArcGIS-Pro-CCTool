@@ -172,7 +172,7 @@ namespace CCTool.Scripts.UI.ProWindow
                         File.WriteAllText(txtPath, txt_all);
                     }
                 });
-                pw.AddProcessMessage(50, time_base, "工具运行完成！！！", Brushes.Blue);
+                pw.AddProcessMessage(100, time_base, "工具运行完成！！！", Brushes.Blue);
 
             }
             catch (Exception ee)

@@ -3,21 +3,21 @@
   "version" : "3.0.0",
   "build" : 36056,
   "layers" : [
-    "CIMPATH=____/__________.json"
+    "CIMPATH=__/____.json"
   ],
   "layerDefinitions" : [
     {
       "type" : "CIMFeatureLayer",
-      "name" : "中心城区规划用地用海",
-      "uRI" : "CIMPATH=____/__________.json",
+      "name" : "规划用地",
+      "uRI" : "CIMPATH=__/____.json",
       "sourceModifiedTime" : {
         "type" : "TimeInstant"
       },
       "useSourceMetadata" : true,
-      "description" : "中心城区规划用地用海",
+      "description" : "规划用地",
       "layerElevation" : {
         "type" : "CIMLayerElevationSurface",
-        "elevationSurfaceLayerURI" : "CIMPATH=__/__.json"
+        "elevationSurfaceLayerURI" : "CIMPATH=__/4ec427f88a744e7ca3ab8c00a1bd24ce.json"
       },
       "expanded" : true,
       "layerType" : "Operational",
@@ -32,11 +32,19 @@
       "blendingMode" : "Alpha",
       "allowDrapingOnIntegratedMesh" : true,
       "autoGenerateFeatureTemplates" : true,
+      "featureElevationExpression" : "0",
       "featureTable" : {
         "type" : "CIMFeatureTable",
-        "displayField" : "Shape_Length",
+        "displayField" : "BSM",
         "editable" : true,
         "fieldDescriptions" : [
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "GHDLMC",
+            "fieldName" : "GHDLMC",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
           {
             "type" : "CIMFieldDescription",
             "alias" : "OBJECTID",
@@ -56,6 +64,314 @@
             "type" : "CIMFieldDescription",
             "alias" : "Shape",
             "fieldName" : "Shape",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "BSM",
+            "fieldName" : "BSM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "YSDM",
+            "fieldName" : "YSDM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "TBYBH",
+            "fieldName" : "TBYBH",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "TBBH",
+            "fieldName" : "TBBH",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "DLBM",
+            "fieldName" : "DLBM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "DLMC",
+            "fieldName" : "DLMC",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "QSXZ",
+            "fieldName" : "QSXZ",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "QSDWDM",
+            "fieldName" : "QSDWDM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "QSDWMC",
+            "fieldName" : "QSDWMC",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "ZLDWDM",
+            "fieldName" : "ZLDWDM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "ZLDWMC",
+            "fieldName" : "ZLDWMC",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "TBMJ",
+            "fieldName" : "TBMJ",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "KCDLBM",
+            "fieldName" : "KCDLBM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "KCXS",
+            "fieldName" : "KCXS",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "KCMJ",
+            "fieldName" : "KCMJ",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "TBDLMJ",
+            "fieldName" : "TBDLMJ",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "GDLX",
+            "fieldName" : "GDLX",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "XZDWKD",
+            "fieldName" : "XZDWKD",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "TBXHDM",
+            "fieldName" : "TBXHDM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "TBXHMC",
+            "fieldName" : "TBXHMC",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "ZZSXDM",
+            "fieldName" : "ZZSXDM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "ZZSXMC",
+            "fieldName" : "ZZSXMC",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "GDDB",
+            "fieldName" : "GDDB",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "CZCSXM",
+            "fieldName" : "CZCSXM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "SJNF",
+            "fieldName" : "SJNF",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 0
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "MSSM",
+            "fieldName" : "MSSM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "GDPDJB",
+            "fieldName" : "GDPDJB",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "FRDBS",
+            "fieldName" : "FRDBS",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "HDMC",
+            "fieldName" : "HDMC",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "BZ",
+            "fieldName" : "BZ",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "Shape_Leng",
+            "fieldName" : "Shape_Leng",
+            "numberFormat" : {
+              "type" : "CIMNumericFormat",
+              "alignmentOption" : "esriAlignRight",
+              "alignmentWidth" : 0,
+              "roundingOption" : "esriRoundNumberOfDecimals",
+              "roundingValue" : 6
+            },
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "YDYHMC",
+            "fieldName" : "YDYHMC",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "YDYHDM",
+            "fieldName" : "YDYHDM",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "gkbj",
+            "fieldName" : "gkbj",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "占用情况",
+            "fieldName" : "占用情况",
+            "visible" : true,
+            "searchMode" : "Exact"
+          },
+          {
+            "type" : "CIMFieldDescription",
+            "alias" : "layer",
+            "fieldName" : "layer",
             "visible" : true,
             "searchMode" : "Exact"
           },
@@ -91,113 +407,49 @@
           },
           {
             "type" : "CIMFieldDescription",
-            "alias" : "标识码",
-            "fieldName" : "BSM",
+            "alias" : "GHDLBM",
+            "fieldName" : "GHDLBM",
             "visible" : true,
             "searchMode" : "Exact"
           },
           {
             "type" : "CIMFieldDescription",
-            "alias" : "要素代码",
-            "fieldName" : "YSDM",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "行政区代码",
-            "fieldName" : "XZQDM",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "行政区名称",
-            "fieldName" : "XZQMC",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "用地用海分类代码",
-            "fieldName" : "YDYHFLDM",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "用地用海分类名称",
-            "fieldName" : "YDYHFLMC",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "图斑面积",
-            "fieldName" : "TBMJ",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 0,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 6
-            },
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "图斑地类面积",
-            "fieldName" : "TBDLMJ",
-            "numberFormat" : {
-              "type" : "CIMNumericFormat",
-              "alignmentOption" : "esriAlignRight",
-              "alignmentWidth" : 0,
-              "roundingOption" : "esriRoundNumberOfDecimals",
-              "roundingValue" : 6
-            },
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "规划状态",
-            "fieldName" : "GHZT",
-            "visible" : true,
-            "searchMode" : "Exact"
-          },
-          {
-            "type" : "CIMFieldDescription",
-            "alias" : "基期地类代码",
-            "fieldName" : "JQDLDM",
+            "alias" : "SSBJLX",
+            "fieldName" : "SSBJLX",
             "visible" : true,
             "searchMode" : "Exact"
           }
         ],
-        "timeFields" : {
-          "type" : "CIMTimeTableDefinition"
-        },
-        "timeDefinition" : {
-          "type" : "CIMTimeDataDefinition"
-        },
-        "timeDisplayDefinition" : {
-          "type" : "CIMTimeDisplayDefinition",
-          "timeInterval" : 0,
-          "timeIntervalUnits" : "esriTimeUnitsHours",
-          "timeOffsetUnits" : "esriTimeUnitsYears"
-        },
+        "selectionSetURI" : "CIMPATH=ObjectIdentifierSet/018a6fc58ef23d65cacda2887a0e5375.dat",
         "dataConnection" : {
-          "type" : "CIMFeatureDatasetDataConnection",
-          "featureDataset" : "目标年规划",
-          "workspaceConnectionString" : "DATABASE=D:\\【工作项目】\\【总规】\\安溪国土空间规划\\0-中心城区规划\\0-GIS\\0-安溪国空入库\\合并\\安溪县国土空间总体规划数据库\\县级国土空间规划数据库（中心城区）.gdb",
+          "type" : "CIMStandardDataConnection",
+          "workspaceConnectionString" : "DATABASE=C:\\Users\\Administrator\\Documents\\ArcGIS\\Projects\\Test\\1-输入文件\\上攀村.gdb",
           "workspaceFactory" : "FileGDB",
-          "dataset" : "ZXCQGHYDYH",
+          "dataset" : "规划用地",
           "datasetType" : "esriDTFeatureClass"
         },
         "studyAreaSpatialRel" : "esriSpatialRelUndefined",
         "searchOrder" : "esriSearchOrderSpatial"
       },
       "featureTemplates" : [
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "耕地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "耕地"
+            ]
+          }
+        },
         {
           "type" : "CIMRowTemplate",
           "name" : "水田",
@@ -211,7 +463,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "水田"
             ]
           }
@@ -229,7 +481,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "水浇地"
             ]
           }
@@ -247,8 +499,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "旱地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "园地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "园地"
             ]
           }
         },
@@ -265,7 +535,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "果园"
             ]
           }
@@ -283,7 +553,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "茶园"
             ]
           }
@@ -301,7 +571,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "橡胶园"
             ]
           }
@@ -319,8 +589,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "其他园地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "林地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "林地"
             ]
           }
         },
@@ -337,7 +625,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "乔木林地"
             ]
           }
@@ -355,7 +643,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "竹林地"
             ]
           }
@@ -373,7 +661,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "灌木林地"
             ]
           }
@@ -391,8 +679,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "其他林地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "草地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "草地"
             ]
           }
         },
@@ -409,7 +715,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "天然牧草地"
             ]
           }
@@ -427,7 +733,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "人工牧草地"
             ]
           }
@@ -445,152 +751,8 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "其他草地"
-            ]
-          }
-        },
-        {
-          "type" : "CIMRowTemplate",
-          "name" : "森林沼泽",
-          "tags" : "面",
-          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
-          "excludedToolGUIDs" : [
-            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
-            "a281e635-0f22-47d4-a438-e4d29b920e22",
-            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
-          ],
-          "defaultValues" : {
-            "type" : "PropertySet",
-            "propertySetItems" : [
-              "ydyhflmc",
-              "森林沼泽"
-            ]
-          }
-        },
-        {
-          "type" : "CIMRowTemplate",
-          "name" : "灌丛沼泽",
-          "tags" : "面",
-          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
-          "excludedToolGUIDs" : [
-            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
-            "a281e635-0f22-47d4-a438-e4d29b920e22",
-            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
-          ],
-          "defaultValues" : {
-            "type" : "PropertySet",
-            "propertySetItems" : [
-              "ydyhflmc",
-              "灌丛沼泽"
-            ]
-          }
-        },
-        {
-          "type" : "CIMRowTemplate",
-          "name" : "沼泽草地",
-          "tags" : "面",
-          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
-          "excludedToolGUIDs" : [
-            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
-            "a281e635-0f22-47d4-a438-e4d29b920e22",
-            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
-          ],
-          "defaultValues" : {
-            "type" : "PropertySet",
-            "propertySetItems" : [
-              "ydyhflmc",
-              "沼泽草地"
-            ]
-          }
-        },
-        {
-          "type" : "CIMRowTemplate",
-          "name" : "其他沼泽地",
-          "tags" : "面",
-          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
-          "excludedToolGUIDs" : [
-            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
-            "a281e635-0f22-47d4-a438-e4d29b920e22",
-            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
-          ],
-          "defaultValues" : {
-            "type" : "PropertySet",
-            "propertySetItems" : [
-              "ydyhflmc",
-              "其他沼泽地"
-            ]
-          }
-        },
-        {
-          "type" : "CIMRowTemplate",
-          "name" : "沿海滩涂",
-          "tags" : "面",
-          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
-          "excludedToolGUIDs" : [
-            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
-            "a281e635-0f22-47d4-a438-e4d29b920e22",
-            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
-          ],
-          "defaultValues" : {
-            "type" : "PropertySet",
-            "propertySetItems" : [
-              "ydyhflmc",
-              "沿海滩涂"
-            ]
-          }
-        },
-        {
-          "type" : "CIMRowTemplate",
-          "name" : "内陆滩涂",
-          "tags" : "面",
-          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
-          "excludedToolGUIDs" : [
-            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
-            "a281e635-0f22-47d4-a438-e4d29b920e22",
-            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
-          ],
-          "defaultValues" : {
-            "type" : "PropertySet",
-            "propertySetItems" : [
-              "ydyhflmc",
-              "内陆滩涂"
-            ]
-          }
-        },
-        {
-          "type" : "CIMRowTemplate",
-          "name" : "红树林地",
-          "tags" : "面",
-          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
-          "excludedToolGUIDs" : [
-            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
-            "a281e635-0f22-47d4-a438-e4d29b920e22",
-            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
-          ],
-          "defaultValues" : {
-            "type" : "PropertySet",
-            "propertySetItems" : [
-              "ydyhflmc",
-              "红树林地"
-            ]
-          }
-        },
-        {
-          "type" : "CIMRowTemplate",
-          "name" : "乡村道路用地",
-          "tags" : "面",
-          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
-          "excludedToolGUIDs" : [
-            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
-            "a281e635-0f22-47d4-a438-e4d29b920e22",
-            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
-          ],
-          "defaultValues" : {
-            "type" : "PropertySet",
-            "propertySetItems" : [
-              "ydyhflmc",
-              "乡村道路用地"
             ]
           }
         },
@@ -607,7 +769,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "村道用地"
             ]
           }
@@ -625,8 +787,170 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "村庄内部道路用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "湿地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "湿地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "森林沼泽",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "森林沼泽"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "灌丛沼泽",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "灌丛沼泽"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "沼泽草地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "沼泽草地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "其他沼泽地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "其他沼泽地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "沿海滩涂",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "沿海滩涂"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "内陆滩涂",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "内陆滩涂"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "红树林地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "红树林地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "乡村道路用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "乡村道路用地"
             ]
           }
         },
@@ -643,7 +967,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "种植设施建设用地"
             ]
           }
@@ -661,7 +985,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "畜禽养殖设施建设用地"
             ]
           }
@@ -679,7 +1003,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "水产养殖设施建设用地"
             ]
           }
@@ -697,7 +1021,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "城镇住宅用地"
             ]
           }
@@ -715,8 +1039,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "城镇社区服务设施用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "一类城镇住宅用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "一类城镇住宅用地"
             ]
           }
         },
@@ -733,8 +1075,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "二类城镇住宅用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "三类城镇住宅用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "三类城镇住宅用地"
             ]
           }
         },
@@ -751,7 +1111,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "二类居住用地"
             ]
           }
@@ -769,7 +1129,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "商住综合用地"
             ]
           }
@@ -787,8 +1147,44 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "农村宅基地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "一类农村宅基地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "一类农村宅基地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "二类农村宅基地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "二类农村宅基地"
             ]
           }
         },
@@ -805,8 +1201,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "农村社区服务设施用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "公共管理与公共服务用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "公共管理与公共服务用地"
             ]
           }
         },
@@ -823,7 +1237,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "机关团体用地"
             ]
           }
@@ -841,7 +1255,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "科研用地"
             ]
           }
@@ -859,7 +1273,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "文化用地"
             ]
           }
@@ -877,7 +1291,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "文化活动用地"
             ]
           }
@@ -895,7 +1309,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "图书与展览用地"
             ]
           }
@@ -913,7 +1327,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "教育用地"
             ]
           }
@@ -931,7 +1345,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "高等教育用地"
             ]
           }
@@ -949,7 +1363,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "中等职业教育用地"
             ]
           }
@@ -967,7 +1381,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "其他教育用地"
             ]
           }
@@ -985,7 +1399,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "中小学用地"
             ]
           }
@@ -1003,7 +1417,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "幼儿园用地"
             ]
           }
@@ -1021,7 +1435,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "体育用地"
             ]
           }
@@ -1039,8 +1453,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "体育场馆用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "体育训练用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "体育训练用地"
             ]
           }
         },
@@ -1057,7 +1489,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "医疗卫生用地"
             ]
           }
@@ -1075,7 +1507,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "医院用地"
             ]
           }
@@ -1093,7 +1525,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "基层医疗卫生设施用地"
             ]
           }
@@ -1111,7 +1543,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "公共卫生用地"
             ]
           }
@@ -1129,7 +1561,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "社会福利用地"
             ]
           }
@@ -1147,8 +1579,80 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "老年人社会福利用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "儿童社会福利用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "儿童社会福利用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "残疾人社会福利用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "残疾人社会福利用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "其他社会福利用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "其他社会福利用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "商业服务业用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "商业服务业用地"
             ]
           }
         },
@@ -1165,7 +1669,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "商业用地"
             ]
           }
@@ -1183,7 +1687,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "零售商业用地"
             ]
           }
@@ -1201,7 +1705,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "批发市场用地"
             ]
           }
@@ -1219,7 +1723,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "旅馆用地"
             ]
           }
@@ -1237,7 +1741,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "公用设施营业网点用地"
             ]
           }
@@ -1255,7 +1759,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "商务金融用地"
             ]
           }
@@ -1273,7 +1777,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "娱乐康体用地"
             ]
           }
@@ -1291,8 +1795,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "娱乐用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "康体用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "康体用地"
             ]
           }
         },
@@ -1309,7 +1831,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "其他商业服务业用地"
             ]
           }
@@ -1327,7 +1849,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "工业用地"
             ]
           }
@@ -1345,7 +1867,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "一类工业用地"
             ]
           }
@@ -1363,7 +1885,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "二类工业用地"
             ]
           }
@@ -1381,7 +1903,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "三类工业用地"
             ]
           }
@@ -1399,8 +1921,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "采矿用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "仓储用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "仓储用地"
             ]
           }
         },
@@ -1417,7 +1957,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "物流仓储用地"
             ]
           }
@@ -1435,7 +1975,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "一类物流仓储用地"
             ]
           }
@@ -1453,8 +1993,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "二类物流仓储用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "三类物流仓储用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "三类物流仓储用地"
             ]
           }
         },
@@ -1471,8 +2029,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "储备库用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "交通运输用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "交通运输用地"
             ]
           }
         },
@@ -1489,7 +2065,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "铁路用地"
             ]
           }
@@ -1507,7 +2083,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "公路用地"
             ]
           }
@@ -1525,7 +2101,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "城镇道路用地"
             ]
           }
@@ -1543,7 +2119,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "交通场站用地"
             ]
           }
@@ -1561,7 +2137,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "对外交通场站用地"
             ]
           }
@@ -1579,7 +2155,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "公共交通场站用地"
             ]
           }
@@ -1597,7 +2173,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "社会停车场用地"
             ]
           }
@@ -1615,8 +2191,26 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "其他交通设施用地"
+            ]
+          }
+        },
+        {
+          "type" : "CIMRowTemplate",
+          "name" : "公用设施用地",
+          "tags" : "面",
+          "defaultToolGUID" : "8f79967b-66a0-4a1c-b884-f44bc7e26921",
+          "excludedToolGUIDs" : [
+            "6c6970a7-5ca9-448c-9c7d-0d716cd2ac64",
+            "a281e635-0f22-47d4-a438-e4d29b920e22",
+            "d304243a-5c3a-4ccc-b98b-93684b15fd83"
+          ],
+          "defaultValues" : {
+            "type" : "PropertySet",
+            "propertySetItems" : [
+              "ghdlmc",
+              "公用设施用地"
             ]
           }
         },
@@ -1633,7 +2227,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "供水用地"
             ]
           }
@@ -1651,7 +2245,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "排水用地"
             ]
           }
@@ -1669,7 +2263,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "供电用地"
             ]
           }
@@ -1687,7 +2281,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "供燃气用地"
             ]
           }
@@ -1705,7 +2299,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "供热用地"
             ]
           }
@@ -1723,7 +2317,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "通信用地"
             ]
           }
@@ -1741,7 +2335,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "邮政用地"
             ]
           }
@@ -1759,7 +2353,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "广播电视设施用地"
             ]
           }
@@ -1777,7 +2371,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "环卫用地"
             ]
           }
@@ -1795,7 +2389,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "消防用地"
             ]
           }
@@ -1813,7 +2407,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "干渠"
             ]
           }
@@ -1831,7 +2425,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "水工设施用地"
             ]
           }
@@ -1849,7 +2443,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "其他公用设施用地"
             ]
           }
@@ -1867,7 +2461,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "公园绿地"
             ]
           }
@@ -1885,7 +2479,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "防护绿地"
             ]
           }
@@ -1903,7 +2497,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "广场用地"
             ]
           }
@@ -1921,7 +2515,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "特殊用地"
             ]
           }
@@ -1939,7 +2533,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "军事设施用地"
             ]
           }
@@ -1957,7 +2551,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "使领馆用地"
             ]
           }
@@ -1975,7 +2569,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "宗教用地"
             ]
           }
@@ -1993,7 +2587,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "文物古迹用地"
             ]
           }
@@ -2011,7 +2605,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "监教场所用地"
             ]
           }
@@ -2029,7 +2623,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "殡葬用地"
             ]
           }
@@ -2047,7 +2641,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "其他特殊用地"
             ]
           }
@@ -2065,7 +2659,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "留白用地"
             ]
           }
@@ -2083,7 +2677,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "陆地水域"
             ]
           }
@@ -2101,7 +2695,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "河流水面"
             ]
           }
@@ -2119,7 +2713,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "湖泊水面"
             ]
           }
@@ -2137,7 +2731,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "水库水面"
             ]
           }
@@ -2155,7 +2749,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "坑塘水面"
             ]
           }
@@ -2173,7 +2767,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "沟渠"
             ]
           }
@@ -2191,7 +2785,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "其他土地"
             ]
           }
@@ -2209,7 +2803,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "空闲地"
             ]
           }
@@ -2227,7 +2821,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "田坎"
             ]
           }
@@ -2245,7 +2839,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "田间道"
             ]
           }
@@ -2263,7 +2857,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "盐碱地"
             ]
           }
@@ -2281,7 +2875,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "沙地"
             ]
           }
@@ -2299,7 +2893,7 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "裸土地"
             ]
           }
@@ -2317,19 +2911,13 @@
           "defaultValues" : {
             "type" : "PropertySet",
             "propertySetItems" : [
-              "ydyhflmc",
+              "ghdlmc",
               "裸岩石砾地"
             ]
           }
         }
       ],
       "htmlPopupEnabled" : true,
-      "htmlPopupFormat" : {
-        "type" : "CIMHtmlPopupFormat",
-        "htmlUseCodedDomainValues" : true,
-        "htmlPresentationStyle" : "TwoColumnTable"
-      },
-      "isFlattened" : true,
       "selectable" : true,
       "featureCacheType" : "Session",
       "displayFiltersType" : "ByScale",
@@ -2337,8 +2925,9 @@
       "labelClasses" : [
         {
           "type" : "CIMLabelClass",
-          "expression" : "[BSM]",
-          "expressionEngine" : "VBScript",
+          "expressionTitle" : "自定义",
+          "expression" : "$feature.BSM",
+          "expressionEngine" : "Arcade",
           "featuresToLabel" : "AllVisibleFeatures",
           "maplexLabelPlacementProperties" : {
             "type" : "CIMMaplexLabelPlacementProperties",
@@ -2439,14 +3028,14 @@
             "truncationPreferredCharacters" : "aeiou",
             "polygonAnchorPointPerimeterInsetUnit" : "Point"
           },
-          "name" : "默认",
-          "priority" : 8,
+          "name" : "类 1",
+          "priority" : -1,
           "standardLabelPlacementProperties" : {
             "type" : "CIMStandardLabelPlacementProperties",
             "featureType" : "Polygon",
             "featureWeight" : "None",
             "labelWeight" : "High",
-            "numLabelsOption" : "OneLabelPerPart",
+            "numLabelsOption" : "OneLabelPerName",
             "lineLabelPosition" : {
               "type" : "CIMStandardLineLabelPosition",
               "above" : true,
@@ -2471,8 +3060,8 @@
               "aboveLeft" : 2,
               "aboveCenter" : 2,
               "aboveRight" : 1,
-              "centerLeft" : 3,
-              "centerRight" : 2,
+              "centerLeft" : 2,
+              "centerRight" : 3,
               "belowLeft" : 3,
               "belowCenter" : 3,
               "belowRight" : 2
@@ -2485,33 +3074,21 @@
             "symbol" : {
               "type" : "CIMTextSymbol",
               "blockProgression" : "TTB",
-              "compatibilityMode" : true,
               "depth3D" : 1,
-              "drawSoftHyphen" : true,
               "extrapolateBaselines" : true,
-              "flipAngle" : 90,
               "fontEffects" : "Normal",
               "fontEncoding" : "Unicode",
-              "fontFamilyName" : "SimSun",
+              "fontFamilyName" : "Microsoft YaHei",
               "fontStyleName" : "Regular",
               "fontType" : "Unspecified",
               "haloSize" : 1,
-              "height" : 8,
+              "height" : 10,
               "hinting" : "Default",
-              "horizontalAlignment" : "Center",
+              "horizontalAlignment" : "Left",
               "kerning" : true,
               "letterWidth" : 100,
               "ligatures" : true,
               "lineGapType" : "ExtraLeading",
-              "shadowColor" : {
-                "type" : "CIMRGBColor",
-                "values" : [
-                  0,
-                  0,
-                  0,
-                  100
-                ]
-              },
               "symbol" : {
                 "type" : "CIMPolygonSymbol",
                 "symbolLayers" : [
@@ -2601,12 +3178,48 @@
         },
         "defaultSymbolPatch" : "Default",
         "fields" : [
-          "YDYHFLMC"
+          "GHDLMC"
         ],
         "groups" : [
           {
             "type" : "CIMUniqueValueGroup",
             "classes" : [
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "耕地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            245,
+                            248,
+                            220,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "耕地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
               {
                 "type" : "CIMUniqueValueClass",
                 "editable" : true,
@@ -2710,6 +3323,42 @@
                     "type" : "CIMUniqueValue",
                     "fieldValues" : [
                       "旱地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "园地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            191,
+                            233,
+                            170,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "园地"
                     ]
                   }
                 ],
@@ -2862,6 +3511,42 @@
               {
                 "type" : "CIMUniqueValueClass",
                 "editable" : true,
+                "label" : "林地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            104,
+                            177,
+                            103,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "林地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
                 "label" : "乔木林地",
                 "patch" : "Default",
                 "symbol" : {
@@ -3006,6 +3691,42 @@
               {
                 "type" : "CIMUniqueValueClass",
                 "editable" : true,
+                "label" : "草地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            205,
+                            245,
+                            122,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "草地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
                 "label" : "天然牧草地",
                 "patch" : "Default",
                 "symbol" : {
@@ -3106,6 +3827,114 @@
                     "type" : "CIMUniqueValue",
                     "fieldValues" : [
                       "其他草地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "村道用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            216,
+                            215,
+                            159,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "村道用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "村庄内部道路用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            216,
+                            215,
+                            159,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "村庄内部道路用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "湿地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            101,
+                            205,
+                            170,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "湿地"
                     ]
                   }
                 ],
@@ -3402,78 +4231,6 @@
               {
                 "type" : "CIMUniqueValueClass",
                 "editable" : true,
-                "label" : "村道用地",
-                "patch" : "Default",
-                "symbol" : {
-                  "type" : "CIMSymbolReference",
-                  "symbol" : {
-                    "type" : "CIMPolygonSymbol",
-                    "symbolLayers" : [
-                      {
-                        "type" : "CIMSolidFill",
-                        "enable" : true,
-                        "color" : {
-                          "type" : "CIMRGBColor",
-                          "values" : [
-                            216,
-                            215,
-                            159,
-                            100
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                },
-                "values" : [
-                  {
-                    "type" : "CIMUniqueValue",
-                    "fieldValues" : [
-                      "村道用地"
-                    ]
-                  }
-                ],
-                "visible" : true
-              },
-              {
-                "type" : "CIMUniqueValueClass",
-                "editable" : true,
-                "label" : "村庄内部道路用地",
-                "patch" : "Default",
-                "symbol" : {
-                  "type" : "CIMSymbolReference",
-                  "symbol" : {
-                    "type" : "CIMPolygonSymbol",
-                    "symbolLayers" : [
-                      {
-                        "type" : "CIMSolidFill",
-                        "enable" : true,
-                        "color" : {
-                          "type" : "CIMRGBColor",
-                          "values" : [
-                            216,
-                            215,
-                            159,
-                            100
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                },
-                "values" : [
-                  {
-                    "type" : "CIMUniqueValue",
-                    "fieldValues" : [
-                      "村庄内部道路用地"
-                    ]
-                  }
-                ],
-                "visible" : true
-              },
-              {
-                "type" : "CIMUniqueValueClass",
-                "editable" : true,
                 "label" : "种植设施建设用地",
                 "patch" : "Default",
                 "symbol" : {
@@ -3654,6 +4411,42 @@
               {
                 "type" : "CIMUniqueValueClass",
                 "editable" : true,
+                "label" : "一类城镇住宅用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            255,
+                            45,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "一类城镇住宅用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
                 "label" : "二类城镇住宅用地",
                 "patch" : "Default",
                 "symbol" : {
@@ -3682,6 +4475,42 @@
                     "type" : "CIMUniqueValue",
                     "fieldValues" : [
                       "二类城镇住宅用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "三类城镇住宅用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            255,
+                            45,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "三类城镇住宅用地"
                     ]
                   }
                 ],
@@ -3816,6 +4645,78 @@
               {
                 "type" : "CIMUniqueValueClass",
                 "editable" : true,
+                "label" : "一类农村宅基地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            211,
+                            128,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "一类农村宅基地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "二类农村宅基地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            211,
+                            128,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "二类农村宅基地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
                 "label" : "农村社区服务设施用地",
                 "patch" : "Default",
                 "symbol" : {
@@ -3844,6 +4745,42 @@
                     "type" : "CIMUniqueValue",
                     "fieldValues" : [
                       "农村社区服务设施用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "公共管理与公共服务用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            133,
+                            201,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "公共管理与公共服务用地"
                     ]
                   }
                 ],
@@ -4338,6 +5275,42 @@
               {
                 "type" : "CIMUniqueValueClass",
                 "editable" : true,
+                "label" : "体育训练用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            0,
+                            165,
+                            124,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "体育训练用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
                 "label" : "医疗卫生用地",
                 "patch" : "Default",
                 "symbol" : {
@@ -4546,6 +5519,150 @@
                     "type" : "CIMUniqueValue",
                     "fieldValues" : [
                       "老年人社会福利用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "儿童社会福利用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            159,
+                            127,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "儿童社会福利用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "残疾人社会福利用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            159,
+                            127,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "残疾人社会福利用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "其他社会福利用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            159,
+                            127,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "其他社会福利用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "商业服务业用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            0,
+                            0,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "商业服务业用地"
                     ]
                   }
                 ],
@@ -4842,6 +5959,42 @@
               {
                 "type" : "CIMUniqueValueClass",
                 "editable" : true,
+                "label" : "康体用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            255,
+                            0,
+                            0,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "康体用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
                 "label" : "其他商业服务业用地",
                 "patch" : "Default",
                 "symbol" : {
@@ -5058,6 +6211,42 @@
               {
                 "type" : "CIMUniqueValueClass",
                 "editable" : true,
+                "label" : "仓储用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            135,
+                            97,
+                            211,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "仓储用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
                 "label" : "物流仓储用地",
                 "patch" : "Default",
                 "symbol" : {
@@ -5166,6 +6355,42 @@
               {
                 "type" : "CIMUniqueValueClass",
                 "editable" : true,
+                "label" : "三类物流仓储用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            135,
+                            97,
+                            211,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "三类物流仓储用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
                 "label" : "储备库用地",
                 "patch" : "Default",
                 "symbol" : {
@@ -5212,6 +6437,42 @@
                     "type" : "CIMUniqueValue",
                     "fieldValues" : [
                       "储备库用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "交通运输用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            183,
+                            183,
+                            183,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "交通运输用地"
                     ]
                   }
                 ],
@@ -5500,6 +6761,42 @@
                     "type" : "CIMUniqueValue",
                     "fieldValues" : [
                       "其他交通设施用地"
+                    ]
+                  }
+                ],
+                "visible" : true
+              },
+              {
+                "type" : "CIMUniqueValueClass",
+                "editable" : true,
+                "label" : "公用设施用地",
+                "patch" : "Default",
+                "symbol" : {
+                  "type" : "CIMSymbolReference",
+                  "symbol" : {
+                    "type" : "CIMPolygonSymbol",
+                    "symbolLayers" : [
+                      {
+                        "type" : "CIMSolidFill",
+                        "enable" : true,
+                        "color" : {
+                          "type" : "CIMRGBColor",
+                          "values" : [
+                            0,
+                            99,
+                            128,
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                "values" : [
+                  {
+                    "type" : "CIMUniqueValue",
+                    "fieldValues" : [
+                      "公用设施用地"
                     ]
                   }
                 ],
@@ -7077,7 +8374,17 @@
         "polygonSymbolColorTarget" : "Fill"
       },
       "scaleSymbols" : true,
-      "snappable" : true
+      "snappable" : true,
+      "symbolLayerDrawing" : {
+        "type" : "CIMSymbolLayerDrawing"
+      }
+    }
+  ],
+  "binaryReferences" : [
+    {
+      "type" : "CIMBinaryReference",
+      "uRI" : "CIMPATH=ObjectIdentifierSet/018a6fc58ef23d65cacda2887a0e5375.dat",
+      "data" : "CgQKAv0B"
     }
   ],
   "rGBColorProfile" : "sRGB IEC61966-2.1",
@@ -7086,7 +8393,10 @@
     {
       "type" : "CIMElevationSurfaceLayer",
       "name" : "地面",
-      "uRI" : "CIMPATH=__/__.json",
+      "uRI" : "CIMPATH=__/4ec427f88a744e7ca3ab8c00a1bd24ce.json",
+      "sourceModifiedTime" : {
+        "type" : "TimeInstant"
+      },
       "useSourceMetadata" : true,
       "description" : "地面",
       "expanded" : true,
@@ -7109,7 +8419,7 @@
           255,
           255,
           255,
-          0
+          100
         ]
       },
       "surfaceTINShadingMode" : "Smooth"

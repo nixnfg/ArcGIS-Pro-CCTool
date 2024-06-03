@@ -54,8 +54,8 @@ namespace CCTool.Scripts.DataPross.GDB
             //string mdbPath = textMDBPath.Text;
             //string gdbPath = textGDBPath.Text;
 
-            string mdbPath = @"C:\Users\Administrator\Documents\ArcGIS\Projects\Test\1-输入文件\4.规划数据库\村庄规划数据库.mdb";
-            string gdbPath = @"C:\Users\Administrator\Documents\ArcGIS\Projects\Test\1-输入文件\备用\靛墩村.gdb";
+            //string mdbPath = @"C:\Users\Administrator\Documents\ArcGIS\Projects\Test\1-输入文件\4.规划数据库\村庄规划数据库.mdb";
+            //string gdbPath = @"C:\Users\Administrator\Documents\ArcGIS\Projects\Test\1-输入文件\备用\靛墩村.gdb";
 
             // 注册GDAL
             //OSGeo.GDAL.Gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "YES");
